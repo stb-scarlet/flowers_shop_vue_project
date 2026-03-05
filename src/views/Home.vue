@@ -67,8 +67,12 @@
               <p>Categories</p>
             </div>
             <ul class="categories-container">
-              <li class="category-container" v-for="item in categories" :key="item">
-                <input type="checkbox" :id="`${item}-checkbox`">
+              <li
+                class="category-container"
+                v-for="item in categories"
+                :key="item"
+              >
+                <input type="checkbox" :id="`${item}-checkbox`" />
                 <label :for="`${item}-checkbox`">{{ item }}</label>
                 <span>()</span>
               </li>
@@ -78,11 +82,24 @@
             <div class="hvmfr-title">
               <p>Price Range</p>
             </div>
-            <div class="range-slider">
-              <div class="range-progress"></div>
-              <div class="range">
-                <input type="range">
-                <input type="range">
+            <div class="range-slider-container">
+              <div class="range-slider" ref="rangeSlider">
+                <div class="range-progress" :style="{
+                  left: handleRange.left,
+                  width: handleRange.width
+                }"></div>
+                <input
+                  type="range"
+                  :min="handleRange.minPrice"
+                  :max="handleRange.maxPrice"
+                  v-model="rangeMin"
+                />
+                <input
+                  type="range"
+                  :min="handleRange.minPrice"
+                  :max="handleRange.maxPrice"
+                  v-model="rangeMax"
+                />
               </div>
             </div>
             <div class="range-values">
@@ -99,8 +116,12 @@
               <p>Size</p>
             </div>
             <ul class="sizes-container">
-              <li class="size" v-for="item in ['small', 'medium', 'large']" :key="item">
-                <input type="checkbox" :id="`${item}-checkbox`">
+              <li
+                class="size"
+                v-for="item in ['small', 'medium', 'large']"
+                :key="item"
+              >
+                <input type="checkbox" :id="`${item}-checkbox`" />
                 <label :for="`${item}-checkbox`">{{ item }}</label>
                 <span>()</span>
               </li>
@@ -115,7 +136,11 @@
         <div class="products-container">
           <div class="sort-container"></div>
           <div class="products">
-            <div class="product-card" v-for="item in products.slice(0, 9)" :key="item.id">
+            <div
+              class="product-card"
+              v-for="item in products.slice(0, 9)"
+              :key="item.id"
+            >
               <div class="pc-top-container">
                 <div class="pct-discount-container" v-if="item.discountPrice">
                   <p>{{ item.discountPrice.discount }}% OFF</p>
@@ -135,7 +160,7 @@
                   @mousemove="handleMove"
                   @mouseleave="resetZoom"
                 >
-                  <img :src="item.src" :alt="item.name" loading="lazy" />
+                  <!-- <img :src="item.src" :alt="item.name" loading="lazy" /> -->
                 </div>
               </div>
               <div class="pc-main-container">
@@ -165,20 +190,23 @@
 </template>
 <script setup>
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
+const rangeMin = ref(0);
+const rangeMax = ref(0);
+const rangeSlider = ref(null);
+const rangeWidth = ref(null);
 const modules = [Pagination, Navigation];
 const store = useStore();
 const products = computed(() => store.getters["product/getProducts"]);
 const banners = computed(() => store.getters["product/getBanners"]);
 const categories = computed(() => {
   return [...new Set(products.value.map((item) => item?.category))];
-})
-
+});
 function handleMove(e) {
   const container = e.currentTarget;
   const img = container.querySelector("img");
@@ -191,12 +219,54 @@ function handleMove(e) {
   img.style.transformOrigin = `${x}% ${y}%`;
   img.style.transform = "scale(1.8)";
 }
-
 function resetZoom(e) {
   const img = e.currentTarget.querySelector("img");
   img.style.transform = "scale(1)";
   img.style.transformOrigin = "center center";
 }
+onMounted(() => {
+  const rangeStyles = getComputedStyle(rangeSlider.value);
+  rangeWidth.value = parseInt(rangeStyles.width);
+});
+const handleRange = computed(() => {
+  // progress.style.left = (min.value / 1000) * 300 + "px";
+  //   progress.style.width = ((max.value - min.value) / 1000) * 300 + "px";
+  // const left = rangeMin.value / (rangeMax.value - rangeMin.value) * rangeWidth.value
+  const minPrice = parseInt(
+    Math.min(...products.value.map((item) => item.price)),
+  );
+  const maxPrice = parseInt(
+    Math.max(...products.value.map((item) => item.price)),
+  );
+  const left = (rangeMin.value / maxPrice) * rangeWidth.value;
+  const width =
+    ((rangeMax.value - rangeMin.value) / maxPrice) * rangeWidth.value;
+  return {
+    minPrice: minPrice,
+    maxPrice: maxPrice,
+    left: left + "px",
+    width: width + "px",
+  };
+});
+watch(
+  handleRange,
+  (val) => {
+    rangeMin.value = val.minPrice;
+    rangeMax.value = val.maxPrice;
+  },
+  { immediate: true },
+);
+watch(rangeMin, (val) => {
+  if (val > rangeMax.value - 10) {
+    rangeMin.value = rangeMax.value - 10;
+  }
+});
+
+watch(rangeMax, (val) => {
+  if (val < rangeMin.value + 10) {
+    rangeMax.value = rangeMin.value + 10;
+  }
+});
 </script>
 <style lang="scss" scoped>
 :root {
@@ -398,6 +468,8 @@ function resetZoom(e) {
       gap: clamp(20px, 2.2vw, 40px);
       .hv-main-filter-container {
         border: 1px solid blue;
+        background-color: rgba(240, 240, 240, 0.4);
+        backdrop-filter: blur(14px) saturate(180%);
         .hvmfc-title,
         .hvmfr-title,
         .hvmfs-title {
@@ -412,7 +484,8 @@ function resetZoom(e) {
           padding: 0 3%;
           margin-bottom: clamp(10px, 1.2vw, 20px);
           .categories-container,
-          .range-slider,
+          .range-slider-container,
+          .range-values,
           .sizes-container {
             padding: 0 clamp(10px, 1.2vw, 20px);
             display: grid;
@@ -440,6 +513,35 @@ function resetZoom(e) {
               }
               span {
                 margin-left: auto;
+              }
+            }
+            .range-slider {
+              position: relative;
+              height: clamp(4px, 1.2vw, 8px);
+              background-color: rgba(0, 180, 0, 0.1);
+              border-radius: 25px;
+              .range-progress {
+                position: absolute;
+                height: 100%;
+                background-color: rgb(0, 180, 0);
+              }
+              input[type="range"] {
+                position: absolute;
+                width: 100%;
+                appearance: none;
+                pointer-events: none;
+                background: none;
+                height: 100%;
+              }
+              input[type="range"]::-webkit-slider-thumb {
+                appearance: none;
+                width: clamp(10px, 1.2vw, 18px);
+                height: clamp(10px, 1.2vw, 18px);
+                border-radius: 50%;
+                border: 3px solid rgb(255, 255, 255);
+                background-color: rgb(0, 180, 0);
+                pointer-events: auto;
+                cursor: pointer;
               }
             }
           }
