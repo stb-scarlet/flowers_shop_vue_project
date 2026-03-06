@@ -71,10 +71,16 @@
                 class="category-container"
                 v-for="item in categories"
                 :key="item"
+                :class="{ 'active-filter': category.includes(item) }"
               >
-                <input type="checkbox" :id="`${item}-checkbox`" />
+                <input
+                  type="checkbox"
+                  :id="`${item}-checkbox`"
+                  :value="item"
+                  v-model="category"
+                />
                 <label :for="`${item}-checkbox`">{{ item }}</label>
-                <span>()</span>
+                <span>({{ productsQuantity(item) }})</span>
               </li>
             </ul>
           </div>
@@ -82,33 +88,43 @@
             <div class="hvmfr-title">
               <p>Price Range</p>
             </div>
-            <div class="range-slider-container">
-              <div class="range-slider" ref="rangeSlider">
-                <div class="range-progress" :style="{
-                  left: handleRange.left,
-                  width: handleRange.width
-                }"></div>
+            <div class="range-container">
+              <div class="range-slider">
+                <div class="range-progress" :style="rangeProgress"></div>
                 <input
                   type="range"
-                  :min="handleRange.minPrice"
-                  :max="handleRange.maxPrice"
+                  :min="minPrice"
+                  :max="maxPrice"
                   v-model="rangeMin"
                 />
                 <input
                   type="range"
-                  :min="handleRange.minPrice"
-                  :max="handleRange.maxPrice"
+                  :min="minPrice"
+                  :max="maxPrice"
                   v-model="rangeMax"
                 />
               </div>
-            </div>
-            <div class="range-values">
-              <div class="rv-min-value">
-                <p>Min</p>
-              </div>
-              <div class="rv-max-value">
-                <p>Max</p>
-              </div>
+              <form class="range-field-container" @submit.prevent="handlePrice">
+                <div class="range-field">
+                  <label for="minNumber" class="rf-min">
+                    <p>Min:</p>
+                    <input
+                      type="number"
+                      id="minNumber"
+                      v-model="priceNumberMin"
+                    />
+                  </label>
+                  <label for="maxNumber" class="rf-max">
+                    <p>Max:</p>
+                    <input
+                      type="number"
+                      id="maxNumber"
+                      v-model="priceNumberMax"
+                    />
+                  </label>
+                </div>
+                <button type="submit" class="rf-filter">Filter</button>
+              </form>
             </div>
           </div>
           <div class="hvmf-size-container">
@@ -120,10 +136,16 @@
                 class="size"
                 v-for="item in ['small', 'medium', 'large']"
                 :key="item"
+                :class="{ 'active-filter': size.includes(item) }"
               >
-                <input type="checkbox" :id="`${item}-checkbox`" />
+                <input
+                  type="checkbox"
+                  :id="`${item}-checkbox`"
+                  :value="item"
+                  v-model="size"
+                />
                 <label :for="`${item}-checkbox`">{{ item }}</label>
-                <span>()</span>
+                <span>({{ productsQuantity(item) }})</span>
               </li>
             </ul>
           </div>
@@ -135,54 +157,69 @@
         </div>
         <div class="products-container">
           <div class="sort-container"></div>
-          <div class="products">
-            <div
-              class="product-card"
-              v-for="item in products.slice(0, 9)"
+          <swiper
+            :slides-per-view="3"
+            :slides-per-group="3"
+            :grid="{ rows: 3, fill: 'row' }"
+            :space-between="30"
+            :pagination="{ clickable: true }"
+            :modules="modules"
+            class="products-swiper"
+          >
+            <swiper-slide
+              class="products-swiper-slide"
+              v-for="item in filteredProducts"
               :key="item.id"
             >
-              <div class="pc-top-container">
-                <div class="pct-discount-container" v-if="item.discountPrice">
-                  <p>{{ item.discountPrice.discount }}% OFF</p>
-                </div>
-                <div class="pct-actions-container">
-                  <button class="pct-wishlist-container">
-                    <div class="pct-wishlist-box">
-                      <img src="/action-icons/wishlist-icon.png" alt="" />
+              <div class="products">
+                <div class="product-card">
+                  <div class="pc-top-container">
+                    <div
+                      class="pct-discount-container"
+                      v-if="item.discountPrice"
+                    >
+                      <p>{{ item.discountPrice.discount }}% OFF</p>
                     </div>
-                  </button>
-                  <router-link to="" class="pct-view-container">
-                    <i class="fas fa-eye"></i>
-                  </router-link>
-                </div>
-                <div
-                  class="pct-image-container"
-                  @mousemove="handleMove"
-                  @mouseleave="resetZoom"
-                >
-                  <!-- <img :src="item.src" :alt="item.name" loading="lazy" /> -->
-                </div>
-              </div>
-              <div class="pc-main-container">
-                <div class="pcm-name-container">
-                  <p>{{ item.name }}</p>
-                </div>
-                <div class="pcm-actions-container">
-                  <div class="pcm-price-container">
-                    <div class="pcm-old-price" v-if="item.discountPrice">
-                      <p>{{ item.discountPrice.oldPrice.toFixed(2) }}</p>
+                    <div class="pct-actions-container">
+                      <button class="pct-wishlist-container">
+                        <div class="pct-wishlist-box">
+                          <img src="/action-icons/wishlist-icon.png" alt="" />
+                        </div>
+                      </button>
+                      <router-link to="" class="pct-view-container">
+                        <i class="fas fa-eye"></i>
+                      </router-link>
                     </div>
-                    <p>{{ item.price.toFixed(2) }}</p>
+                    <div
+                      class="pct-image-container"
+                      @mousemove="handleMove"
+                      @mouseleave="resetZoom"
+                    >
+                      <!-- <img :src="item.src" :alt="item.name" loading="lazy" /> -->
+                    </div>
                   </div>
-                  <button class="pcm-cart-container">
-                    <div class="pcm-cart-box">
-                      <img src="/action-icons/cart-icon.png" alt="" />
+                  <div class="pc-main-container">
+                    <div class="pcm-name-container">
+                      <p>{{ item.name }}</p>
                     </div>
-                  </button>
+                    <div class="pcm-actions-container">
+                      <div class="pcm-price-container">
+                        <div class="pcm-old-price" v-if="item.discountPrice">
+                          <p>{{ item.discountPrice.oldPrice.toFixed(2) }}</p>
+                        </div>
+                        <p>{{ item.price.toFixed(2) }}</p>
+                      </div>
+                      <button class="pcm-cart-container">
+                        <div class="pcm-cart-box">
+                          <img src="/action-icons/cart-icon.png" alt="" />
+                        </div>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </swiper-slide>
+          </swiper>
         </div>
       </div>
     </div>
@@ -194,22 +231,132 @@ import { computed, ref, watch, onMounted } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/grid";
 import "swiper/css/navigation";
-import { Pagination, Navigation } from "swiper/modules";
-const rangeMin = ref(0);
-const rangeMax = ref(0);
-const rangeSlider = ref(null);
-const rangeWidth = ref(null);
-const modules = [Pagination, Navigation];
+import { Pagination, Navigation, Grid } from "swiper/modules";
+import product from "@/store/modules/product";
+
+const modules = [Pagination, Navigation, Grid];
 const store = useStore();
+const category = ref([]);
+const size = ref([]);
 const products = computed(() => store.getters["product/getProducts"]);
 const banners = computed(() => store.getters["product/getBanners"]);
 const categories = computed(() => {
-  return [...new Set(products.value.map((item) => item?.category))];
+  return [...new Set(products.value.map((p) => p?.category))];
 });
+
+const minPrice = computed(() =>
+  Math.min(...products.value.map((p) => p.price)),
+);
+
+const maxPrice = computed(() =>
+  Math.max(...products.value.map((p) => p.price)),
+);
+
+const rangeMin = ref(0);
+const rangeMax = ref(0);
+
+const priceNumberMin = ref(0);
+const priceNumberMax = ref(0);
+
+const minGap = 10;
+
+/* ---------- INIT ---------- */
+
+onMounted(() => {
+  rangeMin.value = minPrice.value;
+  rangeMax.value = maxPrice.value;
+
+  priceNumberMin.value = parseInt(rangeMin.value);
+  priceNumberMax.value = parseInt(rangeMax.value);
+});
+
+/* ---------- FILTER PRODUCTS ---------- */
+
+const productsQuantity = (el) => {
+  return (
+    products.value.filter((p) => el.includes(p.category)).length ||
+    products.value.filter((p) => p.sizes.some((s) => el.includes(s))).length
+  );
+};
+
+const filteredProducts = computed(() => {
+  let result = products.value;
+  if (category.value.length) {
+    result = result.filter((p) => category.value.includes(p.category));
+  }
+
+  if (rangeMin.value && rangeMax.value) {
+    result = result.filter(
+      (p) => p.price >= rangeMin.value && p.price <= rangeMax.value,
+    );
+  }
+
+  if (size.value.length) {
+    result = result.filter((p) => p.sizes.some((s) => size.value.includes(s)));
+  }
+
+  return result;
+});
+
+/* ---------- RANGE PROGRESS ---------- */
+
+const rangeProgress = computed(() => {
+  const range = maxPrice.value - minPrice.value;
+
+  const left = ((rangeMin.value - minPrice.value) / range) * 100;
+
+  const width = ((rangeMax.value - rangeMin.value) / range) * 100;
+
+  return {
+    left: left + "%",
+    width: width + "%",
+  };
+});
+
+/* ---------- RANGE PRICE FIELD ---------- */
+
+const handlePrice = () => {
+  if (priceNumberMin.value > rangeMax.value - minGap) {
+    priceNumberMin.value = parseInt(rangeMax.value - minGap);
+  } else if (priceNumberMin.value < minPrice.value) {
+    priceNumberMin.value = parseInt(minPrice.value);
+  } else if (priceNumberMax.value > maxPrice.value) {
+    priceNumberMax.value = parseInt(maxPrice.value);
+  }
+
+  rangeMin.value = priceNumberMin.value;
+  rangeMax.value = priceNumberMax.value;
+};
+
+/* ---------- WATCHERS ---------- */
+
+watch(rangeMin, (val) => {
+  if (val > rangeMax.value - minGap) {
+    rangeMin.value = rangeMax.value - minGap;
+  } else if (val < minPrice.value) {
+    rangeMin.value = minPrice.value;
+  }
+  priceNumberMin.value = parseInt(val);
+});
+
+watch(rangeMax, (val) => {
+  if (val < rangeMin.value + minGap) {
+    rangeMax.value = rangeMin.value + minGap;
+  } else if (val > maxPrice.value) {
+    rangeMax.value = maxPrice.value;
+  }
+  priceNumberMax.value = parseInt(val);
+});
+
+/* ---------- IMAGE ZOOM ---------- */
+
 function handleMove(e) {
   const container = e.currentTarget;
   const img = container.querySelector("img");
+
+  if (!img) return;
 
   const rect = container.getBoundingClientRect();
 
@@ -219,54 +366,15 @@ function handleMove(e) {
   img.style.transformOrigin = `${x}% ${y}%`;
   img.style.transform = "scale(1.8)";
 }
+
 function resetZoom(e) {
   const img = e.currentTarget.querySelector("img");
-  img.style.transform = "scale(1)";
-  img.style.transformOrigin = "center center";
-}
-onMounted(() => {
-  const rangeStyles = getComputedStyle(rangeSlider.value);
-  rangeWidth.value = parseInt(rangeStyles.width);
-});
-const handleRange = computed(() => {
-  // progress.style.left = (min.value / 1000) * 300 + "px";
-  //   progress.style.width = ((max.value - min.value) / 1000) * 300 + "px";
-  // const left = rangeMin.value / (rangeMax.value - rangeMin.value) * rangeWidth.value
-  const minPrice = parseInt(
-    Math.min(...products.value.map((item) => item.price)),
-  );
-  const maxPrice = parseInt(
-    Math.max(...products.value.map((item) => item.price)),
-  );
-  const left = (rangeMin.value / maxPrice) * rangeWidth.value;
-  const width =
-    ((rangeMax.value - rangeMin.value) / maxPrice) * rangeWidth.value;
-  return {
-    minPrice: minPrice,
-    maxPrice: maxPrice,
-    left: left + "px",
-    width: width + "px",
-  };
-});
-watch(
-  handleRange,
-  (val) => {
-    rangeMin.value = val.minPrice;
-    rangeMax.value = val.maxPrice;
-  },
-  { immediate: true },
-);
-watch(rangeMin, (val) => {
-  if (val > rangeMax.value - 10) {
-    rangeMin.value = rangeMax.value - 10;
-  }
-});
 
-watch(rangeMax, (val) => {
-  if (val < rangeMin.value + 10) {
-    rangeMax.value = rangeMin.value + 10;
-  }
-});
+  if (!img) return;
+
+  img.style.transform = "scale(1)";
+  img.style.transformOrigin = "center";
+}
 </script>
 <style lang="scss" scoped>
 :root {
@@ -462,46 +570,43 @@ watch(rangeMax, (val) => {
       }
     }
     .hv-products-section {
-      border: 1px solid red;
       display: grid;
       grid-template-columns: 24% 1fr;
       gap: clamp(20px, 2.2vw, 40px);
       .hv-main-filter-container {
-        border: 1px solid blue;
-        background-color: rgba(240, 240, 240, 0.4);
-        backdrop-filter: blur(14px) saturate(180%);
         .hvmfc-title,
         .hvmfr-title,
         .hvmfs-title {
           font-size: clamp(10px, 4vw, 20px);
-          font-weight: 700;
+          font-weight: 500;
           color: rgb(0, 0, 0);
           margin-bottom: clamp(4px, 1.2vw, 12px);
         }
         .hvmf-categories-container,
         .hvmf-range-container,
         .hvmf-size-container {
-          padding: 0 3%;
-          margin-bottom: clamp(10px, 1.2vw, 20px);
+          margin-bottom: 30px;
           .categories-container,
-          .range-slider-container,
-          .range-values,
+          .range-container,
           .sizes-container {
             padding: 0 clamp(10px, 1.2vw, 20px);
             display: grid;
             gap: clamp(4px, 1.2vw, 12px);
+            color: rgb(100, 100, 100);
             .category-container,
             .size {
               list-style: none;
               text-transform: capitalize;
               font-size: clamp(8px, 3.6vw, 16px);
               font-weight: 500;
-              color: rgb(0, 0, 0);
               display: flex;
               align-items: center;
               transition: all 0.2s ease-in;
               cursor: pointer;
               &:hover {
+                color: rgba(0, 180, 0, 0.8);
+              }
+              &.active-filter {
                 color: rgba(0, 180, 0, 0.8);
               }
               input {
@@ -517,11 +622,12 @@ watch(rangeMax, (val) => {
             }
             .range-slider {
               position: relative;
-              height: clamp(4px, 1.2vw, 8px);
+              height: clamp(2px, 1.2vw, 4px);
               background-color: rgba(0, 180, 0, 0.1);
               border-radius: 25px;
               .range-progress {
                 position: absolute;
+                border-radius: 25px;
                 height: 100%;
                 background-color: rgb(0, 180, 0);
               }
@@ -535,187 +641,240 @@ watch(rangeMax, (val) => {
               }
               input[type="range"]::-webkit-slider-thumb {
                 appearance: none;
-                width: clamp(10px, 1.2vw, 18px);
-                height: clamp(10px, 1.2vw, 18px);
+                width: clamp(10px, 1.2vw, 16px);
+                height: clamp(10px, 1.2vw, 16px);
                 border-radius: 50%;
-                border: 3px solid rgb(255, 255, 255);
-                background-color: rgb(0, 180, 0);
+                border: 2px solid rgb(0, 180, 0);
+                background-color: rgb(255, 255, 255);
                 pointer-events: auto;
-                cursor: pointer;
+                cursor: grab;
+                &:active {
+                  cursor: grabbing;
+                }
               }
+            }
+          }
+          .range-field-container {
+            display: grid;
+            gap: clamp(4px, 1.2vw, 12px);
+            .range-field {
+              display: flex;
+              gap: clamp(4px, 1.2vw, 12px);
+              .rf-min,
+              .rf-max {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: rgb(255, 255, 255);
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                padding: clamp(4px, 1.2vw, 10px);
+                border-radius: 6px;
+                font-size: clamp(4px, 3.6vw, 14px);
+                cursor: pointer;
+                input {
+                  width: 100%;
+                  height: 100%;
+                  border: none;
+                  outline: none;
+                  background-color: transparent;
+                  padding-left: clamp(1px, 1.2vw, 4px);
+                  font-size: clamp(4px, 3.6vw, 14.8px);
+                }
+              }
+            }
+            .rf-filter {
+              width: 100%;
+              background-color: rgb(0, 180, 0);
+              border: 1px solid rgb(255, 255, 255);
+              border-radius: 6px;
+              padding: clamp(4px, 1.2vw, 6px);
+              font-size: clamp(8px, 3.6vw, 16px);
+              color: rgb(240, 240, 240);
+              font-family: "Quicksand", sans-serif;
+              font-weight: 700;
+              cursor: pointer;
+              &:hover {
+                background-color: rgba(0, 180, 0, 0.8);
+              }
+            }
+          }
+        }
+        .hvmf-banner-container {
+          padding: 0 clamp(10px, 1.2vw, 20px);
+          .hvmfb-image {
+            width: 100%;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
             }
           }
         }
       }
       .products-container {
-        border: 1px solid black;
-        width: 100%;
-        gap: clamp(10px, 1.2vw, 20px);
+        min-width: 0;
         .sort-container {
           height: 50px;
           margin-bottom: clamp(10px, 1.2vw, 20px);
           border: 1px solid red;
         }
-        .products {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: clamp(10px, 2.2vw, 40px);
-          .product-card {
-            .pc-top-container {
-              margin-bottom: clamp(4px, 1.2vw, 10px);
-              position: relative;
-              .pct-discount-container {
-                position: absolute;
-                z-index: 1;
-                top: 4%;
-                transform: translateY(-4%);
-                background-color: rgb(0, 180, 0);
-                padding: clamp(2px, 0.8vw, 8px) clamp(4px, 2.8vw, 22px)
-                  clamp(2px, 0.8vw, 8px) clamp(4px, 0.8vw, 18px);
-                font-weight: 500;
-                font-size: clamp(8px, 2.6vw, 18px);
-                color: rgb(240, 240, 240);
-                clip-path: polygon(
-                  0 50%,
-                  0 0,
-                  100% 0,
-                  90% 50%,
-                  100% 100%,
-                  0 100%
-                );
-              }
-              .pct-actions-container {
-                position: absolute;
-                z-index: 1;
-                top: 3.2%;
-                right: 3.2%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                .pct-wishlist-container {
-                  padding: clamp(2px, 1.2vw, 4px);
-                  border: 0;
-                  border-radius: 50%;
-                  background-color: rgba(255, 255, 255, 0.4);
-                  backdrop-filter: blur(10px) saturate(180%);
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  margin-bottom: clamp(4px, 1.2vw, 6px);
-                  transition: all 0.2s;
-                  cursor: pointer;
-                  .pct-wishlist-box {
-                    height: clamp(12px, 4vw, 20px);
-                    width: clamp(12px, 4vw, 20px);
+        .products-swiper {
+          .products-swiper-slide {
+            border: 1px solid red;
+            .products {
+              .product-card {
+                .pc-top-container {
+                  margin-bottom: clamp(4px, 1.2vw, 10px);
+                  position: relative;
+                  .pct-discount-container {
+                    position: absolute;
+                    z-index: 1;
+                    top: 4%;
+                    transform: translateY(-4%);
+                    background-color: rgb(0, 180, 0);
+                    padding: clamp(2px, 0.8vw, 8px) clamp(4px, 2.8vw, 22px)
+                      clamp(2px, 0.8vw, 8px) clamp(4px, 0.8vw, 18px);
+                    font-weight: 500;
+                    font-size: clamp(8px, 2.6vw, 18px);
+                    color: rgb(240, 240, 240);
+                    clip-path: polygon(
+                      0 50%,
+                      0 0,
+                      100% 0,
+                      90% 50%,
+                      100% 100%,
+                      0 100%
+                    );
+                  }
+                  .pct-actions-container {
+                    position: absolute;
+                    z-index: 1;
+                    top: 3.2%;
+                    right: 3.2%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    .pct-wishlist-container {
+                      padding: clamp(2px, 1.2vw, 4px);
+                      border: 0;
+                      border-radius: 50%;
+                      background-color: rgba(255, 255, 255, 0.4);
+                      backdrop-filter: blur(10px) saturate(180%);
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      margin-bottom: clamp(4px, 1.2vw, 6px);
+                      transition: all 0.2s;
+                      cursor: pointer;
+                      .pct-wishlist-box {
+                        height: clamp(12px, 4vw, 20px);
+                        width: clamp(12px, 4vw, 20px);
+                        img {
+                          width: 100%;
+                          height: 100%;
+                          object-fit: cover;
+                        }
+                      }
+                      &:focus .wishlist-box {
+                        filter: brightness(0) saturate(100%) invert(21%)
+                          sepia(96%) saturate(7492%) hue-rotate(340deg)
+                          brightness(101%) contrast(101%);
+                      }
+                      &:hover {
+                        background-color: rgb(255, 255, 255);
+                      }
+                    }
+                    .pct-view-container {
+                      padding: clamp(2px, 1.2vw, 4px);
+                      border-radius: 50%;
+                      font-size: clamp(10px, 3.6vw, 16px);
+                      background-color: rgba(255, 255, 255, 0.4);
+                      backdrop-filter: blur(10px) saturate(180%);
+                      text-decoration: none;
+                      color: rgb(100, 100, 100);
+                      transition: all 0.2s;
+                      &:hover {
+                        color: rgb(0, 0, 0);
+                        background-color: rgb(255, 255, 255);
+                      }
+                    }
+                  }
+                  .pct-image-container {
+                    height: clamp(100px, 44vw, 350px);
+                    width: 100%;
+                    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
+                    border-radius: clamp(10px, 2.5vw, 16px);
+                    // aspect-ratio: 100% / clamp(100px, 44vw, 350px);
+                    overflow: hidden;
+                    cursor: zoom-in;
                     img {
                       width: 100%;
                       height: 100%;
                       object-fit: cover;
+                      border-radius: clamp(10px, 2.5vw, 16px);
+                      transition: transform 0.3s ease;
                     }
                   }
-                  // &:focus .wishlist-box {
-                  //   filter: brightness(0) saturate(100%) invert(21%) sepia(96%)
-                  //     saturate(7492%) hue-rotate(340deg) brightness(101%)
-                  //     contrast(101%);
-                  // }
-                  &:hover {
-                    background-color: rgb(255, 255, 255);
+                  @media (hover: none) {
+                    .pct-image-container {
+                      cursor: default;
+                    }
                   }
                 }
-                .pct-view-container {
-                  padding: clamp(2px, 1.2vw, 4px);
-                  border-radius: 50%;
-                  font-size: clamp(10px, 3.6vw, 16px);
-                  background-color: rgba(255, 255, 255, 0.4);
-                  backdrop-filter: blur(10px) saturate(180%);
-                  text-decoration: none;
-                  color: rgb(100, 100, 100);
-                  transition: all 0.2s;
-                  &:hover {
+                .pc-main-container {
+                  padding: 0 3.2%;
+                  margin-top: auto;
+                  .pcm-name-container {
+                    font-size: clamp(8px, 3.6vw, 18px);
                     color: rgb(0, 0, 0);
-                    background-color: rgb(255, 255, 255);
+                    height: clamp(10px, 4.8vw, 26px);
+                    width: 100%;
+                    overflow: hidden;
                   }
-                }
-              }
-              .pct-image-container {
-                height: clamp(100px, 44vw, 350px);
-                width: 100%;
-                box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
-                border-radius: clamp(10px, 2.5vw, 16px);
-                // aspect-ratio: 100% / clamp(100px, 44vw, 350px);
-                overflow: hidden;
-                cursor: zoom-in;
-                img {
-                  width: 100%;
-                  height: 100%;
-                  object-fit: cover;
-                  border-radius: clamp(10px, 2.5vw, 16px);
-                  transition: transform 0.3s ease;
-                }
-              }
-              @media (hover: none) {
-                .pct-image-container {
-                  cursor: default;
-                }
-              }
-            }
-            .pc-main-container {
-              padding: 0 3.2%;
-              .pcm-name-container {
-                font-size: clamp(8px, 3.6vw, 18px);
-                color: rgb(0, 0, 0);
-                height: clamp(10px, 4.8vw, 26px);
-                width: 100%;
-                overflow: hidden;
-              }
-              .pcm-actions-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-end;
-                .pcm-price-container {
-                  font-size: clamp(10px, 4vw, 20px);
-                  color: rgb(0, 180, 0);
-                  font-weight: 700;
-                  .pcm-old-price {
-                    font-size: clamp(6px, 3vw, 14px);
-                    color: rgb(100, 100, 100);
-                    text-decoration: line-through;
-                    margin-bottom: -2.8px;
-                  }
-                }
-                .pcm-cart-container {
-                  padding: clamp(4px, 1.2vw, 8px);
-                  margin-top: clamp(4px, 1.2vw, 8px);
-                  border: 0;
-                  background-color: rgb(0, 180, 0);
-                  border-radius: clamp(4px, 1.2vw, 8px);
-                  color: rgb(255, 255, 255);
-                  font-size: clamp(8px, 3vw, 18px);
-                  cursor: pointer;
-                  transition: all 0.2s;
-                  .pcm-cart-box {
-                    height: clamp(12px, 5vw, 24px);
-                    width: clamp(12px, 5vw, 24px);
-                    filter: brightness(0) invert(1);
-                    img {
-                      width: 100%;
-                      height: 100%;
-                      object-fit: cover;
+                  .pcm-actions-container {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    .pcm-price-container {
+                      font-size: clamp(10px, 4vw, 20px);
+                      color: rgb(0, 180, 0);
+                      font-weight: 700;
+                      .pcm-old-price {
+                        font-size: clamp(6px, 3vw, 14px);
+                        color: rgb(100, 100, 100);
+                        text-decoration: line-through;
+                        margin-bottom: -2.8px;
+                      }
+                    }
+                    .pcm-cart-container {
+                      padding: clamp(4px, 1.2vw, 8px);
+                      margin-top: clamp(4px, 1.2vw, 8px);
+                      border: 0;
+                      background-color: rgb(0, 180, 0);
+                      border-radius: clamp(4px, 1.2vw, 8px);
+                      color: rgb(255, 255, 255);
+                      font-size: clamp(8px, 3vw, 18px);
+                      cursor: pointer;
+                      transition: all 0.2s;
+                      .pcm-cart-box {
+                        height: clamp(12px, 5vw, 24px);
+                        width: clamp(12px, 5vw, 24px);
+                        filter: brightness(0) invert(1);
+                        img {
+                          width: 100%;
+                          height: 100%;
+                          object-fit: cover;
+                        }
+                      }
+                      &:hover {
+                        background-color: rgba(0, 180, 0, 0.8);
+                      }
                     }
                   }
-                  &:hover {
-                    background-color: rgba(0, 180, 0, 0.8);
-                  }
                 }
               }
             }
-          }
-        }
-        @media (max-width: 575px) {
-          .products {
-            grid-template-columns: repeat(2, 48%);
-            gap: clamp(10px, 4.2vw, 40px) 4%;
           }
         }
       }
@@ -723,7 +882,7 @@ watch(rangeMax, (val) => {
     @media (max-width: 1024px) {
       .hv-products-section {
         grid-template-columns: 100%;
-        .main-filter-container {
+        .hv-main-filter-container {
           display: none;
         }
       }
