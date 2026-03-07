@@ -95,13 +95,15 @@
                   type="range"
                   :min="minPrice"
                   :max="maxPrice"
-                  v-model="rangeMin"
+                  step="1"
+                  v-model.number="rangeMin"
                 />
                 <input
                   type="range"
                   :min="minPrice"
                   :max="maxPrice"
-                  v-model="rangeMax"
+                  step="1"
+                  v-model.number="rangeMax"
                 />
               </div>
               <form class="range-field-container" @submit.prevent="handlePrice">
@@ -111,7 +113,7 @@
                     <input
                       type="number"
                       id="minNumber"
-                      v-model="priceNumberMin"
+                      v-model.number="priceNumberMin"
                     />
                   </label>
                   <label for="maxNumber" class="rf-max">
@@ -119,7 +121,7 @@
                     <input
                       type="number"
                       id="maxNumber"
-                      v-model="priceNumberMax"
+                      v-model.number="priceNumberMax"
                     />
                   </label>
                 </div>
@@ -156,12 +158,53 @@
           </div>
         </div>
         <div class="products-container">
-          <div class="sort-container"></div>
+          <div class="sort-container">
+            <div class="sort-status">
+              <ul class="ss-wrap">
+                <li
+                  class="ssw-item"
+                  v-for="item in ['All Plants', 'New Arrivals', 'Best Sellers']"
+                  :key="item"
+                  :class="{ 'active-status': status === item }"
+                >
+                  <button @click="status = item">
+                    {{ item }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="sort-by-container">
+              <div class="sb-text">
+                <button>Default Sorting</button>
+                <i class="fas fa-chevron-down"></i>
+              </div>
+              <ul class="sb-wrap">
+                <li class="sbw-item">
+                  <button></button>
+                </li>
+              </ul>
+            </div>
+          </div>
           <swiper
-            :slides-per-view="3"
-            :slides-per-group="3"
+            :breakpoints="{
+              0: {
+                slidesPerView: 2,
+                slidesPerGroup: 2,
+                spaceBetween: 10,
+              },
+              576: {
+                slidesPerView: 3,
+                slidesPerGroup: 3,
+                spaceBetween: 20,
+              },
+              1280: {
+                slidesPerView: 4,
+                slidesPerGroup: 4,
+                spaceBetween: 14,
+              },
+            }"
             :grid="{ rows: 3, fill: 'row' }"
-            :space-between="30"
+            :slides-per-group="4"
             :pagination="{ clickable: true }"
             :modules="modules"
             class="products-swiper"
@@ -239,6 +282,7 @@ import product from "@/store/modules/product";
 const modules = [Pagination, Navigation, Grid];
 const store = useStore();
 const category = ref([]);
+const status = ref("All Plants");
 const size = ref([]);
 const products = computed(() => store.getters["product/getProducts"]);
 const banners = computed(() => store.getters["product/getBanners"]);
@@ -260,7 +304,7 @@ const rangeMax = ref(0);
 const priceNumberMin = ref(0);
 const priceNumberMax = ref(0);
 
-const minGap = 10;
+const minGap = 100;
 
 /* ---------- INIT ---------- */
 
@@ -275,26 +319,31 @@ onMounted(() => {
 /* ---------- FILTER PRODUCTS ---------- */
 
 const productsQuantity = (el) => {
-  return (
-    products.value.filter((p) => el.includes(p.category)).length ||
-    products.value.filter((p) => p.sizes.some((s) => el.includes(s))).length
-  );
+  return products.value.filter((p) => p.category === el || p.sizes.includes(el))
+    .length;
 };
 
 const filteredProducts = computed(() => {
-  let result = products.value;
+  let result = [...products.value];
   if (category.value.length) {
     result = result.filter((p) => category.value.includes(p.category));
   }
 
   if (rangeMin.value && rangeMax.value) {
     result = result.filter(
-      (p) => p.price >= rangeMin.value && p.price <= rangeMax.value,
+      (p) =>
+        p.price >= Number(rangeMin.value) && p.price <= Number(rangeMax.value),
     );
   }
 
   if (size.value.length) {
     result = result.filter((p) => p.sizes.some((s) => size.value.includes(s)));
+  }
+
+  if (status.value == "New Arrivals") {
+    result.sort((a, b) => b.id - a.id);
+  } else if (status.value === "Best Sellers") {
+    result.sort((a, b) => b.reviews.length - a.reviews.length);
   }
 
   return result;
@@ -571,8 +620,8 @@ function resetZoom(e) {
     }
     .hv-products-section {
       display: grid;
-      grid-template-columns: 24% 1fr;
-      gap: clamp(20px, 2.2vw, 40px);
+      grid-template-columns: 22% 1fr;
+      gap: 16px;
       .hv-main-filter-container {
         .hvmfc-title,
         .hvmfr-title,
@@ -604,10 +653,10 @@ function resetZoom(e) {
               transition: all 0.2s ease-in;
               cursor: pointer;
               &:hover {
-                color: rgba(0, 180, 0, 0.8);
+                color: rgba(0, 180, 0, 0.5);
               }
               &.active-filter {
-                color: rgba(0, 180, 0, 0.8);
+                color: rgb(0, 180, 0);
               }
               input {
                 margin-right: clamp(4px, 1.2vw, 12px);
@@ -714,15 +763,88 @@ function resetZoom(e) {
       .products-container {
         min-width: 0;
         .sort-container {
-          height: 50px;
-          margin-bottom: clamp(10px, 1.2vw, 20px);
-          border: 1px solid red;
+          margin-bottom: 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .sort-status,
+          .sort-by-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .sb-text,
+            .ss-wrap,
+            .sb-wrap {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              list-style: none;
+              .ssw-item {
+                margin-right: 24px;
+                button {
+                  position: relative;
+                  background-color: transparent;
+                  color: rgb(100, 100, 100);
+                  border: none;
+                  cursor: pointer;
+                  font-size: clamp(8px, 3.6vw, 16px);
+                  font-family: "Quicksand", sans-serif;
+                  font-weight: 500;
+                  padding-bottom: 4px;
+                  transition: all 0.2s ease-in;
+                  &::after {
+                    content: "";
+                    position: absolute;
+                    transform: scale(0);
+                    transform-origin: right;
+                    border-radius: 25px;
+                    top: 100%;
+                    width: 100%;
+                    height: 2px;
+                    background-color: rgba(0, 180, 0, 0.5);
+                    left: 0;
+                    transition: all 0.2s ease-in;
+                  }
+                  &:hover,
+                  &:hover::after {
+                    color: rgba(0, 180, 0, 0.5);
+                    transform: scale(1);
+                    transform-origin: left;
+                  }
+                }
+                &.active-status button {
+                  color: rgb(0, 180, 0);
+                }
+              }
+              i {
+                margin-left: 4px;
+                font-size: clamp(4px, 3.6vw, 14px);
+                color: rgb(100, 100, 100);
+                padding-top: 2px;
+              }
+            }
+            .sb-text {
+              button {
+                background-color: transparent;
+                color: rgb(100, 100, 100);
+                border: none;
+                cursor: pointer;
+                font-size: clamp(8px, 3.6vw, 16px);
+                font-family: "Quicksand", sans-serif;
+                font-weight: 500;
+                transition: all 0.2s ease-in;
+              }
+            }
+          }
         }
         .products-swiper {
+          padding: 0 6px;
           .products-swiper-slide {
-            border: 1px solid red;
+            margin-bottom: clamp(8px, 4vw, 24px);
             .products {
               .product-card {
+                border-radius: clamp(10px, 2.5vw, 16px);
+                transition: all 0.4s;
                 .pc-top-container {
                   margin-bottom: clamp(4px, 1.2vw, 10px);
                   position: relative;
@@ -823,7 +945,8 @@ function resetZoom(e) {
                   }
                 }
                 .pc-main-container {
-                  padding: 0 3.2%;
+                  padding: 0 3.2% 3.2% 3.2%;
+                  border-radius: clamp(10px, 2.5vw, 16px);
                   margin-top: auto;
                   .pcm-name-container {
                     font-size: clamp(8px, 3.6vw, 18px);
@@ -874,6 +997,9 @@ function resetZoom(e) {
                   }
                 }
               }
+            }
+            &:hover .products .product-card {
+              box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.2);
             }
           }
         }
