@@ -173,14 +173,29 @@
                 </li>
               </ul>
             </div>
-            <div class="sort-by-container">
+            <div class="sort-by-container" :class="{ 'active-sort': toggleSort }">
               <div class="sb-text">
-                <button>Default Sorting</button>
-                <i class="fas fa-chevron-down"></i>
+                <button @click="toggleSort = !toggleSort">
+                  Default Sorting
+                  <i class="fas fa-chevron-down"></i>
+                </button>
               </div>
               <ul class="sb-wrap">
-                <li class="sbw-item">
-                  <button></button>
+                <li
+                  class="sbw-item"
+                  v-for="item in [
+                    'Default Sorting',
+                    'A - Z',
+                    'Z - A',
+                    'Price - High to Low',
+                    'Price - Low to High',
+                    'Rating - High to Low',
+                    'Rating - Low to High',
+                  ]"
+                  :key="item"
+                  :class="{ 'active-sort': sort === item }"
+                >
+                  <button @click="sort = item">{{ item }}</button>
                 </li>
               </ul>
             </div>
@@ -238,7 +253,7 @@
                       @mousemove="handleMove"
                       @mouseleave="resetZoom"
                     >
-                      <!-- <img :src="item.src" :alt="item.name" loading="lazy" /> -->
+                      <img :src="item.src" :alt="item.name" loading="lazy" />
                     </div>
                   </div>
                   <div class="pc-main-container">
@@ -282,7 +297,9 @@ import product from "@/store/modules/product";
 const modules = [Pagination, Navigation, Grid];
 const store = useStore();
 const category = ref([]);
+const toggleSort = ref(false);
 const status = ref("All Plants");
+const sort = ref("Default Sorting");
 const size = ref([]);
 const products = computed(() => store.getters["product/getProducts"]);
 const banners = computed(() => store.getters["product/getBanners"]);
@@ -340,10 +357,40 @@ const filteredProducts = computed(() => {
     result = result.filter((p) => p.sizes.some((s) => size.value.includes(s)));
   }
 
-  if (status.value == "New Arrivals") {
+  if (status.value === "New Arrivals") {
     result.sort((a, b) => b.id - a.id);
   } else if (status.value === "Best Sellers") {
     result.sort((a, b) => b.reviews.length - a.reviews.length);
+  }
+
+  if (sort.value === "Price - Low to High") {
+    result.sort((a, b) => a.price - b.price);
+  } else if (sort.value === "Price - High to Low") {
+    result.sort((a, b) => b.price - a.price);
+  } else if (sort.value === "A - Z") {
+    result.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sort.value === "Z - A") {
+    result.sort((a, b) => b.name.localeCompare(a.name));
+  } else if (sort.value === "Rating - High to Low") {
+    result.sort((a, b) => {
+      const ratingA =
+        a.reviews.reduce((total, review) => total + review.rating, 0) /
+        a.reviews.length;
+      const ratingB =
+        b.reviews.reduce((total, review) => total + review.rating, 0) /
+        b.reviews.length;
+      return ratingA - ratingB;
+    });
+  } else if (sort.value === "Rating - Low to High") {
+    result.sort((a, b) => {
+      const ratingA =
+        a.reviews.reduce((total, review) => total + review.rating, 0) /
+        a.reviews.length;
+      const ratingB =
+        b.reviews.reduce((total, review) => total + review.rating, 0) /
+        b.reviews.length;
+      return ratingB - ratingA;
+    });
   }
 
   return result;
@@ -352,6 +399,7 @@ const filteredProducts = computed(() => {
 /* ---------- RANGE PROGRESS ---------- */
 
 const rangeProgress = computed(() => {
+  ``;
   const range = maxPrice.value - minPrice.value;
 
   const left = ((rangeMin.value - minPrice.value) / range) * 100;
@@ -769,12 +817,12 @@ function resetZoom(e) {
           align-items: center;
           .sort-status,
           .sort-by-container {
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
             .sb-text,
-            .ss-wrap,
-            .sb-wrap {
+            .ss-wrap {
               display: flex;
               justify-content: center;
               align-items: center;
@@ -795,7 +843,7 @@ function resetZoom(e) {
                   &::after {
                     content: "";
                     position: absolute;
-                    transform: scale(0);
+                    transform: scaleX(0);
                     transform-origin: right;
                     border-radius: 25px;
                     top: 100%;
@@ -803,24 +851,22 @@ function resetZoom(e) {
                     height: 2px;
                     background-color: rgba(0, 180, 0, 0.5);
                     left: 0;
-                    transition: all 0.2s ease-in;
+                    transition: transform 0.3s ease;
                   }
                   &:hover,
                   &:hover::after {
                     color: rgba(0, 180, 0, 0.5);
-                    transform: scale(1);
+                    transform: scaleX(1);
                     transform-origin: left;
                   }
                 }
                 &.active-status button {
                   color: rgb(0, 180, 0);
+                  &::after {
+                    transform: scaleX(1);
+                    transform-origin: left;
+                  }
                 }
-              }
-              i {
-                margin-left: 4px;
-                font-size: clamp(4px, 3.6vw, 14px);
-                color: rgb(100, 100, 100);
-                padding-top: 2px;
               }
             }
             .sb-text {
@@ -833,6 +879,75 @@ function resetZoom(e) {
                 font-family: "Quicksand", sans-serif;
                 font-weight: 500;
                 transition: all 0.2s ease-in;
+                i {
+                  font-size: clamp(4px, 3.6vw, 14px);
+                  color: rgb(100, 100, 100);
+                  padding-top: 2px;
+                  transition: all 0.2s;
+                }
+                &:hover {
+                  color: rgb(0, 180, 0);
+                  i {
+                    color: rgb(0, 180, 0);
+                  }
+                }
+              }
+            }
+            .sb-wrap {
+              position: absolute;
+              padding: clamp(4px, 1.2vw, 10px) clamp(6px, 1.2vw, 16px);
+              min-width: 0;
+              top: 100%;
+              right: 0;
+              background-color: rgb(255, 255, 255);
+              box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.2);
+              border-radius: clamp(4px, 1.2vw, 10px);
+              list-style: none;
+              z-index: 2;
+              visibility: hidden;
+              opacity: 0;
+              transform: translateY(-4px);
+              transition: all 0.2s;
+              .sbw-item {
+                button {
+                  background-color: transparent;
+                  color: rgb(100, 100, 100);
+                  font-family: "Quicksand", sans-serif;
+                  font-weight: 500;
+                  font-size: clamp(8px, 3.6vw, 16px);
+                  width: 100%;
+                  text-align: left;
+                  padding: 4px 0;
+                  border: none;
+                  white-space: nowrap;
+                  transition: all 0.2s ease-in;
+                  cursor: pointer;
+                  &:hover {
+                    color: rgba(0, 180, 0, 0.5);
+                  }
+                }
+                &.active-sort button {
+                  color: rgb(0, 180, 0);
+                }
+              }
+            }
+            &.active-sort {
+              .sb-text {
+                button {
+                  color: rgb(0, 180, 0);
+                  i {
+                    color: rgb(0, 180, 0);
+                  }
+                }
+                i {
+                  padding-bottom: 2px;
+                  transform: rotate(-180deg);
+                }
+              }
+              .sb-wrap {
+                visibility: visible;
+                opacity: 1;
+                transform: translateY(0);
               }
             }
           }
