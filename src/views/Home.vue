@@ -173,7 +173,10 @@
                 </li>
               </ul>
             </div>
-            <div class="sort-by-container" :class="{ 'active-sort': toggleSort }">
+            <div
+              class="sort-by-container"
+              :class="{ 'active-sort': toggleSort }"
+            >
               <div class="sb-text">
                 <button @click="toggleSort = !toggleSort">
                   Default Sorting
@@ -253,7 +256,7 @@
                       @mousemove="handleMove"
                       @mouseleave="resetZoom"
                     >
-                      <img :src="item.src" :alt="item.name" loading="lazy" />
+                      <!-- <img :src="item.src" :alt="item.name" loading="lazy" /> -->
                     </div>
                   </div>
                   <div class="pc-main-container">
@@ -280,6 +283,62 @@
           </swiper>
         </div>
       </div>
+      <div class="hv-products-banner-container">
+        <div class="product-banner">
+          <div class="pb-image">
+            <img src="/public/product-images/13.png" alt="" />
+          </div>
+          <div class="pb-texts">
+            <p>Summer Cactus & Succulents</p>
+            <p>
+              We are an online plant shop offering a wide range of cheap and
+              trendy plants
+            </p>
+            <button>
+              Find More <span><i class="fas fa-arrow-right"></i></span>
+            </button>
+          </div>
+        </div>
+        <div class="product-banner">
+          <div class="pb-image">
+            <img src="/public/product-images/14.png" alt="" />
+          </div>
+          <div class="pb-texts">
+            <p>Styling Trends & Much More</p>
+            <p>
+              We are an online plant shop offering a wide range of cheap and
+              trendy plants
+            </p>
+            <button>
+              Find More <span><i class="fas fa-arrow-right"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="hv-blogs-container">
+        <div class="bc-title">
+          <h2>Out Blog Posts</h2>
+          <p>
+            We are an online plant shop offering a wide range of cheap and
+            trendy plants
+          </p>
+        </div>
+        <div class="posts-card-container">
+          <div class="post-card" v-for="item in blogs" :key="item.id">
+            <div class="pc-image">
+              <img :src="item.src" alt="" />
+            </div>
+            <div class="pc-main">
+              <p>{{ item.firstParagraph }}</p>
+              <p>{{ item.secondParagraph }}</p>
+              <p>{{ item.thirdParagraph }}</p>
+              <button>
+                Read More<span><i class="fas fa-arrow-right"></i></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -303,6 +362,7 @@ const sort = ref("Default Sorting");
 const size = ref([]);
 const products = computed(() => store.getters["product/getProducts"]);
 const banners = computed(() => store.getters["product/getBanners"]);
+const blogs = computed(() => store.getters["product/getBlogs"]);
 const categories = computed(() => {
   return [...new Set(products.value.map((p) => p?.category))];
 });
@@ -811,9 +871,8 @@ function resetZoom(e) {
       .products-container {
         min-width: 0;
         .sort-container {
-          margin-bottom: 16px;
+          margin-bottom: clamp(10px, 4.6vw, 16px);
           display: flex;
-          justify-content: space-between;
           align-items: center;
           .sort-status,
           .sort-by-container {
@@ -828,12 +887,13 @@ function resetZoom(e) {
               align-items: center;
               list-style: none;
               .ssw-item {
-                margin-right: 24px;
+                margin-right: clamp(4px, 2.6vw, 24px);
                 button {
                   position: relative;
                   background-color: transparent;
                   color: rgb(100, 100, 100);
                   border: none;
+                  white-space: nowrap;
                   cursor: pointer;
                   font-size: clamp(8px, 3.6vw, 16px);
                   font-family: "Quicksand", sans-serif;
@@ -917,7 +977,7 @@ function resetZoom(e) {
                   font-size: clamp(8px, 3.6vw, 16px);
                   width: 100%;
                   text-align: left;
-                  padding: 4px 0;
+                  padding: clamp(0px, 0.8vw, 4px) 0;
                   border: none;
                   white-space: nowrap;
                   transition: all 0.2s ease-in;
@@ -950,6 +1010,9 @@ function resetZoom(e) {
                 transform: translateY(0);
               }
             }
+          }
+          .sort-by-container {
+            margin-left: auto;
           }
         }
         .products-swiper {
@@ -1066,9 +1129,11 @@ function resetZoom(e) {
                   .pcm-name-container {
                     font-size: clamp(8px, 3.6vw, 18px);
                     color: rgb(0, 0, 0);
-                    height: clamp(10px, 4.8vw, 26px);
-                    width: 100%;
-                    overflow: hidden;
+                    p {
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    }
                   }
                   .pcm-actions-container {
                     display: flex;
@@ -1120,11 +1185,295 @@ function resetZoom(e) {
         }
       }
     }
+
+    .hv-blogs-container {
+      .bc-title {
+        text-align: center;
+        margin-bottom: clamp(6px, 2vw, 20px);
+        h2 {
+          font-size: clamp(12px, 4vw, 38px);
+          color: rgb(0, 0, 0);
+          font-weight: 700;
+          line-height: clamp(10px, 4.8vw, 38px);
+          margin-bottom: clamp(2px, 1vw, 6px);
+        }
+        p {
+          font-size: clamp(8px, 3vw, 20px);
+          line-height: clamp(8px, 4vw, 26px);
+          color: rgb(100, 100, 100);
+        }
+      }
+      .posts-card-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(8px, 2vw, 40px);
+        .post-card {
+          overflow: hidden;
+          .pc-image {
+            width: 100%;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-top-left-radius: clamp(4px, 2.5vw, 10px);
+              border-top-right-radius: clamp(4px, 2.5vw, 10px);
+            }
+          }
+          .pc-main {
+            padding: 3%;
+            background-color: rgba(0, 0, 0, 0.03);
+            border-bottom-left-radius: clamp(4px, 2.5vw, 10px);
+            border-bottom-right-radius: clamp(4px, 2.5vw, 10px);
+            height: clamp(120px, 20vw, 178px);
+            display: flex;
+            justify-content: start;
+            flex-direction: column;
+            align-items: flex-start;
+            p:nth-child(1) {
+              font-size: clamp(8px, 2vw, 16px);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              width: 100%;
+              color: rgb(0, 180, 0);
+              margin-bottom: clamp(2px, 1vw, 4px);
+            }
+            p:nth-child(2) {
+              font-size: clamp(12px, 4vw, 20px);
+              font-weight: 600;
+              margin-bottom: clamp(2px, 1vw, 4px);
+            }
+            p:nth-child(3) {
+              font-size: clamp(8px, 2vw, 16px);
+              color: rgb(100, 100, 100);
+            }
+            button {
+              background-color: transparent;
+              margin-top: auto;
+              border: none;
+              font-size: clamp(8px, 2vw, 16px);
+              color: rgb(0, 0, 0);
+              transition: all 0.2s;
+              cursor: pointer;
+              i {
+                margin-left: 4px;
+                font-size: clamp(6px, 2vw, 14px);
+              }
+              &:hover {
+                color: rgb(0, 180, 0);
+              }
+            }
+          }
+        }
+      }
+    }
     @media (max-width: 1024px) {
       .hv-products-section {
         grid-template-columns: 100%;
         .hv-main-filter-container {
           display: none;
+        }
+      }
+      .hv-blogs-container {
+        .posts-card-container {
+          grid-template-columns: repeat(3, 1fr);
+          .post-card {
+            .pc-main {
+              height: 178px;
+            }
+          }
+        }
+      }
+    }
+    @media (min-width: 769px) {
+      .hv-products-banner-container {
+        display: flex;
+        margin-bottom: clamp(50px, 7vw, 70vw);
+        gap: 24px;
+        .product-banner {
+          width: 50%;
+          height: clamp(100px, 24vw, 350px);
+          box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
+          border-radius: clamp(10px, 2.5vw, 16px);
+          overflow: hidden;
+          background: linear-gradient(
+            to left,
+            rgba(255, 255, 255, 0.2),
+            rgb(255, 255, 255) 60%
+          );
+          display: flex;
+          .pb-image {
+            height: 100%;
+            width: 40%;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+          .pb-texts {
+            width: 60%;
+            padding-right: clamp(10px, 100vw, 20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            text-align: right;
+            p:nth-child(1) {
+              font-size: clamp(12px, 1.8vw, 30px);
+              color: rgb(0, 0, 0);
+              font-weight: 700;
+              line-height: clamp(20px, 2.8vw, 32px);
+              margin-bottom: clamp(2px, 0.2vw, 10px);
+            }
+            p:nth-child(2) {
+              font-size: clamp(8px, 1.6vw, 20px);
+              line-height: clamp(10px, 2vw, 26px);
+              margin-bottom: clamp(4px, 1vw, 10px);
+              color: rgb(100, 100, 100);
+            }
+            button {
+              background-color: rgb(0, 180, 0);
+              border: none;
+              color: rgb(240, 240, 240);
+              padding: clamp(6px, 100vw, 10px) clamp(10px, 100vw, 20px);
+              border-radius: clamp(4px, 2vw, 8px);
+              font-size: clamp(8px, 1.4vw, 16px);
+              transition: all 0.2s;
+              cursor: pointer;
+              &:hover {
+                background-color: rgba(0, 180, 0, 0.8);
+              }
+            }
+          }
+        }
+        .product-banner:nth-child(1) {
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url(/banner-images/5.jpg);
+            z-index: -1;
+          }
+        }
+        .product-banner:nth-child(2) {
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url(/banner-images/6.jpg);
+            transform: rotate(180deg);
+            z-index: -1;
+          }
+        }
+      }
+    }
+    @media (max-width: 768px) {
+      .hv-products-banner-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: clamp(20px, 8vw, 70px);
+        gap: 24px;
+        .product-banner {
+          width: 100%;
+          height: clamp(100px, 40vw, 300px);
+          box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
+          border-radius: clamp(10px, 2.5vw, 16px);
+          overflow: hidden;
+          background: linear-gradient(
+            to left,
+            rgba(255, 255, 255, 0.2),
+            rgb(255, 255, 255) 60%
+          );
+          display: flex;
+          .pb-image {
+            height: 100%;
+            width: 40%;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+          .pb-texts {
+            width: 60%;
+            padding-right: clamp(4px, 2.4vw, 30px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            text-align: right;
+            p:nth-child(1) {
+              font-size: clamp(12px, 4vw, 38px);
+              color: rgb(0, 0, 0);
+              font-weight: 700;
+              line-height: clamp(10px, 4.8vw, 38px);
+              margin-bottom: clamp(2px, 1vw, 10px);
+            }
+            p:nth-child(2) {
+              font-size: clamp(8px, 3vw, 20px);
+              line-height: clamp(8px, 4vw, 26px);
+              margin-bottom: clamp(4px, 2vw, 20px);
+              color: rgb(100, 100, 100);
+            }
+            button {
+              background-color: rgb(0, 180, 0);
+              border: none;
+              color: rgb(240, 240, 240);
+              padding: clamp(4px, 2vw, 10px) clamp(6px, 2vw, 20px);
+              border-radius: clamp(4px, 2vw, 8px);
+              font-size: clamp(6px, 2.4vw, 16px);
+              transition: all 0.2s;
+              cursor: pointer;
+              &:hover {
+                background-color: rgba(0, 180, 0, 0.8);
+              }
+            }
+          }
+        }
+        .product-banner:nth-child(1) {
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url(/banner-images/5.jpg);
+            z-index: -1;
+          }
+        }
+        .product-banner:nth-child(2) {
+          position: relative;
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url(/banner-images/6.jpg);
+            transform: rotate(180deg);
+            z-index: -1;
+          }
+        }
+      }
+      .hv-blogs-container {
+        .posts-card-container {
+          grid-template-columns: repeat(2, 1fr);
+          .post-card {
+            .pc-main {
+              height: clamp(74px, 24vw, 150px);
+              p:nth-child(2) {
+                font-size: clamp(8px, 3vw, 20px);
+              }
+              p:nth-child(1),
+              p:nth-child(3),
+              button {
+                font-size: clamp(6px, 2vw, 16px);
+                i {
+                  font-size: clamp(4px, 2vw, 14px);
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -1133,6 +1482,9 @@ function resetZoom(e) {
 @media (max-width: 1024px) {
   .home-view {
     padding-bottom: clamp(30px, 13.4vw, 80px);
+    .hv-main-container {
+      padding: 0 clamp(2px, 2vw, 20px);
+    }
   }
 }
 </style>
