@@ -10,8 +10,8 @@
             dynamicBullets: true,
           }"
           :navigation="{
-            prevEl: '.swiper-custom-prev',
-            nextEl: '.swiper-custom-next',
+            prevEl: '.banner-swiper-prev',
+            nextEl: '.banner-swiper-next',
           }"
           :slides-per-view="1"
           :space-between="10"
@@ -53,10 +53,10 @@
             </div>
           </swiper-slide>
         </swiper>
-        <div class="swiper-custom-prev">
+        <div class="banner-swiper-prev">
           <i class="fas fa-angle-left"></i>
         </div>
-        <div class="swiper-custom-next">
+        <div class="banner-swiper-next">
           <i class="fas fa-angle-right"></i>
         </div>
       </div>
@@ -222,8 +222,12 @@
               },
             }"
             :grid="{ rows: 3, fill: 'row' }"
+            :pagination="pagination"
             :slides-per-group="4"
-            :pagination="{ clickable: true }"
+            :navigation="{
+              prevEl: '.products-swiper-prev',
+              nextEl: '.products-swiper-next',
+            }"
             :modules="modules"
             class="products-swiper"
           >
@@ -281,6 +285,15 @@
               </div>
             </swiper-slide>
           </swiper>
+          <div class="products-swiper-container">
+            <div class="products-swiper-prev">
+              <i class="fas fa-angle-left"></i>
+            </div>
+            <div class="products-swiper-pagination"></div>
+            <div class="products-swiper-next">
+              <i class="fas fa-angle-right"></i>
+            </div>
+          </div>
         </div>
       </div>
       <div class="hv-products-banner-container">
@@ -354,6 +367,24 @@ import { Pagination, Navigation, Grid } from "swiper/modules";
 import product from "@/store/modules/product";
 
 const modules = [Pagination, Navigation, Grid];
+const maxVisible = ref(4);
+
+const pagination = {
+  clickable: true,
+  dynamicBullets: true,
+  el: ".products-swiper-pagination",
+  renderBullet: (index, className) => {
+    if (index < maxVisible.value) {
+      return `<span class="${className}">${index + 1}</span>`;
+    }
+
+    if (index === maxVisible.value) {
+      return `<span class="swiper-pagination-ellipsis">...</span>`;
+    }
+
+    return "";
+  },
+};
 const store = useStore();
 const category = ref([]);
 const toggleSort = ref(false);
@@ -562,7 +593,7 @@ function resetZoom(e) {
     padding: 0 clamp(10px, 1vw, 20px);
     margin: 0 auto;
     .hv-banners-container {
-      height: clamp(80px, 30vw, 450px);
+      height: clamp(130px, 40vw, 450px);
       margin-bottom: clamp(4px, 2vw, 20px);
       position: relative;
       .banners-swiper {
@@ -617,7 +648,7 @@ function resetZoom(e) {
               margin-bottom: clamp(0px, 0.8vw, 12px);
               color: rgb(240, 240, 240);
               line-height: clamp(12px, 5vw, 52px);
-              font-size: clamp(10px, 4.4vw, 50px);
+              font-size: clamp(10px, 4vw, 50px);
               font-family: "Petit Formal Script", cursive;
               font-weight: 500;
               p {
@@ -635,11 +666,11 @@ function resetZoom(e) {
             .shop-link {
               text-decoration: none;
               button {
-                padding: clamp(2px, 0.8vw, 9px) clamp(4px, 0.8vw, 18px);
+                padding: clamp(2px, 1vw, 9px) clamp(4px, 1vw, 18px);
                 border-radius: clamp(2px, 1vw, 6px);
                 background-color: rgb(0, 180, 0);
                 color: rgb(240, 240, 240);
-                font-size: clamp(6px, 2.6vw, 16px);
+                font-size: clamp(6px, 1.4vw, 16px);
                 letter-spacing: clamp(0px, 0.1vw, 1.2px);
                 font-family: "Quicksand", sans-serif;
                 display: flex;
@@ -660,7 +691,6 @@ function resetZoom(e) {
             }
           }
         }
-
         .banners-swiper-slide:nth-child(2),
         .banners-swiper-slide:nth-child(3) {
           .banners-swiper-slide-container {
@@ -669,9 +699,15 @@ function resetZoom(e) {
             }
           }
         }
+        :deep(.swiper-pagination-bullet) {
+          background-color: rgb(240, 240, 240);
+        }
+        :deep(.swiper-pagination-bullet-active) {
+          background-color: rgba(0, 180, 0, 0.8);
+        }
       }
-      .swiper-custom-prev,
-      .swiper-custom-next {
+      .banner-swiper-prev,
+      .banner-swiper-next {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
@@ -693,35 +729,29 @@ function resetZoom(e) {
           background-color: rgb(240, 240, 240);
         }
       }
-      .swiper-custom-next {
+      .banner-swiper-next {
         right: 0%;
       }
-      .swiper-custom-prev {
+      .banner-swiper-prev {
         left: 0%;
       }
       &:hover {
-        .swiper-custom-next,
-        .swiper-custom-prev {
+        .banner-swiper-next,
+        .banner-swiper-prev {
           opacity: 1;
           visibility: visible;
         }
-        .swiper-custom-next {
+        .banner-swiper-next {
           right: 2%;
         }
-        .swiper-custom-prev {
+        .banner-swiper-prev {
           left: 2%;
         }
       }
-      :deep(.swiper-pagination-bullet) {
-        background-color: rgb(240, 240, 240);
-      }
-      :deep(.swiper-pagination-bullet-active) {
-        background-color: rgba(0, 180, 0, 0.8);
-      }
       @media (max-width: 992px) {
         :deep(.swiper-pagination-bullet),
-        .swiper-custom-next,
-        .swiper-custom-prev {
+        .banner-swiper-next,
+        .banner-swiper-prev {
           display: none;
         }
       }
@@ -1183,6 +1213,46 @@ function resetZoom(e) {
             }
           }
         }
+        .products-swiper-container {
+          display: flex;
+          align-items: center;
+          justify-content: end;
+          margin-bottom: clamp(20px, 10vw, 40px);
+          .products-swiper-prev,
+          .products-swiper-next {
+            display: inline-block;
+            font-size: clamp(10px, 4vw, 24px);
+            transition: all 0.2s ease-in;
+            &:hover {
+              color: rgb(0, 180, 0);
+            }
+          }
+          .products-swiper-pagination {
+            display: flex;
+            transform: translateX(0);
+            width: auto;
+            :deep(.swiper-pagination-bullet) {
+              background-color: rgb(100, 100, 100);
+              height: clamp(20px, 6vw, 34px);
+              width: clamp(20px, 6vw, 34px);
+              border-radius: 50%;
+              opacity: 1;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: rgb(240, 240, 240);
+              border-radius: 6px;
+              font-size: clamp(8px, 3vw, 16px);
+              &.swiper-pagination-bullet-active {
+                background-color: rgb(0, 180, 0);
+              }
+            }
+            :deep(.swiper-pagination-ellipsis) {
+              font-size: clamp(18px, 4vw, 24px);
+              align-self: flex-end;
+            }
+          }
+        }
       }
     }
 
@@ -1313,7 +1383,7 @@ function resetZoom(e) {
           }
           .pb-texts {
             width: 60%;
-            padding-right: clamp(10px, 100vw, 20px);
+            padding-right: clamp(10px, 2vw, 20px);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -1336,7 +1406,7 @@ function resetZoom(e) {
               background-color: rgb(0, 180, 0);
               border: none;
               color: rgb(240, 240, 240);
-              padding: clamp(6px, 100vw, 10px) clamp(10px, 100vw, 20px);
+              padding: clamp(8px, 1vw, 10px) clamp(10px, 1vw, 20px);
               border-radius: clamp(4px, 2vw, 8px);
               font-size: clamp(8px, 1.4vw, 16px);
               transition: all 0.2s;
@@ -1445,13 +1515,26 @@ function resetZoom(e) {
         }
         .product-banner:nth-child(2) {
           position: relative;
+          background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.2),
+            rgb(255, 255, 255) 60%
+          );
           &::after {
             content: "";
             position: absolute;
             inset: 0;
             background: url(/banner-images/6.jpg);
-            transform: rotate(180deg);
             z-index: -1;
+          }
+          .pb-image {
+            order: 1;
+          }
+          .pb-texts {
+            padding-right: 0;
+            padding-left: clamp(4px, 2.4vw, 30px);
+            align-items: flex-start;
+            text-align: left;
           }
         }
       }

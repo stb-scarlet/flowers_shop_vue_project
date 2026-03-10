@@ -257,9 +257,6 @@ const handleClick = (event) => {
   ) {
     return;
   }
-  searchButton.value?.classList.remove("active-action");
-  searchContainer.value?.classList.remove("search-container-show");
-  navLinks.value?.classList.remove("nav-links-hide");
   document.body.classList.remove("overlay");
   searchView.value?.classList.remove("search-view-show");
   languageList.value?.classList.remove("language-list-active");
@@ -510,7 +507,7 @@ const showSearchView = () => {
       background-color: rgb(240, 240, 240);
       margin-bottom: clamp(4px, 2vw, 12px);
       .main-navbar {
-        height: clamp(65px, 8vw, 80px);
+        height: clamp(65px, 6vw, 80px);
         max-width: 1500px;
         padding: 0 clamp(10px, 1vw, 20px);
         visibility: visible;
@@ -617,18 +614,18 @@ const showSearchView = () => {
               justify-content: center;
               align-items: center;
               transform: translate(-50%, -50%);
-              padding: 0 clamp(0px, 1vw, 20px);
+              padding: clamp(10px, 1.2vw, 16px) clamp(0px, 1vw, 20px);
               height: 100%;
               width: 100%;
               .search-container {
-                height: clamp(40px, 5vw, 55px);
+                height: 100%;
                 width: 100%;
-                border-radius: 10px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                background-color: rgb(255, 255, 255);
-                border: 1px solid rgba(0, 0, 0, 0.1);
+                background-color: rgb(0, 180, 0);
+                border: 1px solid rgb(0, 180, 0);
+                border-radius: clamp(4px, 2vw, 10px);
                 box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.15);
                 transform: translateY(-25px);
                 opacity: 0;
@@ -642,7 +639,8 @@ const showSearchView = () => {
                     border: none;
                     width: 100%;
                     height: 100%;
-                    background-color: transparent;
+                    background-color: rgb(255, 255, 255);
+                    border-radius: clamp(4px, 2vw, 10px);
                     padding-left: clamp(15px, 1vw, 20px);
                     font-size: clamp(18px, 1vw, 22px);
                     font-weight: 500;
@@ -665,23 +663,26 @@ const showSearchView = () => {
                   align-items: center;
                   justify-content: center;
                   .search-button {
-                    padding: 0 clamp(15px, 1vw, 20px);
+                    padding: 0 clamp(6px, 0.4vw, 14px);
                     height: 100%;
                     border-radius: 10px;
-                    font-size: clamp(14px, 1vw, 18px);
+                    font-size: clamp(16px, 1vw, 22px);
+                    border-top-right-radius: 10px;
+                    border-bottom-right-radius: 10px;
                     border: none;
                     display: flex;
-                    background-color: rgb(0, 180, 0);
+                    background-color: transparent;
                     color: white;
                     font-family: "Quicksand", sans-serif;
                     align-items: center;
                     transition: 0.2s ease-in;
+                    cursor: pointer;
                     &:hover {
                       background-color: rgba(0, 180, 0, 0.8);
                     }
                     .search-icon {
-                      width: 16px;
-                      height: 16px;
+                      width: clamp(16px, 1vw, 22px);
+                      height: clamp(16px, 1vw, 22px);
                       filter: invert(100%);
                       margin-right: 5px;
                       img {

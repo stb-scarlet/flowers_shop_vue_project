@@ -95,7 +95,6 @@
                         alt=""
                       />
                     </div>
-                    <span>Search</span>
                   </button>
                 </div>
               </div>
@@ -526,7 +525,7 @@ const showSearchView = () => {
       z-index: 1001;
       margin-bottom: clamp(4px, 2vw, 20px);
       .main-navbar {
-        padding: 0 clamp(2px, 2vw, 10px);
+        padding: 6px clamp(2px, 2vw, 10px) 2px;
         opacity: 1;
         visibility: visible;
         position: relative;
@@ -540,7 +539,6 @@ const showSearchView = () => {
           justify-content: space-between;
           align-items: center;
           padding: clamp(4px, 1vw, 10px);
-
           .middle-side {
             height: 100%;
             min-width: 0;
@@ -561,7 +559,8 @@ const showSearchView = () => {
                 height: 100%;
                 border: 1px solid rgb(0, 180, 0);
                 width: 100%;
-                border-radius: clamp(4px, 2vw, 10px);
+                border-radius: clamp(10px, 2.5vw, 25px);
+                overflow: hidden;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -574,7 +573,7 @@ const showSearchView = () => {
                     outline: none;
                     border: none;
                     background-color: rgb(240, 240, 240);
-                    border-radius: clamp(4px, 2vw, 10px);
+                    border-radius: clamp(10px, 2.5vw, 25px);
                     width: 100%;
                     height: 100%;
                     padding-left: clamp(14px, 1vw, 20px);
@@ -593,11 +592,8 @@ const showSearchView = () => {
                   align-items: center;
                   justify-content: center;
                   .search-button {
-                    padding: 0 clamp(8px, 1vw, 10px);
+                    padding: 0 clamp(10px, 2vw, 14px);
                     height: 100%;
-                    border-top-right-radius: 10px;
-                    border-bottom-right-radius: 10px;
-                    font-size: clamp(12px, 4vw, 18px);
                     border: none;
                     display: flex;
                     background-color: transparent;
@@ -606,8 +602,8 @@ const showSearchView = () => {
                     align-items: center;
                     transition: 0.2s ease-in;
                     .search-icon {
-                      width: clamp(12px, 2vw, 16px);
-                      height: clamp(12px, 2vw, 16px);
+                      width: clamp(20px, 3vw, 24px);
+                      height: clamp(20px, 3vw, 24px);
                       filter: invert(100%);
                       margin-right: 5px;
                       display: flex;
@@ -619,14 +615,10 @@ const showSearchView = () => {
                         object-fit: cover;
                       }
                     }
-
-                    @media (max-width: 576px) {
-                      .search-icon {
-                        margin-right: 0;
-                      }
-                      span {
-                        display: none;
-                      }
+                  }
+                  @media (max-width: 576px) {
+                    .search-button {
+                      display: none;
                     }
                   }
                 }
@@ -635,12 +627,11 @@ const showSearchView = () => {
                 position: absolute;
                 top: 110%;
                 width: 100%;
-                padding: 0 clamp(0px, 1vw, 20px);
                 opacity: 0;
                 visibility: hidden;
                 transition: all 0.2s ease-in;
                 .a {
-                  border-radius: clamp(10px, 1vw, 25px);
+                  border-radius: clamp(10px, 2.5vw, 25px);
                   box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.15);
                   height: 150px;
                   background-color: rgb(255, 255, 255);
@@ -664,8 +655,8 @@ const showSearchView = () => {
               height: 100%;
               width: clamp(35px, 8vw, 55px);
               background-color: rgb(255, 255, 255);
-              border-radius: clamp(4px, 2vw, 10px);
-              border: 1px solid rgba(0, 0, 0, 0.15);
+              border-radius: clamp(10px, 2.5vw, 25px);
+              border: 1px solid rgb(0, 180, 0);
               cursor: pointer;
               .burger-line {
                 position: absolute;
@@ -707,6 +698,7 @@ const showSearchView = () => {
                 transition: all 0.2s;
               }
               &.bb-active {
+                border-color: rgb(255, 25, 83);
                 .burger-line {
                   transform: scale(0);
                   background-color: rgb(255, 25, 83);
@@ -861,39 +853,30 @@ const showSearchView = () => {
             }
           }
         }
+        @media (min-width: 577px) {
+          .main-navbar-container {
+            height: clamp(40px, 8.8vw, 76px);
+          }
+        }
         &.main-navbar-show {
           opacity: 1;
           visibility: visible;
           position: fixed;
-          top: clamp(5px, 2vw, 15px);
+          top: 0;
           left: 50%;
           transform: translate(-50%, 0px);
           width: clamp(0px, 100%, 1500px);
-          padding: 0 clamp(2px, 2vw, 20px);
-          .main-navbar-container {
-            border-radius: clamp(10px, 2.5vw, 25px);
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(14px) saturate(180%);
-            -webkit-backdrop-filter: blur(14px) saturate(180%);
-            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.15);
-            padding: clamp(4px, 1vw, 10px) clamp(4px, 1vw, 20px);
-          }
+          background: rgba(255, 255, 255, 0.65);
+          backdrop-filter: blur(14px) saturate(180%);
+          -webkit-backdrop-filter: blur(14px) saturate(180%);
+          box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.15);
         }
         &.main-navbar-hide {
           position: fixed;
           width: clamp(0px, 100%, 1500px);
-          padding: 0 clamp(2px, 2vw, 20px);
           top: -80px;
           opacity: 0;
           visibility: hidden;
-          .main-navbar-container {
-            border-radius: clamp(10px, 2.5vw, 25px);
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(14px) saturate(180%);
-            -webkit-backdrop-filter: blur(14px) saturate(180%);
-            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.15);
-            padding: clamp(4px, 1vw, 10px) clamp(4px, 1vw, 20px);
-          }
         }
       }
     }
@@ -920,8 +903,8 @@ const showSearchView = () => {
           align-items: center;
           .action {
             margin: clamp(4px, 2vw, 10px) 0;
-            height: clamp(20px, 6vw, 40px);
-            width: clamp(20px, 6vw, 40px);
+            height: 26px;
+            width: 26px;
             img {
               width: 100%;
               height: 100%;
