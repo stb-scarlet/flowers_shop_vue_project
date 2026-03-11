@@ -311,6 +311,14 @@ const showSearchView = () => {
 };
 </script>
 <style lang="scss">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: rgb(245, 242, 235);
+}
 .desktop-navbar {
   display: none;
 }

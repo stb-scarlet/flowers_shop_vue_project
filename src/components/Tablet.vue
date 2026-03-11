@@ -534,7 +534,7 @@ const showSearchView = () => {
         transition: all 0.5s ease-out;
         z-index: 1000;
         .main-navbar-container {
-          height: clamp(40px, 10vw, 76px);
+          height: clamp(40px, 10vw, 70px);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -559,7 +559,7 @@ const showSearchView = () => {
                 height: 100%;
                 border: 1px solid rgb(0, 180, 0);
                 width: 100%;
-                border-radius: clamp(10px, 2.5vw, 25px);
+                border-radius: 10px;
                 overflow: hidden;
                 display: flex;
                 justify-content: space-between;
@@ -573,7 +573,7 @@ const showSearchView = () => {
                     outline: none;
                     border: none;
                     background-color: rgb(240, 240, 240);
-                    border-radius: clamp(10px, 2.5vw, 25px);
+                    border-radius: 10px;
                     width: 100%;
                     height: 100%;
                     padding-left: clamp(14px, 1vw, 20px);
@@ -592,7 +592,7 @@ const showSearchView = () => {
                   align-items: center;
                   justify-content: center;
                   .search-button {
-                    padding: 0 clamp(10px, 2vw, 14px);
+                    padding: 0 clamp(8px, 2vw, 10px);
                     height: 100%;
                     border: none;
                     display: flex;
@@ -602,8 +602,8 @@ const showSearchView = () => {
                     align-items: center;
                     transition: 0.2s ease-in;
                     .search-icon {
-                      width: clamp(20px, 3vw, 24px);
-                      height: clamp(20px, 3vw, 24px);
+                      width: clamp(20px, 3vw, 20px);
+                      height: clamp(20px, 3vw, 20px);
                       filter: invert(100%);
                       margin-right: 5px;
                       display: flex;
@@ -653,9 +653,9 @@ const showSearchView = () => {
             .burger-button {
               position: relative;
               height: 100%;
-              width: clamp(35px, 8vw, 55px);
+              width: clamp(35px, 8vw, 46px);
               background-color: rgb(255, 255, 255);
-              border-radius: clamp(10px, 2.5vw, 25px);
+              border-radius: 10px;
               border: 1px solid rgb(0, 180, 0);
               cursor: pointer;
               .burger-line {
@@ -855,7 +855,7 @@ const showSearchView = () => {
         }
         @media (min-width: 577px) {
           .main-navbar-container {
-            height: clamp(40px, 8.8vw, 76px);
+            height: clamp(40px, 8.8vw, 64px);
           }
         }
         &.main-navbar-show {
