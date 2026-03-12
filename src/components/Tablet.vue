@@ -326,7 +326,7 @@ const showSearchView = () => {
 .mobile-navbar {
   display: none;
 }
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .mobile-navbar {
     position: relative;
     display: block;
@@ -521,11 +521,10 @@ const showSearchView = () => {
 
     .mobile-top-navbar-container {
       position: relative;
-      background-color: rgb(240, 240, 240);
       z-index: 1001;
-      margin-bottom: clamp(4px, 2vw, 20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
       .main-navbar {
-        padding: 6px clamp(2px, 2vw, 10px) 2px;
+        padding: 10px clamp(10px, 2vw, 20px);
         opacity: 1;
         visibility: visible;
         position: relative;
@@ -534,11 +533,10 @@ const showSearchView = () => {
         transition: all 0.5s ease-out;
         z-index: 1000;
         .main-navbar-container {
-          height: clamp(40px, 10vw, 70px);
+          height: 40px;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: clamp(4px, 1vw, 10px);
           .middle-side {
             height: 100%;
             min-width: 0;
@@ -653,7 +651,7 @@ const showSearchView = () => {
             .burger-button {
               position: relative;
               height: 100%;
-              width: clamp(35px, 8vw, 46px);
+              width: 40px;
               background-color: rgb(255, 255, 255);
               border-radius: 10px;
               border: 1px solid rgb(0, 180, 0);
@@ -851,11 +849,6 @@ const showSearchView = () => {
               opacity: 1;
               visibility: visible;
             }
-          }
-        }
-        @media (min-width: 577px) {
-          .main-navbar-container {
-            height: clamp(40px, 8.8vw, 64px);
           }
         }
         &.main-navbar-show {

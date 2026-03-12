@@ -224,12 +224,6 @@ function resetZoom(e) {
                     object-fit: cover;
                   }
                 }
-                &:focus {
-                  background-color: rgba(255, 25, 83, 0.65);
-                  .pct-wishlist-box {
-                    filter: brightness(0) invert(1);
-                  }
-                }
                 &:hover {
                   background-color: rgba(255, 25, 83, 0.65);
                   .pct-wishlist-box {

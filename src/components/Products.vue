@@ -194,7 +194,7 @@
                   @mousemove="handleMove"
                   @mouseleave="resetZoom"
                 >
-                  <!-- <img :src="item.src" :alt="item.name" loading="lazy" /> -->
+                  <img :src="item.src" :alt="item.name" loading="lazy" />
                 </div>
               </div>
               <div class="pc-main-container">
@@ -721,7 +721,6 @@ function resetZoom(e) {
       }
     }
     .products-swiper {
-      padding: 0 6px;
       .products-swiper-slide {
         margin-bottom: clamp(8px, 4vw, 24px);
         .products {
@@ -764,7 +763,7 @@ function resetZoom(e) {
                   padding: clamp(2px, 1.2vw, 4px);
                   border: 0;
                   border-radius: 50%;
-                  background-color: rgba(255, 255, 255, 0.4);
+                  background-color: rgba(245, 242, 235, 0.4);
                   backdrop-filter: blur(10px) saturate(180%);
                   display: flex;
                   justify-content: center;
@@ -781,27 +780,25 @@ function resetZoom(e) {
                       object-fit: cover;
                     }
                   }
-                  &:focus .wishlist-box {
-                    filter: brightness(0) saturate(100%) invert(21%) sepia(96%)
-                      saturate(7492%) hue-rotate(340deg) brightness(101%)
-                      contrast(101%);
-                  }
                   &:hover {
-                    background-color: rgb(255, 255, 255);
+                    background-color: rgba(255, 25, 83, 0.65);
+                    .pct-wishlist-box {
+                      filter: brightness(0) invert(1);
+                    }
                   }
                 }
                 .pct-view-container {
                   padding: clamp(2px, 1.2vw, 4px);
                   border-radius: 50%;
                   font-size: clamp(10px, 3.6vw, 16px);
-                  background-color: rgba(255, 255, 255, 0.4);
+                  background-color: rgba(245, 242, 235, 0.4);
                   backdrop-filter: blur(10px) saturate(180%);
                   text-decoration: none;
                   color: rgb(100, 100, 100);
                   transition: all 0.2s;
                   &:hover {
                     color: rgb(0, 0, 0);
-                    background-color: rgb(255, 255, 255);
+                    background-color: rgb(245, 242, 235);
                   }
                 }
               }
@@ -858,8 +855,8 @@ function resetZoom(e) {
                 .pcm-cart-container {
                   padding: clamp(4px, 1.2vw, 8px);
                   margin-top: clamp(4px, 1.2vw, 8px);
-                  border: 0;
-                  background-color: rgb(0, 180, 0);
+                  border: 1px solid rgb(0, 180, 0);
+                  background-color: transparent;
                   border-radius: clamp(4px, 1.2vw, 8px);
                   color: rgb(255, 255, 255);
                   font-size: clamp(8px, 3vw, 18px);
@@ -868,7 +865,8 @@ function resetZoom(e) {
                   .pcm-cart-box {
                     height: clamp(12px, 5vw, 24px);
                     width: clamp(12px, 5vw, 24px);
-                    filter: brightness(0) invert(1);
+                    filter: invert(39%) sepia(94%) saturate(1125%)
+                      hue-rotate(92deg) brightness(95%) contrast(105%);
                     img {
                       width: 100%;
                       height: 100%;
@@ -877,14 +875,14 @@ function resetZoom(e) {
                   }
                   &:hover {
                     background-color: rgba(0, 180, 0, 0.8);
+                    .pcm-cart-box {
+                      filter: brightness(0) invert(1);
+                    }
                   }
                 }
               }
             }
           }
-        }
-        &:hover .products .product-card {
-          box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.2);
         }
       }
     }

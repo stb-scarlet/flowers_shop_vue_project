@@ -318,11 +318,12 @@ const showSearchView = () => {
 }
 body {
   background-color: rgb(245, 242, 235);
+  font-family: "Quicksand", sans-serif;
 }
 .desktop-navbar {
   display: none;
 }
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
   .desktop-navbar {
     position: relative;
     display: block;
@@ -512,8 +513,7 @@ body {
       position: relative;
       z-index: 1;
       width: 100%;
-      background-color: rgb(240, 240, 240);
-      margin-bottom: clamp(4px, 2vw, 12px);
+      border: 1px solid rgba(0, 0, 0, 0.15);
       .main-navbar {
         height: clamp(65px, 6vw, 80px);
         max-width: 1500px;
