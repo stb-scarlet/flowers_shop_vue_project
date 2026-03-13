@@ -37,8 +37,13 @@
       </div>
     </div>
   </div>
+  <Service />
+  <PartnerLogos />
 </template>
-<script setup></script>
+<script setup>
+import Service from '@/components/Service.vue';
+import PartnerLogos from '@/components/PartnerLogos.vue';
+</script>
 <style lang="scss" scoped>
 .about-us-container {
   max-width: 1200px;
@@ -113,8 +118,12 @@
       }
     }
     .au-right-side {
+      .auls-title {
+        padding-left: 20px;
+      }
       .auls-texts {
         line-height: 18px;
+        font-weight: 400;
       }
     }
   }
@@ -132,9 +141,9 @@
       .auls-title {
         text-align: center;
         font-size: 20px;
+        padding-left: 0;
       }
       .auls-texts {
-        font-size: 12px;
         padding-left: 20px;
       }
     }
