@@ -11,7 +11,7 @@
       :breakpoints="{
         0: {
           spaceBetween: 12,
-          slidesPerView: 1.4,
+          slidesPerView: 1.2,
         },
         576: {
           spaceBetween: 16,
@@ -84,7 +84,7 @@ const categories = [
   .cc-title {
     font-family: "Petit Formal Script", cursive;
     color: rgb(0, 180, 0);
-    font-size: clamp(14px, 4vw, 28px);
+    font-size: clamp(18px, 4.8vw, 28px);
     font-weight: 700;
     margin-bottom: clamp(14px, 1.2vw, 20px);
     display: flex;
@@ -93,10 +93,11 @@ const categories = [
     button {
       background-color: transparent;
       border: none;
-      color: rgb(0, 180, 0);
+      color: rgb(100, 100, 100);
+      font-size: clamp(12px, 2vw, 16px);
       cursor: pointer;
       &:hover {
-        color: rgb(255, 25, 83);
+        color: rgb(0, 180, 0);
         text-decoration: underline;
       }
     }
@@ -121,7 +122,7 @@ const categories = [
           }
         }
         .cc-texts {
-          font-size: clamp(28px, 6.6vw, 40px);
+          font-size: clamp(28px, 8vw, 40px);
           font-family: "Playfair Display", serif;
           position: relative;
           color: rgb(245, 242, 235);
@@ -134,29 +135,31 @@ const categories = [
           padding: clamp(20px, 100vw, 30px) clamp(14px, 5vw, 26px)
             clamp(14px, 5vw, 26px);
           button {
-            background-color: rgba(200, 200, 200, 0.15);
-            backdrop-filter: blur(4px) saturate(180%);
-            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            background-color: rgba(0, 0, 0, 0.03);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             border: 1px solid rgb(245, 242, 235);
-            padding: 0.4rem 0;
+            font-family: "Quicksand", sans-serif;
+            padding: clamp(4px, 2vw, 10px) clamp(16px, 2.4vw, 20px);
             border-radius: 25px;
-            font-size: clamp(10px, 2vw, 16px);
+            font-size: clamp(14px, 2vw, 16px);
             color: rgb(245, 242, 235);
-            transition: all 0.2s;
+            transition: background-color 0.2s, border 0.2s;
+            font-weight: 600;
             cursor: pointer;
             &:hover {
               background-color: rgb(255, 25, 83);
               border: 1px solid rgb(255, 25, 83);
             }
           }
-          &:hover {
-            &::after {
-              content: "";
-              z-index: -1;
-              position: absolute;
-              inset: 0;
-              background-color: rgba(0, 180, 0, 0.1);
-            }
+          &::after {
+            content: "";
+            z-index: -1;
+            position: absolute;
+            inset: 0;
+          }
+          &:hover::after {
+            background-color: rgba(0, 180, 0, 0.1);
           }
         }
       }

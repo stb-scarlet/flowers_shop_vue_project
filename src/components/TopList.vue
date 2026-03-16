@@ -10,18 +10,22 @@
       :free-mode="true"
       :breakpoints="{
         0: {
-          slidesPerView: 2,
+          slidesPerView: 2.2,
           spaceBetween: 12,
         },
         425: {
+          slidesPerView: 2.6,
+          spaceBetween: 12,
+        },
+        576: {
           slidesPerView: 3,
           spaceBetween: 12,
         },
-        992: {
+        768: {
           slidesPerView: 4,
-          spaceBetween: 20,
+          spaceBetween: 12,
         },
-        1280: {
+        1024: {
           slidesPerView: 5,
           spaceBetween: 20,
         },
@@ -52,12 +56,8 @@
                   <i class="fas fa-eye"></i>
                 </router-link>
               </div>
-              <div
-                class="pct-image-container"
-                @mousemove="handleMove"
-                @mouseleave="resetZoom"
-              >
-                <!-- <img :src="item.src" :alt="item.name" loading="lazy" /> -->
+              <div class="pct-image-container">
+                <img :src="item.src" :alt="item.name" loading="lazy" />
               </div>
             </div>
             <div class="pc-main-container">
@@ -98,14 +98,14 @@ import { computed } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/navigation";
-import { FreeMode, Navigation } from "swiper/modules";
-const modules = [Navigation, FreeMode];
+import { Navigation } from "swiper/modules";
+const modules = [Navigation];
 
 const store = useStore();
 
 const products = computed(() => store.getters["product/getProducts"]);
 
-const topListProducts = products.value.sort((a, b) => {
+const topListProducts = [...products.value].sort((a, b) => {
   const ratingA =
     a.reviews.reduce((total, review) => total + review.rating, 0) /
     a.reviews.length;
@@ -114,32 +114,6 @@ const topListProducts = products.value.sort((a, b) => {
     b.reviews.length;
   return ratingB - ratingA;
 });
-
-/* ---------- IMAGE ZOOM ---------- */
-
-function handleMove(e) {
-  const container = e.currentTarget;
-  const img = container.querySelector("img");
-
-  if (!img) return;
-
-  const rect = container.getBoundingClientRect();
-
-  const x = ((e.clientX - rect.left) / rect.width) * 100;
-  const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-  img.style.transformOrigin = `${x}% ${y}%`;
-  img.style.transform = "scale(1.8)";
-}
-
-function resetZoom(e) {
-  const img = e.currentTarget.querySelector("img");
-
-  if (!img) return;
-
-  img.style.transform = "scale(1)";
-  img.style.transformOrigin = "center";
-}
 </script>
 <style lang="scss" scoped>
 .top-list-container {
@@ -148,7 +122,7 @@ function resetZoom(e) {
   .tl-title {
     font-family: "Petit Formal Script", cursive;
     color: rgb(0, 180, 0);
-    font-size: clamp(14px, 4vw, 28px);
+    font-size: clamp(18px, 4.8vw, 28px);
     font-weight: 700;
     margin-bottom: clamp(14px, 1.2vw, 20px);
     display: flex;
@@ -157,10 +131,11 @@ function resetZoom(e) {
     button {
       background-color: transparent;
       border: none;
-      color: rgb(0, 180, 0);
+      color: rgb(100, 100, 100);
+      font-size: clamp(12px, 2vw, 16px);
       cursor: pointer;
       &:hover {
-        color: rgb(255, 25, 83);
+        color: rgb(0, 180, 0);
         text-decoration: underline;
       }
     }
@@ -168,8 +143,8 @@ function resetZoom(e) {
   .tl-swiper {
     .tl-swiper-slide {
       .tl-swiper-slide-container {
+        user-select: none;
         .product-card {
-          border-radius: clamp(10px, 2.5vw, 16px);
           transition: all 0.4s;
           .pc-top-container {
             margin-bottom: clamp(4px, 1.2vw, 10px);
@@ -207,13 +182,12 @@ function resetZoom(e) {
                 padding: clamp(2px, 1.2vw, 6px);
                 border: 0;
                 border-radius: 50%;
-                background-color: rgba(245, 242, 235, 0.4);
-                backdrop-filter: blur(10px) saturate(180%);
+                background-color: rgb(245, 242, 235);
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 margin-bottom: clamp(4px, 1.2vw, 6px);
-                transition: all 0.2s;
+                transition: background-color 0.2s;
                 cursor: pointer;
                 .pct-wishlist-box {
                   height: clamp(12px, 4vw, 20px);
@@ -225,35 +199,31 @@ function resetZoom(e) {
                   }
                 }
                 &:hover {
-                  background-color: rgba(255, 25, 83, 0.65);
-                  .pct-wishlist-box {
-                    filter: brightness(0) invert(1);
-                  }
+                  background-color: rgb(255, 255, 255);
                 }
               }
               .pct-view-container {
                 padding: clamp(2px, 1.2vw, 6px);
                 border-radius: 50%;
                 font-size: clamp(10px, 3.6vw, 16px);
-                background-color: rgba(245, 242, 235, 0.4);
-                backdrop-filter: blur(10px) saturate(180%);
+                background-color: rgb(245, 242, 235);
                 text-decoration: none;
                 color: rgb(100, 100, 100);
-                transition: all 0.2s;
+                transition:
+                  color 0.2s,
+                  background-color 0.2s;
                 &:hover {
+                  background-color: rgb(255, 255, 255);
                   color: rgb(0, 0, 0);
-                  background-color: rgb(245, 242, 235);
                 }
               }
             }
             .pct-image-container {
-              height: clamp(100px, 50vw, 350px);
               width: 100%;
-              box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
+              height: 100%;
               border-radius: clamp(10px, 2.5vw, 16px);
               // aspect-ratio: 100% / clamp(100px, 44vw, 350px);
               overflow: hidden;
-              cursor: zoom-in;
               img {
                 width: 100%;
                 height: 100%;
@@ -262,10 +232,30 @@ function resetZoom(e) {
                 transition: transform 0.3s ease;
               }
             }
-            @media (hover: none) {
-              .pct-image-container {
-                cursor: default;
-              }
+          }
+          @media (min-width: 0) {
+            .pc-top-container {
+              height: clamp(150px, 50vw, 200px);
+            }
+          }
+          @media (min-width: 425px) {
+            .pc-top-container {
+              height: clamp(170px, 42vw, 250px);
+            }
+          }
+          @media (min-width: 576px) {
+            .pc-top-container {
+              height: clamp(200px, 38vw, 300px);
+            }
+          }
+          @media (min-width: 768px) {
+            .pc-top-container {
+              height: clamp(240px, 32vw, 310px);
+            }
+          }
+          @media (min-width: 1024px) {
+            .pc-top-container {
+              height: clamp(250px, 24vw, 340px);
             }
           }
           .pc-main-container {
@@ -273,7 +263,7 @@ function resetZoom(e) {
             border-radius: clamp(10px, 2.5vw, 16px);
             margin-top: auto;
             .pcm-name-container {
-              font-size: clamp(8px, 3.6vw, 18px);
+              font-size: clamp(14px, 3.6vw, 18px);
               color: rgb(0, 0, 0);
               p {
                 white-space: nowrap;
@@ -286,11 +276,11 @@ function resetZoom(e) {
               justify-content: space-between;
               align-items: flex-end;
               .pcm-price-container {
-                font-size: clamp(10px, 4vw, 20px);
+                font-size: clamp(14px, 4vw, 20px);
                 color: rgb(0, 180, 0);
                 font-weight: 700;
                 .pcm-old-price {
-                  font-size: clamp(6px, 3vw, 14px);
+                  font-size: clamp(10px, 3vw, 14px);
                   color: rgb(100, 100, 100);
                   text-decoration: line-through;
                   margin-bottom: -2.8px;
@@ -305,11 +295,10 @@ function resetZoom(e) {
                 color: rgb(255, 255, 255);
                 font-size: clamp(8px, 3vw, 18px);
                 cursor: pointer;
-                transition: all 0.2s;
+                transition: background-color 0.2s;
                 .pcm-cart-box {
                   height: clamp(12px, 5vw, 24px);
                   width: clamp(12px, 5vw, 24px);
-                  filter: invert(39%) sepia(94%) saturate(1125%) hue-rotate(92deg) brightness(95%) contrast(105%);
                   img {
                     width: 100%;
                     height: 100%;
@@ -318,16 +307,10 @@ function resetZoom(e) {
                 }
                 &:hover {
                   background-color: rgba(0, 180, 0, 0.8);
-                  .pcm-cart-box {
-                    filter: brightness(0) invert(1);
-                  }
                 }
               }
             }
           }
-        }
-        &:hover .tl-swiper-slide-container .product-card {
-          box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.2);
         }
       }
     }
@@ -336,6 +319,7 @@ function resetZoom(e) {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    z-index: 1;
     left: 0;
     width: 100%;
     display: flex;
@@ -349,13 +333,12 @@ function resetZoom(e) {
       z-index: 1;
       height: clamp(22px, 10vw, 36px);
       width: clamp(22px, 10vw, 36px);
-      background-color: rgba(245, 242, 235, 0.25);
-      backdrop-filter: blur(14px) saturate(180%);
+      background-color: rgba(245, 242, 235, 0.65);
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 50%;
-      transition: all 0.2s ease-in;
+      transition: background-color 0.2s ease-in, color 0.2s ease-in;
       cursor: pointer;
       &:hover {
         background-color: rgb(245, 242, 235);

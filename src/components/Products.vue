@@ -140,27 +140,8 @@
         </div>
       </div>
       <swiper
-        :breakpoints="{
-          0: {
-            slidesPerView: 2,
-            slidesPerGroup: 2,
-            spaceBetween: 10,
-          },
-          576: {
-            slidesPerView: 3,
-            slidesPerGroup: 3,
-            spaceBetween: 20,
-          },
-          1280: {
-            slidesPerView: 4,
-            slidesPerGroup: 4,
-            spaceBetween: 14,
-          },
-        }"
-        :grid="{ rows: 3, fill: 'row' }"
         :pagination="pagination"
         :allowTouchMove="false"
-        :slides-per-group="4"
         :navigation="{
           prevEl: '.products-swiper-prev',
           nextEl: '.products-swiper-next',
@@ -168,13 +149,13 @@
         :modules="modules"
         class="products-swiper"
       >
-        <swiper-slide
-          class="products-swiper-slide"
-          v-for="item in filteredProducts"
-          :key="item.id"
-        >
+        <swiper-slide class="products-swiper-slide" v-for="(products, index) in filteredProducts" :key="index">
           <div class="products">
-            <div class="product-card">
+            <div
+              class="product-card"
+              v-for="item in products"
+              :key="item.id"
+            >
               <div class="pc-top-container">
                 <div class="pct-discount-container" v-if="item.discountPrice">
                   <p>{{ item.discountPrice.discount }}% OFF</p>
@@ -189,11 +170,7 @@
                     <i class="fas fa-eye"></i>
                   </router-link>
                 </div>
-                <div
-                  class="pct-image-container"
-                  @mousemove="handleMove"
-                  @mouseleave="resetZoom"
-                >
+                <div class="pct-image-container">
                   <img :src="item.src" :alt="item.name" loading="lazy" />
                 </div>
               </div>
@@ -219,12 +196,12 @@
           </div>
         </swiper-slide>
       </swiper>
-      <div class="products-swiper-container">
-        <div class="products-swiper-prev">
+      <div class="products-swiper-custom-container">
+        <div class="psc-prev">
           <i class="fas fa-angle-left"></i>
         </div>
-        <div class="products-swiper-pagination"></div>
-        <div class="products-swiper-next">
+        <div class="psc-pagination"></div>
+        <div class="psc-next">
           <i class="fas fa-angle-right"></i>
         </div>
       </div>
@@ -242,7 +219,6 @@ import "swiper/css/navigation";
 import { Pagination, Navigation, Grid } from "swiper/modules";
 
 const modules = [Pagination, Navigation, Grid];
-const maxVisible = ref(4);
 
 const pagination = {
   clickable: true,
@@ -314,21 +290,21 @@ const filteredProducts = computed(() => {
   }
 
   if (status.value === "New Arrivals") {
-    result.sort((a, b) => b.id - a.id);
+    result = [...result].sort((a, b) => b.id - a.id);
   } else if (status.value === "Best Sellers") {
-    result.sort((a, b) => b.reviews.length - a.reviews.length);
+    result = [...result].sort((a, b) => b.reviews.length - a.reviews.length);
   }
 
   if (sort.value === "Price - Low to High") {
-    result.sort((a, b) => a.price - b.price);
+    result = [...result].sort((a, b) => a.price - b.price);
   } else if (sort.value === "Price - High to Low") {
-    result.sort((a, b) => b.price - a.price);
+    result = [...result].sort((a, b) => b.price - a.price);
   } else if (sort.value === "A - Z") {
-    result.sort((a, b) => a.name.localeCompare(b.name));
+    result = [...result].sort((a, b) => a.name.localeCompare(b.name));
   } else if (sort.value === "Z - A") {
-    result.sort((a, b) => b.name.localeCompare(a.name));
+    result = [...result].sort((a, b) => b.name.localeCompare(a.name));
   } else if (sort.value === "Rating - High to Low") {
-    result.sort((a, b) => {
+    result = [...result].sort((a, b) => {
       const ratingA =
         a.reviews.reduce((total, review) => total + review.rating, 0) /
         a.reviews.length;
@@ -338,7 +314,7 @@ const filteredProducts = computed(() => {
       return ratingA - ratingB;
     });
   } else if (sort.value === "Rating - Low to High") {
-    result.sort((a, b) => {
+    result = [...result].sort((a, b) => {
       const ratingA =
         a.reviews.reduce((total, review) => total + review.rating, 0) /
         a.reviews.length;
@@ -349,7 +325,13 @@ const filteredProducts = computed(() => {
     });
   }
 
-  return result;
+  const filteredProducts = [];
+
+  for (let i = 0; i < result.length; i +=12) {
+    filteredProducts.push(result.slice(i, i + 12));
+  }
+
+  return filteredProducts;
 });
 
 /* ---------- RANGE PROGRESS ---------- */
@@ -402,32 +384,6 @@ watch(rangeMax, (val) => {
   }
   priceNumberMax.value = parseInt(val);
 });
-
-/* ---------- IMAGE ZOOM ---------- */
-
-function handleMove(e) {
-  const container = e.currentTarget;
-  const img = container.querySelector("img");
-
-  if (!img) return;
-
-  const rect = container.getBoundingClientRect();
-
-  const x = ((e.clientX - rect.left) / rect.width) * 100;
-  const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-  img.style.transformOrigin = `${x}% ${y}%`;
-  img.style.transform = "scale(1.8)";
-}
-
-function resetZoom(e) {
-  const img = e.currentTarget.querySelector("img");
-
-  if (!img) return;
-
-  img.style.transform = "scale(1)";
-  img.style.transformOrigin = "center";
-}
 </script>
 <style lang="scss" scoped>
 .hv-products-section {
@@ -722,9 +678,12 @@ function resetZoom(e) {
     }
     .products-swiper {
       .products-swiper-slide {
-        margin-bottom: clamp(8px, 4vw, 24px);
         .products {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: clamp(10px, 4.6vw, 16px);
           .product-card {
+            min-width: 0;
             border-radius: clamp(10px, 2.5vw, 16px);
             transition: all 0.4s;
             .pc-top-container {
@@ -760,11 +719,10 @@ function resetZoom(e) {
                 justify-content: center;
                 align-items: center;
                 .pct-wishlist-container {
-                  padding: clamp(2px, 1.2vw, 4px);
+                  padding: clamp(2px, 1.2vw, 6px);
                   border: 0;
                   border-radius: 50%;
-                  background-color: rgba(245, 242, 235, 0.4);
-                  backdrop-filter: blur(10px) saturate(180%);
+                  background-color: rgb(245, 242, 235);
                   display: flex;
                   justify-content: center;
                   align-items: center;
@@ -788,28 +746,24 @@ function resetZoom(e) {
                   }
                 }
                 .pct-view-container {
-                  padding: clamp(2px, 1.2vw, 4px);
+                  padding: clamp(2px, 1.2vw, 6px);
                   border-radius: 50%;
                   font-size: clamp(10px, 3.6vw, 16px);
-                  background-color: rgba(245, 242, 235, 0.4);
-                  backdrop-filter: blur(10px) saturate(180%);
+                  background-color: rgb(245, 242, 235);
                   text-decoration: none;
                   color: rgb(100, 100, 100);
                   transition: all 0.2s;
                   &:hover {
                     color: rgb(0, 0, 0);
-                    background-color: rgb(245, 242, 235);
                   }
                 }
               }
               .pct-image-container {
-                height: clamp(100px, 44vw, 350px);
                 width: 100%;
+                height: 100%;
                 box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
                 border-radius: clamp(10px, 2.5vw, 16px);
-                // aspect-ratio: 100% / clamp(100px, 44vw, 350px);
                 overflow: hidden;
-                cursor: zoom-in;
                 img {
                   width: 100%;
                   height: 100%;
@@ -824,12 +778,37 @@ function resetZoom(e) {
                 }
               }
             }
+            @media (min-width: 0) {
+              .pc-top-container {
+                height: clamp(150px, 50vw, 200px);
+              }
+            }
+            @media (min-width: 425px) {
+              .pc-top-container {
+                height: clamp(170px, 42vw, 250px);
+              }
+            }
+            @media (min-width: 576px) {
+              .pc-top-container {
+                height: clamp(200px, 38vw, 300px);
+              }
+            }
+            @media (min-width: 768px) {
+              .pc-top-container {
+                height: clamp(240px, 32vw, 310px);
+              }
+            }
+            @media (min-width: 1024px) {
+              .pc-top-container {
+                height: clamp(250px, 24vw, 340px);
+              }
+            }
             .pc-main-container {
               padding: 0 3.2% 3.2% 3.2%;
               border-radius: clamp(10px, 2.5vw, 16px);
               margin-top: auto;
               .pcm-name-container {
-                font-size: clamp(8px, 3.6vw, 18px);
+                font-size: clamp(14px, 3.6vw, 18px);
                 color: rgb(0, 0, 0);
                 p {
                   white-space: nowrap;
@@ -842,11 +821,11 @@ function resetZoom(e) {
                 justify-content: space-between;
                 align-items: flex-end;
                 .pcm-price-container {
-                  font-size: clamp(10px, 4vw, 20px);
+                  font-size: clamp(14px, 4vw, 20px);
                   color: rgb(0, 180, 0);
                   font-weight: 700;
                   .pcm-old-price {
-                    font-size: clamp(6px, 3vw, 14px);
+                    font-size: clamp(10px, 3vw, 14px);
                     color: rgb(100, 100, 100);
                     text-decoration: line-through;
                     margin-bottom: -2.8px;
@@ -886,12 +865,12 @@ function resetZoom(e) {
         }
       }
     }
-    .products-swiper-container {
+    .products-swiper-custom-container {
       display: flex;
       align-items: center;
       justify-content: end;
-      .products-swiper-prev,
-      .products-swiper-next {
+      .psc-prev,
+      .psc-next {
         display: inline-block;
         font-size: clamp(10px, 4vw, 24px);
         transition: all 0.2s ease-in;
@@ -899,27 +878,10 @@ function resetZoom(e) {
           color: rgb(0, 180, 0);
         }
       }
-      .products-swiper-pagination {
+      .psc-pagination {
         display: flex;
         transform: translateX(0);
         width: auto !important;
-        .swiper-pagination-bullet {
-          position: static;
-          background-color: rgb(100, 100, 100);
-          height: clamp(20px, 6vw, 34px);
-          width: clamp(20px, 6vw, 34px);
-          border-radius: 50%;
-          opacity: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color: rgb(245, 242, 235);
-          border-radius: 6px;
-          font-size: clamp(8px, 3vw, 16px);
-          &.swiper-pagination-bullet-active {
-            background-color: rgb(0, 180, 0);
-          }
-        }
       }
     }
   }
