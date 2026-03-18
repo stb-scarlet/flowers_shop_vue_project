@@ -1,6 +1,6 @@
 <template>
   <div class="partner-logos-container">
-    <ul class="pl-wrap">
+    <ul class="pl-wrapper">
       <li class="plw-item" v-for="item in partners" :key="item.id">
         <div class="brand-logo">
           <img :src="item.src" alt="" loading="lazy" />
@@ -59,14 +59,14 @@ const partners = [
   padding: 0 clamp(10px, 1vw, 20px);
   margin: 0 auto clamp(30px, 4vw, 70px);
   max-width: 1200px;
-  .pl-wrap {
+  .pl-wrapper {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     .plw-item {
       width: 100%;
-      height: 350px;
+      height: clamp(150px, 42vw, 340px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -77,7 +77,7 @@ const partners = [
       backdrop-filter: blur(4px) saturate(180%);
       border: 1px solid rgba(0, 0, 0, 0.1);
       .brand-logo {
-        height: 120px;
+        height: clamp(80px, 24vw, 120px);
         img {
           width: 100%;
           height: 100%;
@@ -86,8 +86,8 @@ const partners = [
       }
       .plwi-button {
         position: absolute;
-        top: 3%;
-        right: 3%;
+        top: 5%;
+        right: 5%;
         button {
           padding: 6px;
           border-radius: 50%;
@@ -95,7 +95,7 @@ const partners = [
           font-size: 14px;
           background-color: rgb(230, 243, 234);
           color: rgb(0, 180, 0);
-          transition: all 0.2s;
+          transition: transform 0.2s;
         }
       }
       &::after {
@@ -103,7 +103,7 @@ const partners = [
         position: absolute;
         inset: 0;
         z-index: -1;
-        transition: all 0.2s;
+        transition: background-color 0.2s;
       }
       &:hover {
         .plwi-button {
@@ -114,6 +114,15 @@ const partners = [
       }
       &:hover::after {
         background-color: rgba(0, 180, 0, 0.1);
+      }
+    }
+  }
+  @media (min-width: 1024px) {
+    .pl-wrapper {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      .plw-item {
+        height: 350px;
       }
     }
   }

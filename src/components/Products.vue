@@ -1,103 +1,21 @@
 <template>
   <div class="hv-products-section">
-    <div class="hv-main-filter-container">
-      <div class="hvmf-categories-container">
-        <div class="hvmfc-title">
-          <p>Categories</p>
-        </div>
-        <ul class="categories-container">
-          <li
-            class="category-container"
-            v-for="item in categories"
-            :key="item"
-            :class="{ 'active-filter': category.includes(item) }"
-          >
-            <input
-              type="checkbox"
-              :id="`${item}-checkbox`"
-              :value="item"
-              v-model="category"
-            />
-            <label :for="`${item}-checkbox`">{{ item }}</label>
-            <span>({{ productsQuantity(item) }})</span>
-          </li>
-        </ul>
-      </div>
-      <div class="hvmf-range-container">
-        <div class="hvmfr-title">
-          <p>Price Range</p>
-        </div>
-        <div class="range-container">
-          <div class="range-slider">
-            <div class="range-progress" :style="rangeProgress"></div>
-            <input
-              type="range"
-              :min="minPrice"
-              :max="maxPrice"
-              step="1"
-              v-model.number="rangeMin"
-            />
-            <input
-              type="range"
-              :min="minPrice"
-              :max="maxPrice"
-              step="1"
-              v-model.number="rangeMax"
-            />
-          </div>
-          <form class="range-field-container" @submit.prevent="handlePrice">
-            <div class="range-field">
-              <label for="minNumber" class="rf-min">
-                <p>Min:</p>
-                <input
-                  type="number"
-                  id="minNumber"
-                  v-model.number="priceNumberMin"
-                />
-              </label>
-              <label for="maxNumber" class="rf-max">
-                <p>Max:</p>
-                <input
-                  type="number"
-                  id="maxNumber"
-                  v-model.number="priceNumberMax"
-                />
-              </label>
-            </div>
-            <button type="submit" class="rf-filter">Filter</button>
-          </form>
-        </div>
-      </div>
-      <div class="hvmf-size-container">
-        <div class="hvmfs-title">
-          <p>Size</p>
-        </div>
-        <ul class="sizes-container">
-          <li
-            class="size"
-            v-for="item in ['small', 'medium', 'large']"
-            :key="item"
-            :class="{ 'active-filter': size.includes(item) }"
-          >
-            <input
-              type="checkbox"
-              :id="`${item}-checkbox`"
-              :value="item"
-              v-model="size"
-            />
-            <label :for="`${item}-checkbox`">{{ item }}</label>
-            <span>({{ productsQuantity(item) }})</span>
-          </li>
-        </ul>
-      </div>
-      <div class="hvmf-banner-container">
-        <div class="hvmfb-image">
-          <img src="/banner-images/4.webp" alt="" />
-        </div>
-      </div>
-    </div>
+    <MainFilter @products="filteredProducts = $event" />
     <div class="products-container">
       <div class="sort-container">
+        <div class="mmf-box">
+          <button class="fb-button">
+            <svg class="fbb-icon" viewBox="0 0 24 24">
+              <path
+                d="M19 3H5C3.58579 3 2.87868 3 2.43934 3.4122C2 3.8244 2 4.48782 2 5.81466V6.50448C2 7.54232 2 8.06124 2.2596 8.49142C2.5192 8.9216 2.99347 9.18858 3.94202 9.72255L6.85504 11.3624C7.49146 11.7206 7.80967 11.8998 8.03751 12.0976C8.51199 12.5095 8.80408 12.9935 8.93644 13.5872C9 13.8722 9 14.2058 9 14.8729L9 17.5424C9 18.452 9 18.9067 9.25192 19.2613C9.50385 19.6158 9.95128 19.7907 10.8462 20.1406C12.7248 20.875 13.6641 21.2422 14.3321 20.8244C15 20.4066 15 19.4519 15 17.5424V14.8729C15 14.2058 15 13.8722 15.0636 13.5872C15.1959 12.9935 15.488 12.5095 15.9625 12.0976C16.1903 11.8998 16.5085 11.7206 17.145 11.3624L20.058 9.72255C21.0065 9.18858 21.4808 8.9216 21.7404 8.49142C22 8.06124 22 7.54232 22 6.50448V5.81466C22 4.48782 22 3.8244 21.5607 3.4122C21.1213 3 20.4142 3 19 3Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+                fill="none"
+              />
+            </svg>
+          </button>
+          <button class="fbc-button">Clear All</button>
+        </div>
         <div class="sort-status">
           <ul class="ss-wrap">
             <li
@@ -149,13 +67,13 @@
         :modules="modules"
         class="products-swiper"
       >
-        <swiper-slide class="products-swiper-slide" v-for="(products, index) in filteredProducts" :key="index">
+        <swiper-slide
+          class="products-swiper-slide"
+          v-for="(products, index) in readyProducts"
+          :key="index"
+        >
           <div class="products">
-            <div
-              class="product-card"
-              v-for="item in products"
-              :key="item.id"
-            >
+            <div class="product-card" v-for="item in products" :key="item.id">
               <div class="pc-top-container">
                 <div class="pct-discount-container" v-if="item.discountPrice">
                   <p>{{ item.discountPrice.discount }}% OFF</p>
@@ -163,12 +81,35 @@
                 <div class="pct-actions-container">
                   <button class="pct-wishlist-container">
                     <div class="pct-wishlist-box">
-                      <img src="/action-icons/wishlist-icon.png" alt="" />
+                      <svg class="wb-icon" viewBox="0 0 24 24">
+                        <path
+                          d="M8.96173 18.9109L9.42605 18.3219L8.96173 18.9109ZM12 5.50063L11.4596 6.02073C11.601 6.16763 11.7961 6.25063 12 6.25063C12.2039 6.25063 12.399 6.16763 12.5404 6.02073L12 5.50063ZM15.0383 18.9109L15.5026 19.4999L15.0383 18.9109ZM9.42605 18.3219C7.91039 17.1271 6.25307 15.9603 4.93829 14.4798C3.64922 13.0282 2.75 11.3345 2.75 9.1371H1.25C1.25 11.8026 2.3605 13.8361 3.81672 15.4758C5.24723 17.0866 7.07077 18.3752 8.49742 19.4999L9.42605 18.3219ZM2.75 9.1371C2.75 6.98623 3.96537 5.18252 5.62436 4.42419C7.23607 3.68748 9.40166 3.88258 11.4596 6.02073L12.5404 4.98053C10.0985 2.44352 7.26409 2.02539 5.00076 3.05996C2.78471 4.07292 1.25 6.42503 1.25 9.1371H2.75ZM8.49742 19.4999C9.00965 19.9037 9.55954 20.3343 10.1168 20.6599C10.6739 20.9854 11.3096 21.25 12 21.25V19.75C11.6904 19.75 11.3261 19.6293 10.8736 19.3648C10.4213 19.1005 9.95208 18.7366 9.42605 18.3219L8.49742 19.4999ZM15.5026 19.4999C16.9292 18.3752 18.7528 17.0866 20.1833 15.4758C21.6395 13.8361 22.75 11.8026 22.75 9.1371H21.25C21.25 11.3345 20.3508 13.0282 19.0617 14.4798C17.7469 15.9603 16.0896 17.1271 14.574 18.3219L15.5026 19.4999ZM22.75 9.1371C22.75 6.42503 21.2153 4.07292 18.9992 3.05996C16.7359 2.02539 13.9015 2.44352 11.4596 4.98053L12.5404 6.02073C14.5983 3.88258 16.7639 3.68748 18.3756 4.42419C20.0346 5.18252 21.25 6.98623 21.25 9.1371H22.75ZM14.574 18.3219C14.0479 18.7366 13.5787 19.1005 13.1264 19.3648C12.6739 19.6293 12.3096 19.75 12 19.75V21.25C12.6904 21.25 13.3261 20.9854 13.8832 20.6599C14.4405 20.3343 14.9903 19.9037 15.5026 19.4999L14.574 18.3219Z"
+                          fill="currentColor"
+                        />
+                      </svg>
                     </div>
                   </button>
-                  <router-link to="" class="pct-view-container">
-                    <i class="fas fa-eye"></i>
-                  </router-link>
+                  <button class="pct-view-container">
+                    <div class="pct-view-box">
+                      <svg class="vb-icon" viewBox="0 0 512 512">
+                        <path
+                          d="M507.024,246.257C454.633,143.663,358.44,79.938,256,79.938c-102.41,0-198.604,63.725-251.022,166.318
+    L0,256.001l4.978,9.744C57.396,368.339,153.59,432.062,256,432.062c102.44,0,198.633-63.723,251.024-166.316l4.976-9.744
+    L507.024,246.257z M256,389.235c-84.328,0-161.27-49.588-207.693-133.234C94.73,172.354,171.672,122.767,256,122.767
+    c84.358,0,161.299,49.588,207.695,133.234C417.299,339.648,340.358,389.235,256,389.235z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M256,153.686c-57.158,0-103.498,46.34-103.498,103.5c0,57.158,46.34,103.498,103.498,103.498
+    s103.5-46.34,103.5-103.498C359.5,200.026,313.158,153.686,256,153.686z
+    M256,302.745c-25.135,0-45.558-20.424-45.558-45.559c0-5.646,1.17-10.972,3.025-15.949
+    l37.85,14.764l-15.99-39.216c6.231-3.178,13.188-5.158,20.674-5.158
+    c25.137,0,45.56,20.424,45.56,45.56C301.56,282.321,281.137,302.745,256,302.745z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </button>
                 </div>
                 <div class="pct-image-container">
                   <img :src="item.src" :alt="item.name" loading="lazy" />
@@ -187,7 +128,21 @@
                   </div>
                   <button class="pcm-cart-container">
                     <div class="pcm-cart-box">
-                      <img src="/action-icons/cart-icon.png" alt="" />
+                      <svg class="cb-icon" viewBox="0 0 1024 1024">
+                        <path
+                          d="M800.8 952c-31.2 0-56-24.8-56-56s24.8-56 56-56 56 24.8 56 56-25.6 56-56 56z 
+    m-448 0c-31.2 0-56-24.8-56-56s24.8-56 56-56 56 24.8 56 56-25.6 56-56 56z
+    M344 792c-42.4 0-79.2-33.6-84-76l-54.4-382.4-31.2-178.4c-2.4-19.2-19.2-35.2-37.6-35.2H96
+    c-13.6 0-24-10.4-24-24s10.4-24 24-24h40.8c42.4 0 80 33.6 85.6 76l31.2 178.4 54.4 383.2
+    C309.6 728 326.4 744 344 744h520c13.6 0 24 10.4 24 24s-10.4 24-24 24H344z
+    m40-128c-12.8 0-23.2-9.6-24-22.4-0.8-6.4 1.6-12.8 5.6-17.6s10.4-8 16-8l434.4-32
+    c19.2 0 36-15.2 38.4-33.6l50.4-288c1.6-13.6-2.4-28-10.4-36.8-5.6-6.4-12.8-9.6-21.6-9.6H320
+    c-13.6 0-24-10.4-24-24s10.4-24 24-24h554.4c22.4 0 42.4 9.6 57.6 25.6
+    16.8 19.2 24.8 47.2 21.6 75.2l-50.4 288c-4.8 41.6-42.4 74.4-84 74.4l-432 32
+    c-1.6 0.8-2.4 0.8-3.2 0.8z"
+                          fill="currentColor"
+                        />
+                      </svg>
                     </div>
                   </button>
                 </div>
@@ -209,8 +164,9 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
-import { computed, ref, watch, onMounted } from "vue";
+import MainFilter from "./MainFilter.vue";
+import { computed, ref } from "vue";
+const filteredProducts = ref([]);
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -228,67 +184,12 @@ const pagination = {
     return `<span class="${className}">${index + 1}</span>`;
   },
 };
-const store = useStore();
-const category = ref([]);
 const toggleSort = ref(false);
 const status = ref("All Plants");
 const sort = ref("Default Sorting");
-const size = ref([]);
-const products = computed(() => store.getters["product/getProducts"]);
-const categories = computed(() => {
-  return [...new Set(products.value.map((p) => p?.category))];
-});
 
-const minPrice = computed(() =>
-  Math.min(...products.value.map((p) => p.price)),
-);
-
-const maxPrice = computed(() =>
-  Math.max(...products.value.map((p) => p.price)),
-);
-
-const rangeMin = ref(0);
-const rangeMax = ref(0);
-
-const priceNumberMin = ref(0);
-const priceNumberMax = ref(0);
-
-const minGap = 100;
-
-/* ---------- INIT ---------- */
-
-onMounted(() => {
-  rangeMin.value = minPrice.value;
-  rangeMax.value = maxPrice.value;
-
-  priceNumberMin.value = parseInt(rangeMin.value);
-  priceNumberMax.value = parseInt(rangeMax.value);
-});
-
-/* ---------- FILTER PRODUCTS ---------- */
-
-const productsQuantity = (el) => {
-  return products.value.filter((p) => p.category === el || p.sizes.includes(el))
-    .length;
-};
-
-const filteredProducts = computed(() => {
-  let result = [...products.value];
-  if (category.value.length) {
-    result = result.filter((p) => category.value.includes(p.category));
-  }
-
-  if (rangeMin.value && rangeMax.value) {
-    result = result.filter(
-      (p) =>
-        p.price >= Number(rangeMin.value) && p.price <= Number(rangeMax.value),
-    );
-  }
-
-  if (size.value.length) {
-    result = result.filter((p) => p.sizes.some((s) => size.value.includes(s)));
-  }
-
+const readyProducts = computed(() => {
+  let result = [...filteredProducts.value];
   if (status.value === "New Arrivals") {
     result = [...result].sort((a, b) => b.id - a.id);
   } else if (status.value === "Best Sellers") {
@@ -325,64 +226,13 @@ const filteredProducts = computed(() => {
     });
   }
 
-  const filteredProducts = [];
+  const filteredResult = [];
 
-  for (let i = 0; i < result.length; i +=12) {
-    filteredProducts.push(result.slice(i, i + 12));
+  for (let i = 0; i < result.length; i += 12) {
+    filteredResult.push(result.slice(i, i + 12));
   }
 
-  return filteredProducts;
-});
-
-/* ---------- RANGE PROGRESS ---------- */
-
-const rangeProgress = computed(() => {
-  ``;
-  const range = maxPrice.value - minPrice.value;
-
-  const left = ((rangeMin.value - minPrice.value) / range) * 100;
-
-  const width = ((rangeMax.value - rangeMin.value) / range) * 100;
-
-  return {
-    left: left + "%",
-    width: width + "%",
-  };
-});
-
-/* ---------- RANGE PRICE FIELD ---------- */
-
-const handlePrice = () => {
-  if (priceNumberMin.value > rangeMax.value - minGap) {
-    priceNumberMin.value = parseInt(rangeMax.value - minGap);
-  } else if (priceNumberMin.value < minPrice.value) {
-    priceNumberMin.value = parseInt(minPrice.value);
-  } else if (priceNumberMax.value > maxPrice.value) {
-    priceNumberMax.value = parseInt(maxPrice.value);
-  }
-
-  rangeMin.value = priceNumberMin.value;
-  rangeMax.value = priceNumberMax.value;
-};
-
-/* ---------- WATCHERS ---------- */
-
-watch(rangeMin, (val) => {
-  if (val > rangeMax.value - minGap) {
-    rangeMin.value = rangeMax.value - minGap;
-  } else if (val < minPrice.value) {
-    rangeMin.value = minPrice.value;
-  }
-  priceNumberMin.value = parseInt(val);
-});
-
-watch(rangeMax, (val) => {
-  if (val < rangeMin.value + minGap) {
-    rangeMax.value = rangeMin.value + minGap;
-  } else if (val > maxPrice.value) {
-    rangeMax.value = maxPrice.value;
-  }
-  priceNumberMax.value = parseInt(val);
+  return filteredResult;
 });
 </script>
 <style lang="scss" scoped>
@@ -391,150 +241,15 @@ watch(rangeMax, (val) => {
   grid-template-columns: 22% 1fr;
   gap: 16px;
   margin-bottom: clamp(20px, 10vw, 40px);
-  .hv-main-filter-container {
-    .hvmfc-title,
-    .hvmfr-title,
-    .hvmfs-title {
-      font-size: clamp(10px, 4vw, 20px);
-      font-weight: 500;
-      color: rgb(0, 0, 0);
-      margin-bottom: clamp(4px, 1.2vw, 12px);
-    }
-    .hvmf-categories-container,
-    .hvmf-range-container,
-    .hvmf-size-container {
-      margin-bottom: 30px;
-      .categories-container,
-      .range-container,
-      .sizes-container {
-        padding: 0 clamp(10px, 1.2vw, 20px);
-        display: grid;
-        gap: clamp(4px, 1.2vw, 12px);
-        color: rgb(100, 100, 100);
-        .category-container,
-        .size {
-          list-style: none;
-          text-transform: capitalize;
-          font-size: clamp(8px, 3.6vw, 16px);
-          font-weight: 500;
-          display: flex;
-          align-items: center;
-          transition: all 0.2s ease-in;
-          cursor: pointer;
-          &:hover {
-            color: rgba(0, 180, 0, 0.5);
-          }
-          &.active-filter {
-            color: rgb(0, 180, 0);
-          }
-          input {
-            margin-right: clamp(4px, 1.2vw, 12px);
-            cursor: pointer;
-          }
-          label {
-            cursor: pointer;
-          }
-          span {
-            margin-left: auto;
-          }
-        }
-        .range-slider {
-          position: relative;
-          height: clamp(2px, 1.2vw, 4px);
-          background-color: rgba(0, 180, 0, 0.1);
-          border-radius: 25px;
-          .range-progress {
-            position: absolute;
-            border-radius: 25px;
-            height: 100%;
-            background-color: rgb(0, 180, 0);
-          }
-          input[type="range"] {
-            position: absolute;
-            width: 100%;
-            appearance: none;
-            pointer-events: none;
-            background: none;
-            height: 100%;
-          }
-          input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: clamp(10px, 1.2vw, 16px);
-            height: clamp(10px, 1.2vw, 16px);
-            border-radius: 50%;
-            border: 2px solid rgb(0, 180, 0);
-            background-color: rgb(255, 255, 255);
-            pointer-events: auto;
-            cursor: grab;
-            &:active {
-              cursor: grabbing;
-            }
-          }
-        }
-      }
-      .range-field-container {
-        display: grid;
-        gap: clamp(4px, 1.2vw, 12px);
-        .range-field {
-          display: flex;
-          gap: clamp(4px, 1.2vw, 12px);
-          .rf-min,
-          .rf-max {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgb(255, 255, 255);
-            border: 1px solid rgba(0, 0, 0, 0.15);
-            padding: clamp(4px, 1.2vw, 10px);
-            border-radius: 6px;
-            font-size: clamp(4px, 3.6vw, 14px);
-            cursor: pointer;
-            input {
-              width: 100%;
-              height: 100%;
-              border: none;
-              outline: none;
-              background-color: transparent;
-              padding-left: clamp(1px, 1.2vw, 4px);
-              font-size: clamp(4px, 3.6vw, 14.8px);
-            }
-          }
-        }
-        .rf-filter {
-          width: 100%;
-          background-color: rgb(0, 180, 0);
-          border: 1px solid rgb(255, 255, 255);
-          border-radius: 6px;
-          padding: clamp(4px, 1.2vw, 6px);
-          font-size: clamp(8px, 3.6vw, 16px);
-          color: rgb(245, 242, 235);
-          font-family: "Quicksand", sans-serif;
-          font-weight: 700;
-          cursor: pointer;
-          &:hover {
-            background-color: rgba(0, 180, 0, 0.8);
-          }
-        }
-      }
-    }
-    .hvmf-banner-container {
-      padding-right: clamp(10px, 1.2vw, 20px);
-      .hvmfb-image {
-        width: 100%;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-    }
-  }
   .products-container {
     min-width: 0;
     .sort-container {
       margin-bottom: clamp(10px, 4.6vw, 16px);
       display: flex;
       align-items: center;
+      .mmf-box {
+        display: none;
+      }
       .sort-status,
       .sort-by-container {
         position: relative;
@@ -556,15 +271,14 @@ watch(rangeMax, (val) => {
               border: none;
               white-space: nowrap;
               cursor: pointer;
-              font-size: clamp(8px, 3.6vw, 16px);
+              font-size: 16px;
               font-family: "Quicksand", sans-serif;
               font-weight: 500;
-              padding-bottom: 4px;
               transition: all 0.2s ease-in;
               &::after {
                 content: "";
                 position: absolute;
-                transform: scaleX(0);
+                transform: scaleX(0) translateY(4px);
                 transform-origin: right;
                 border-radius: 25px;
                 top: 100%;
@@ -584,7 +298,7 @@ watch(rangeMax, (val) => {
             &.active-status button {
               color: rgb(0, 180, 0);
               &::after {
-                transform: scaleX(1);
+                transform: scaleX(1) translateY(2px);
                 transform-origin: left;
               }
             }
@@ -596,7 +310,7 @@ watch(rangeMax, (val) => {
             color: rgb(100, 100, 100);
             border: none;
             cursor: pointer;
-            font-size: clamp(8px, 3.6vw, 16px);
+            font-size: 16px;
             font-family: "Quicksand", sans-serif;
             font-weight: 500;
             transition: all 0.2s ease-in;
@@ -675,13 +389,58 @@ watch(rangeMax, (val) => {
       .sort-by-container {
         margin-left: auto;
       }
+      @media (max-width: 1023px) {
+        .mmf-box {
+          margin-right: clamp(4px, 2.6vw, 24px);
+          display: flex;
+          min-width: 0;
+          align-items: center;
+          justify-content: center;
+          .fb-button {
+            border: none;
+            background-color: transparent;
+            margin-right: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            width: 30px;
+            padding: 4px;
+            .fbb-icon {
+              color: rgb(100, 100, 100);
+              transition: color 0.2s;
+            }
+            &.fbb-active {
+              .fbb-icon {
+                color: rgb(0, 180, 0);
+              }
+            }
+          }
+          .fbc-button {
+            border: none;
+            font-size: 14px;
+            color: rgb(100, 100, 100);
+            font-weight: 500;
+            font-family: "Quicksand", sans-serif;
+            height: 100%;
+            &:active {
+              color: rgb(255, 25, 83);
+            }
+          }
+        }
+      }
+      @media (max-width: 575px) {
+        .sort-status {
+          display: none;
+        }
+      }
     }
     .products-swiper {
       .products-swiper-slide {
         .products {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: clamp(10px, 4.6vw, 16px);
+          grid-template-columns: repeat(2, 1fr);
+          gap: 14px;
           .product-card {
             min-width: 0;
             border-radius: clamp(10px, 2.5vw, 16px);
@@ -698,7 +457,7 @@ watch(rangeMax, (val) => {
                 padding: clamp(2px, 0.8vw, 8px) clamp(4px, 2.8vw, 22px)
                   clamp(2px, 0.8vw, 8px) clamp(4px, 0.8vw, 18px);
                 font-weight: 500;
-                font-size: clamp(8px, 2.6vw, 18px);
+                font-size: clamp(16px, 4vw, 18px);
                 color: rgb(245, 242, 235);
                 clip-path: polygon(
                   0 50%,
@@ -718,7 +477,8 @@ watch(rangeMax, (val) => {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                .pct-wishlist-container {
+                .pct-wishlist-container,
+                .pct-view-container {
                   padding: clamp(2px, 1.2vw, 6px);
                   border: 0;
                   border-radius: 50%;
@@ -729,32 +489,23 @@ watch(rangeMax, (val) => {
                   margin-bottom: clamp(4px, 1.2vw, 6px);
                   transition: all 0.2s;
                   cursor: pointer;
-                  .pct-wishlist-box {
-                    height: clamp(12px, 4vw, 20px);
-                    width: clamp(12px, 4vw, 20px);
-                    img {
+                  .pct-wishlist-box,
+                  .pct-view-box {
+                    height: 20px;
+                    .wb-icon,
+                    .vb-icon {
                       width: 100%;
                       height: 100%;
                       object-fit: cover;
                     }
                   }
                   &:hover {
-                    background-color: rgba(255, 25, 83, 0.65);
+                    background-color: rgb(255, 255, 255);
                     .pct-wishlist-box {
-                      filter: brightness(0) invert(1);
+                      .wb-icon {
+                        color: rgb(255, 25, 83);
+                      }
                     }
-                  }
-                }
-                .pct-view-container {
-                  padding: clamp(2px, 1.2vw, 6px);
-                  border-radius: 50%;
-                  font-size: clamp(10px, 3.6vw, 16px);
-                  background-color: rgb(245, 242, 235);
-                  text-decoration: none;
-                  color: rgb(100, 100, 100);
-                  transition: all 0.2s;
-                  &:hover {
-                    color: rgb(0, 0, 0);
                   }
                 }
               }
@@ -808,8 +559,9 @@ watch(rangeMax, (val) => {
               border-radius: clamp(10px, 2.5vw, 16px);
               margin-top: auto;
               .pcm-name-container {
-                font-size: clamp(14px, 3.6vw, 18px);
+                font-size: clamp(16px, 3.6vw, 18px);
                 color: rgb(0, 0, 0);
+                margin-bottom: 6px;
                 p {
                   white-space: nowrap;
                   overflow: hidden;
@@ -821,46 +573,53 @@ watch(rangeMax, (val) => {
                 justify-content: space-between;
                 align-items: flex-end;
                 .pcm-price-container {
-                  font-size: clamp(14px, 4vw, 20px);
+                  font-size: clamp(16px, 4vw, 20px);
                   color: rgb(0, 180, 0);
                   font-weight: 700;
                   .pcm-old-price {
-                    font-size: clamp(10px, 3vw, 14px);
+                    font-size: clamp(12px, 3vw, 14px);
                     color: rgb(100, 100, 100);
                     text-decoration: line-through;
-                    margin-bottom: -2.8px;
+                    margin-bottom: -2px;
                   }
                 }
                 .pcm-cart-container {
                   padding: clamp(4px, 1.2vw, 8px);
-                  margin-top: clamp(4px, 1.2vw, 8px);
                   border: 1px solid rgb(0, 180, 0);
                   background-color: transparent;
-                  border-radius: clamp(4px, 1.2vw, 8px);
-                  color: rgb(255, 255, 255);
-                  font-size: clamp(8px, 3vw, 18px);
+                  border-radius: 10px;
                   cursor: pointer;
-                  transition: all 0.2s;
+                  transition: background-color 0.2s;
                   .pcm-cart-box {
-                    height: clamp(12px, 5vw, 24px);
-                    width: clamp(12px, 5vw, 24px);
-                    filter: invert(39%) sepia(94%) saturate(1125%)
-                      hue-rotate(92deg) brightness(95%) contrast(105%);
-                    img {
-                      width: 100%;
-                      height: 100%;
-                      object-fit: cover;
+                    height: 24px;
+                    width: 24px;
+                    .cb-icon {
+                      color: rgb(0, 180, 0);
                     }
                   }
                   &:hover {
                     background-color: rgba(0, 180, 0, 0.8);
                     .pcm-cart-box {
-                      filter: brightness(0) invert(1);
+                      .cb-icon {
+                        color: rgb(245, 242, 235);
+                      }
                     }
                   }
                 }
               }
             }
+          }
+        }
+        @media (min-width: 425px) {
+          .products {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+          }
+        }
+        @media (min-width: 768px) {
+          .products {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
           }
         }
       }
@@ -886,7 +645,7 @@ watch(rangeMax, (val) => {
     }
   }
 }
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .hv-products-section {
     grid-template-columns: 100%;
     .hv-main-filter-container {
