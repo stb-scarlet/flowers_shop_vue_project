@@ -8,7 +8,7 @@
             <li class="th-telephone">
               <a href="#" class="th-telephone">
                 <div class="th-telephone-icon">
-                  <img src="/action-icons/phone-icon.svg" alt="">
+                  <img src="/action-icons/phone-icon.svg" alt="" />
                 </div>
                 <span>+1 (23) 456 789</span>
               </a>
@@ -38,7 +38,7 @@
             <li class="th-theme-box"></li>
           </ul>
         </div>
-        <MobileTopHeader @handleOverlay="a" />
+        <MobileTopHeader />
       </div>
     </div>
     <!-- Desktop Navbar -->
@@ -179,10 +179,12 @@
 <script setup>
 import MobileTopHeader from "./MobileTopHeader.vue";
 import { onMounted, ref, onBeforeUnmount, watch } from "vue";
-let lastScroll = 0;
-const toggleOverlay = ref(false);
+const emit = defineEmits(["toggle-search"]);
+const props = defineProps({
+  toggleOverlay: Boolean,
+})
 const navbarHide = ref(false);
-const search = ref(false);
+let lastScroll = 0;
 const handleScroll = () => {
   const currentScroll = window.scrollY;
 
@@ -196,60 +198,31 @@ const handleScroll = () => {
 
   lastScroll = currentScroll;
 };
-const a = (val) => {
-  toggleOverlay.value = val;
-}
-const handleClick = (event) => {
-  if (
-    event.target.closest(
-      ".search-container, .search-view, .th-language-box, #search-button, .th-currency-box",
-    )
-  ) {
-    return;
-  }
-  search.value = false;
-  toggleOverlay.value = false;
+
+const search = ref(false);
+
+const toggleSearch = () => {
+  search.value = !search.value;
+  emit("toggle-search", search.value);
+};
+const showSearchView = () => {
+  search.value = true;
+  emit("toggle-search", search.value);
 };
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
-  window.addEventListener("click", handleClick);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
-  window.removeEventListener("click", handleClick);
 });
 
-const toggleSearch = () => {
-  search.value = !search.value;
-  toggleOverlay.value = !toggleOverlay.value;
-};
-const showSearchView = () => {
-  search.value = true;
-  toggleOverlay.value = true;
-};
-watch(toggleOverlay, (val) => {
-  if (val) {
-    document.body.classList.add("overlay");
-    document.body.style.top = `-${window.scrollY}px`;
-  } else {
-    document.body.classList.remove("overlay");
-  }
+watch(() => props.toggleOverlay, (newVal) => {
+  if (!newVal) search.value = false;
 });
 </script>
-<style lang="scss">
-*,
-*::after,
-*::before {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  background-color: rgb(245, 242, 235);
-  font-family: "Quicksand", sans-serif;
-}
+<style lang="scss" scoped>
 .desktop-navbar {
   position: fixed;
   display: block;
@@ -630,18 +603,6 @@ body {
         }
       }
     }
-  }
-}
-.overlay {
-  // position: sticky;
-  overflow: hidden;
-  &::before {
-    position: fixed;
-    inset: 0;
-    content: "";
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(4px);
-    z-index: 99;
   }
 }
 </style>

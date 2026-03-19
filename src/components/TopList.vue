@@ -22,10 +22,10 @@
         },
         768: {
           slidesPerView: 4,
-          spaceBetween: 18,
         },
         1024: {
           slidesPerView: 5,
+          spaceBetween: 18,
         },
       }"
       :navigation="{

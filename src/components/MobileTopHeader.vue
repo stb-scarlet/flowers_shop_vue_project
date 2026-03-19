@@ -45,7 +45,7 @@ const emit = defineEmits(["handleOverlay"]);
 const isOpen = ref(false);
 
 const handleMenu = () => {
-  isOpen.value = !isOpen.value;
+  isOpen.value = true;
   emit("handleOverlay", isOpen.value);
 };
 </script>

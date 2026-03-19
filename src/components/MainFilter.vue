@@ -1,7 +1,26 @@
 <template>
-  <div class="hv-main-filter-container">
-    <div class="hvmf-categories-container">
-      <div class="hvmfc-title">
+  <div class="main-filter-container" :class="{'mf-show': props.showFilter}">
+    <div class="mf-header">
+      <div class="mfh-title">
+        <h3>Filter</h3>
+      </div>
+      <button class="mfh-close-button" @click="hideFilter">
+        <svg
+          viewBox="0 0 12 12"
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          fill="currentColor"
+          class="cb-icon"
+        >
+          <path
+            d="M6 4.5858L10.2929 0.29289C10.6834 -0.09763 11.3166 -0.09763 11.7071 0.29289C12.0976 0.68342 12.0976 1.31658 11.7071 1.70711L7.4142 6L11.7071 10.2929C12.0976 10.6834 12.0976 11.3166 11.7071 11.7071C11.3166 12.0976 10.6834 12.0976 10.2929 11.7071L6 7.4142L1.70711 11.7071C1.31658 12.0976 0.68342 12.0976 0.29289 11.7071C-0.09763 11.3166 -0.09763 10.6834 0.29289 10.2929L4.5858 6L0.29289 1.70711C-0.09763 1.31658 -0.09763 0.68342 0.29289 0.29289C0.68342 -0.09763 1.31658 -0.09763 1.70711 0.29289L6 4.5858Z"
+          />
+        </svg>
+      </button>
+    </div>
+    <div class="mf-categories-container">
+      <div class="mfc-title">
         <p>Categories</p>
       </div>
       <ul class="categories-container">
@@ -22,8 +41,8 @@
         </li>
       </ul>
     </div>
-    <div class="hvmf-range-container">
-      <div class="hvmfr-title">
+    <div class="mf-range-container">
+      <div class="mfr-title">
         <p>Price Range</p>
       </div>
       <div class="range-container">
@@ -67,8 +86,8 @@
         </form>
       </div>
     </div>
-    <div class="hvmf-size-container">
-      <div class="hvmfs-title">
+    <div class="mf-size-container">
+      <div class="mfs-title">
         <p>Size</p>
       </div>
       <ul class="sizes-container">
@@ -89,8 +108,8 @@
         </li>
       </ul>
     </div>
-    <div class="hvmf-banner-container">
-      <div class="hvmfb-image">
+    <div class="mf-banner-container">
+      <div class="mfb-image">
         <img src="/banner-images/4.webp" alt="" />
       </div>
     </div>
@@ -98,8 +117,12 @@
 </template>
 <script setup>
 import { useStore } from "vuex";
-import { computed, ref, watch, onMounted } from "vue";
-const emit = defineEmits(["products"]);
+import { computed, ref, watch, onMounted, provide, inject } from "vue";
+const emit = defineEmits(["products", "hide-filter"]);
+const props = defineProps({
+  showFilter: Boolean,
+});
+// const toggleOverlay = inject("toggleOverlay");
 const store = useStore();
 const category = ref([]);
 const size = ref([]);
@@ -116,6 +139,9 @@ const maxPrice = computed(() =>
   Math.max(...products.value.map((p) => p.price)),
 );
 
+const hideFilter = () => {
+  emit("hide-filter", false);
+}
 const rangeMin = ref(0);
 const rangeMax = ref(0);
 
@@ -156,7 +182,7 @@ const filteredProducts = computed(() => {
     result = result.filter((p) => p.sizes.some((s) => size.value.includes(s)));
   }
 
-	return result;
+  return result;
 });
 
 /* ---------- RANGE PROGRESS ---------- */
@@ -207,40 +233,49 @@ watch(rangeMax, (val) => {
   priceNumberMax.value = parseInt(val);
 });
 
-watch(filteredProducts, (val) => {
-	emit("products", val);
-}, {immediate: true})
+watch(
+  filteredProducts,
+  (val) => {
+    emit("products", val);
+  },
+  { immediate: true },
+);
+
+
 </script>
 <style lang="scss" scoped>
-.hv-main-filter-container {
-  .hvmfc-title,
-  .hvmfr-title,
-  .hvmfs-title {
-    font-size: clamp(10px, 4vw, 20px);
+.main-filter-container {
+  .mf-header {
+    display: none;
+  }
+  .mfc-title,
+  .mfr-title,
+  .mfs-title {
+    font-size: 18px;
     font-weight: 500;
     color: rgb(0, 0, 0);
-    margin-bottom: clamp(4px, 1.2vw, 12px);
+    margin-bottom: 10px;
   }
-  .hvmf-categories-container,
-  .hvmf-range-container,
-  .hvmf-size-container {
+  .mf-categories-container,
+  .mf-range-container,
+  .mf-size-container {
     margin-bottom: 30px;
     .categories-container,
     .range-container,
     .sizes-container {
-      padding: 0 clamp(10px, 1.2vw, 20px);
+      padding: 0 10px;
       display: grid;
-      gap: clamp(4px, 1.2vw, 12px);
+      gap: 10px;
       color: rgb(100, 100, 100);
       .category-container,
       .size {
         list-style: none;
         text-transform: capitalize;
-        font-size: clamp(8px, 3.6vw, 16px);
+        font-size: 16px;
         font-weight: 500;
         display: flex;
         align-items: center;
-        transition: all 0.2s ease-in;
+        transition: color 0.2s;
         cursor: pointer;
         &:hover {
           color: rgba(0, 180, 0, 0.5);
@@ -249,7 +284,7 @@ watch(filteredProducts, (val) => {
           color: rgb(0, 180, 0);
         }
         input {
-          margin-right: clamp(4px, 1.2vw, 12px);
+          margin-right: 10px;
           cursor: pointer;
         }
         label {
@@ -261,7 +296,7 @@ watch(filteredProducts, (val) => {
       }
       .range-slider {
         position: relative;
-        height: clamp(2px, 1.2vw, 4px);
+        height: 4px;
         background-color: rgba(0, 180, 0, 0.1);
         border-radius: 25px;
         .range-progress {
@@ -280,8 +315,8 @@ watch(filteredProducts, (val) => {
         }
         input[type="range"]::-webkit-slider-thumb {
           appearance: none;
-          width: clamp(10px, 1.2vw, 16px);
-          height: clamp(10px, 1.2vw, 16px);
+          width: 16px;
+          height: 16px;
           border-radius: 50%;
           border: 2px solid rgb(0, 180, 0);
           background-color: rgb(255, 255, 255);
@@ -294,11 +329,10 @@ watch(filteredProducts, (val) => {
       }
     }
     .range-field-container {
-      display: grid;
-      gap: clamp(4px, 1.2vw, 12px);
       .range-field {
         display: flex;
-        gap: clamp(4px, 1.2vw, 12px);
+        gap: 10px;
+        margin-bottom: 10px;
         .rf-min,
         .rf-max {
           display: flex;
@@ -306,9 +340,9 @@ watch(filteredProducts, (val) => {
           align-items: center;
           background-color: rgb(255, 255, 255);
           border: 1px solid rgba(0, 0, 0, 0.15);
-          padding: clamp(4px, 1.2vw, 10px);
+          padding: 10px;
           border-radius: 6px;
-          font-size: clamp(4px, 3.6vw, 14px);
+          font-size: 14px;
           cursor: pointer;
           input {
             width: 100%;
@@ -316,8 +350,8 @@ watch(filteredProducts, (val) => {
             border: none;
             outline: none;
             background-color: transparent;
-            padding-left: clamp(1px, 1.2vw, 4px);
-            font-size: clamp(4px, 3.6vw, 14.8px);
+            padding-left: 4px;
+            font-size: 14.8px;
           }
         }
       }
@@ -326,8 +360,8 @@ watch(filteredProducts, (val) => {
         background-color: rgb(0, 180, 0);
         border: 1px solid rgb(255, 255, 255);
         border-radius: 6px;
-        padding: clamp(4px, 1.2vw, 6px);
-        font-size: clamp(8px, 3.6vw, 16px);
+        padding: 6px;
+        font-size: 16px;
         color: rgb(245, 242, 235);
         font-family: "Quicksand", sans-serif;
         font-weight: 700;
@@ -338,9 +372,9 @@ watch(filteredProducts, (val) => {
       }
     }
   }
-  .hvmf-banner-container {
-    padding-right: clamp(10px, 1.2vw, 20px);
-    .hvmfb-image {
+  .mf-banner-container {
+    padding-right: clamp(10px, 1vw, 20px);
+    .mfb-image {
       width: 100%;
       img {
         width: 100%;
@@ -348,6 +382,57 @@ watch(filteredProducts, (val) => {
         object-fit: cover;
       }
     }
+  }
+}
+@media (max-width: 1023px) {
+  .main-filter-container {
+    position: absolute;
+    z-index: 60;
+    background-color: rgb(245, 242, 235);
+    left: 0;
+    top: 0;
+    width: 300px;
+    transform: translateX(-100%);
+    height: 100%;
+    padding: 0 clamp(10px, 1vw, 20px);
+    transition: transform 0.2s ease-out;
+    .mf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px 10px 10px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      .mfh-title {
+        font-size: 20px;
+        font-family: "Quicksand", sans-serif;
+        text-transform: uppercase;
+        color: rgb(0, 180, 0);
+      }
+      .mfh-close-button {
+        border: none;
+        background-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgb(100, 100, 100);
+        .cb-icon {
+          height: 16px;
+          width: 16px;
+        }
+        &:active {
+          color: rgb(255, 25, 83);
+        }
+      }
+    }
+    &.mf-show {
+      transform: translateX(0);
+    }
+  }
+}
+@media (max-width: 424px) {
+  .main-filter-container {
+    width: 100%;
   }
 }
 </style>
