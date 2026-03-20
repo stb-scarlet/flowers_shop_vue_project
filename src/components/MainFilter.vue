@@ -1,5 +1,5 @@
 <template>
-  <div class="main-filter-container" :class="{'mf-show': props.showFilter}">
+  <div class="main-filter-container" :class="{'mf-show': filterStore.isFilterActive}">
     <div class="mf-header">
       <div class="mfh-title">
         <h3>Filter</h3>
@@ -118,11 +118,10 @@
 <script setup>
 import { useStore } from "vuex";
 import { computed, ref, watch, onMounted, provide, inject } from "vue";
-const emit = defineEmits(["products", "hide-filter"]);
-const props = defineProps({
-  showFilter: Boolean,
-});
-// const toggleOverlay = inject("toggleOverlay");
+import { useFilterStore } from "@/store/modules/Filter";
+const emit = defineEmits(["products"]);
+const filterStore = useFilterStore();
+const hideFilter = filterStore.hideFilter;
 const store = useStore();
 const category = ref([]);
 const size = ref([]);
@@ -139,9 +138,6 @@ const maxPrice = computed(() =>
   Math.max(...products.value.map((p) => p.price)),
 );
 
-const hideFilter = () => {
-  emit("hide-filter", false);
-}
 const rangeMin = ref(0);
 const rangeMax = ref(0);
 
@@ -392,8 +388,9 @@ watch(
     left: 0;
     top: 0;
     width: 300px;
+    height: calc(100vh - 100px);
     transform: translateX(-100%);
-    height: 100%;
+    overflow: scroll;
     padding: 0 clamp(10px, 1vw, 20px);
     transition: transform 0.2s ease-out;
     .mf-header {
@@ -427,6 +424,9 @@ watch(
     }
     &.mf-show {
       transform: translateX(0);
+    }
+    .mf-banner-container {
+      display: none;
     }
   }
 }

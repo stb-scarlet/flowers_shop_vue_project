@@ -179,9 +179,9 @@
 <script setup>
 import MobileTopHeader from "./MobileTopHeader.vue";
 import { onMounted, ref, onBeforeUnmount, watch } from "vue";
-const emit = defineEmits(["toggle-search"]);
+const emit = defineEmits(["toggle-search", "is-search-active"]);
 const props = defineProps({
-  toggleOverlay: Boolean,
+  hideSearch: Boolean,
 })
 const navbarHide = ref(false);
 let lastScroll = 0;
@@ -218,9 +218,14 @@ onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
 });
 
-watch(() => props.toggleOverlay, (newVal) => {
-  if (!newVal) search.value = false;
+watch(() => props.hideSearch, (newVal) => {
+  if (!newVal) {
+    search.value = false;
+  }
 });
+watch(search, (newVal) => {
+  emit("is-search-active", newVal);
+})
 </script>
 <style lang="scss" scoped>
 .desktop-navbar {
