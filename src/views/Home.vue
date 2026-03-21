@@ -3,18 +3,18 @@
     <HomeMainBanner />
     <div class="hv-main-container">
       <TopList />
-      <CategoriesCard />
+      <CategoryCard />
       <Banners />
-      <BlogsCard />
+      <BlogCard />
     </div>
   </div>
 </template>
 <script setup>
-import HomeMainBanner from "@/components/HomeMainBanner.vue";
-import TopList from "@/components/TopList.vue";
-import CategoriesCard from "@/components/CategoriesCard.vue";
-import Banners from "@/components/Banners.vue";
-import BlogsCard from "@/components/BlogsCard.vue";
+import HomeMainBanner from "@/components/home/HomeMainBanner.vue";
+import TopList from "@/components/ui/TopList.vue";
+import CategoryCard from "@/components/home/CategoryCard.vue";
+import Banners from "@/components/ui/Banners.vue";
+import BlogCard from "@/components/home/BlogCard.vue";
 </script>
 <style lang="scss" scoped>
 // :root {

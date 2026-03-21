@@ -8,30 +8,50 @@
   <router-view />
 </template>
 <script setup>
-import Navbar from "./components/Navbar.vue";
-import MainMenu from "./components/MainMenu.vue";
+import Navbar from "./components/layout/Navbar.vue";
+import MainMenu from "./components/layout/MainMenu.vue";
+import { useRoute } from "vue-router";
 import { onMounted, onBeforeUnmount, ref, watch, computed } from "vue";
-import { useFilterStore } from "./store/modules/Filter";
+import { useOverlayStore } from "./store/modules/Overlay";
+const route = useRoute();
+watch(
+  () => route.path,
+  () => {
+    overlayStore.hideMenu();
+    overlayStore.hideFilter();
+    isSearchActive.value = false;
+  },
+);
 
-const filterStore = useFilterStore();
+const overlayStore = useOverlayStore();
 
 const isSearchActive = ref(false);
 
 const overlayActive = computed(() => {
-  return isSearchActive.value || filterStore.isFilterActive;
+  return isSearchActive.value || overlayStore.isFilterActive;
 });
-
+const menuOverlayActive = computed(() => {
+  return overlayStore.isMenuActive;
+});
 const handleClick = (event) => {
-  const selectors = filterStore.ignoreSelectors.join(", ");
+  const selectors = overlayStore.ignoreSelectors.join(", ");
 
   if (event.target.closest(selectors)) return;
 
-  if (filterStore.isFilterActive) {
-    filterStore.hideFilter();
+  if (overlayStore.isFilterActive) {
+    overlayStore.hideFilter();
   }
 
   if (isSearchActive.value) {
     isSearchActive.value = false;
+  }
+
+  if (overlayStore.isMenuActive) {
+    overlayStore.hideMenu();
+  }
+
+  if (overlayStore.isSortActive) {
+    overlayStore.toggleSort();
   }
 };
 
@@ -47,11 +67,20 @@ watch(overlayActive, (val) => {
     document.body.style.top = "";
   }
 });
-
+watch(menuOverlayActive, (val) => {
+  if (val) {
+    document.body.classList.add("menu-overlay");
+    document.body.style.top = `-${window.scrollY}px`;
+    isSearchActive.value = false;
+  } else {
+    document.body.classList.remove("menu-overlay");
+    document.body.style.top = "";
+  }
+});
 const toggleSearch = (val) => {
   isSearchActive.value = val;
-  if (val && filterStore.isFilterActive) {
-    filterStore.hideFilter();
+  if (val && overlayStore.isFilterActive) {
+    overlayStore.hideFilter();
   }
 };
 </script>
@@ -71,7 +100,6 @@ body {
 }
 
 .overlay {
-  // position: sticky;
   overflow: hidden;
   &::before {
     position: fixed;
@@ -80,6 +108,17 @@ body {
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(4px);
     z-index: 50;
+  }
+}
+.menu-overlay {
+  overflow: hidden;
+  &::before {
+    position: fixed;
+    inset: 0;
+    content: "";
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 95;
   }
 }
 </style>

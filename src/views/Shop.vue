@@ -6,9 +6,9 @@
   </div>
 </template>
 <script setup>
-import Products from '@/components/Products.vue';
-import Banners from '@/components/Banners.vue';
-import TopList from '@/components/TopList.vue';
+import Products from '@/components/shop/Products.vue';
+import Banners from '@/components/ui/Banners.vue';
+import TopList from '@/components/ui/TopList.vue';
 </script>
 <style lang="scss">
 .shop-container {
@@ -18,7 +18,7 @@ import TopList from '@/components/TopList.vue';
 }
 @media (min-width: 1024px) {
   .shop-container {
-    padding: 120px 0;
+    padding: 120px 0 0;
   }
 }
 </style>

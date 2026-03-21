@@ -8,7 +8,28 @@
             <li class="th-telephone">
               <a href="#" class="th-telephone">
                 <div class="th-telephone-icon">
-                  <img src="/action-icons/phone-icon.svg" alt="" />
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M16.1007 13.359L16.5562 12.9062C17.1858 12.2801 18.1672 12.1515 18.9728 12.5894L20.8833 13.628C22.1102 14.2949 22.3806 15.9295 21.4217 16.883L20.0011 18.2954C19.6399 18.6546 19.1917 18.9171 18.6763 18.9651M4.00289 5.74561C3.96765 5.12559 4.25823 4.56668 4.69185 4.13552L6.26145 2.57483C7.13596 1.70529 8.61028 1.83992 9.37326 2.85908L10.6342 4.54348C11.2507 5.36691 11.1841 6.49484 10.4775 7.19738L10.1907 7.48257"
+                      stroke="#000"
+                      stroke-width="1.5"
+                    />
+
+                    <path
+                      d="M18.6763 18.9651C17.0469 19.117 13.0622 18.9492 8.8154 14.7266C4.81076 10.7447 4.09308 7.33182 4.00293 5.74561"
+                      stroke="#000"
+                      stroke-width="1.5"
+                      opacity="0.5"
+                    />
+
+                    <path
+                      d="M16.1007 13.3589C16.1007 13.3589 15.0181 14.4353 12.0631 11.4971C9.10807 8.55886 10.1907 7.48242 10.1907 7.48242"
+                      stroke="#000"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      opacity="0.5"
+                    />
+                  </svg>
                 </div>
                 <span>+1 (23) 456 789</span>
               </a>
@@ -16,7 +37,18 @@
             <li class="th-message">
               <a href="#" class="th-message">
                 <div class="th-message-icon">
-                  <img src="/action-icons/envelope-icon.svg" alt="" />
+                  <svg viewBox="0 0 46.572 31.609" fill="currentColor">
+                    <polygon points="46.573,23.807 46.573,6.29 34.923,15.98" />
+                    <polygon points="0,6.294 0,23.802 11.648,15.98" />
+
+                    <path
+                      d="M27.589 22.08c-1.158.963-2.684 1.489-4.305 1.489-1.616 0-3.147-.526-4.301-1.489l-5.193-4.322L0 27.017v3.261c0 .738.601 1.332 1.347 1.332h43.879c.741 0 1.347-.594 1.347-1.332v-3.257l-13.789-9.263L27.589 22.08z"
+                    />
+
+                    <path
+                      d="M45.226 0H1.347C.601 0 0 .594 0 1.33v1.487l20.717 17.227c.663.548 1.597.863 2.567.863.97 0 1.906-.315 2.566-.863L46.573 2.813V1.33C46.573.594 45.967 0 45.226 0z"
+                    />
+                  </svg>
                 </div>
                 <span>example.org</span>
               </a>
@@ -26,13 +58,40 @@
         <div class="th-left">
           <ul class="th-settings">
             <li class="th-currency">
-              <button class="th-currency" @click="toggleCurrency">
-                <span>Currency: </span>
+              <span>Currency: </span>
+              <button
+                class="th-currency-button"
+                @click="toggleCurrency = !toggleCurrency"
+              >
+                <span></span>
               </button>
+              <ul
+                class="th-currency-list"
+                :style="{ 'thc-active': toggleCurrency }"
+              >
+                <li
+                  class="thc-item"
+                  v-for="item in currencyStore.currency"
+                  :key="item.id"
+                >
+                  <button class="thc-button">
+                    <span
+                      :style="{
+                        backgroundImage: `url(${item.flag})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                      }"
+                    ></span>
+                    <p>{{ item.name }}</p>
+                  </button>
+                </li>
+              </ul>
             </li>
             <li class="th-language" ref="languageList">
-              <button class="th-language" @click="toggleLanguage">
-                <span>Language: </span>
+              <span>Language: </span>
+              <button class="th-language-button" @click="toggleLanguage">
+                <span></span>
               </button>
             </li>
             <li class="th-theme-box"></li>
@@ -177,12 +236,16 @@
   </div>
 </template>
 <script setup>
-import MobileTopHeader from "./MobileTopHeader.vue";
+import MobileTopHeader from "../layout/MobileTopHeader.vue";
 import { onMounted, ref, onBeforeUnmount, watch } from "vue";
+import { useCurrencyStore } from "@/store/modules/Currency";
+const currencyStore = useCurrencyStore();
+const toggleCurrency = ref(false);
+console.log(toggleCurrency.value)
 const emit = defineEmits(["toggle-search", "is-search-active"]);
 const props = defineProps({
   hideSearch: Boolean,
-})
+});
 const navbarHide = ref(false);
 let lastScroll = 0;
 const handleScroll = () => {
@@ -218,21 +281,24 @@ onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
 });
 
-watch(() => props.hideSearch, (newVal) => {
-  if (!newVal) {
-    search.value = false;
-  }
-});
+watch(
+  () => props.hideSearch,
+  (newVal) => {
+    if (!newVal) {
+      search.value = false;
+    }
+  },
+);
 watch(search, (newVal) => {
   emit("is-search-active", newVal);
-})
+});
 </script>
 <style lang="scss" scoped>
 .desktop-navbar {
   position: fixed;
   display: block;
   width: 100%;
-  z-index: 100;
+  z-index: 90;
   background-color: rgb(245, 242, 235);
   transition: transform 0.3s ease-out;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -423,7 +489,6 @@ watch(search, (newVal) => {
             .th-currency,
             .th-language {
               margin: 0 4px;
-              background-color: transparent;
               height: 100%;
               display: flex;
               justify-content: center;
@@ -432,17 +497,77 @@ watch(search, (newVal) => {
               color: rgb(245, 242, 235);
               font-size: 14px;
               font-weight: 700;
-              border: none;
+              position: relative;
               .th-telephone-icon,
-              .th-message-icon {
+              .th-message-icon,
+              .th-currency-button,
+              .th-language-button,
+              .th-currency-list .thc-item .thc-button span {
+                border: none;
+                margin: 0 4px;
                 width: 18px;
                 height: 18px;
-                margin-right: 4px;
-                filter: invert(1);
-                img {
-                  width: 100%;
+                background-color: transparent;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                overflow: hidden;
+                cursor: pointer;
+                span {
                   height: 100%;
+                  width: 100%;
+                  background: url("/public/action-icons/usa-flag.svg");
                   object-fit: cover;
+                }
+              }
+              .th-currency-list {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                background-color: rgb(245, 242, 235);
+                border-radius: 10px 0 10px 10px;
+                padding: 4px;
+                display: flex;
+                flex-direction: column;
+                visibility: hidden;
+                opacity: 0;
+                transform: translateY(-10%);
+                transition:
+                  transform 0.2s ease-out,
+                  opacity 0.2s ease-out;
+                .thc-button {
+                  display: flex;
+                  background-color: transparent;
+                  border: none;
+                  padding: 8px;
+                  transition: color 0.2s;
+                  font-family: "Quicksand", sans-serif;
+                  color: rgb(100, 100, 100);
+                  font-weight: 700;
+                  cursor: pointer;
+                  p {
+                    margin: 0 4px;
+                  }
+                  &:hover {
+                    color: rgb(0, 180, 0);
+                  }
+                }
+                &::after {
+                  position: absolute;
+                  content: "";
+                  width: 100%;
+                  top: 50%;
+                  left: 0;
+                  transform: translateY(-50%);
+                  height: 1px;
+                  background-color: rgba(0, 0, 0, 0.1);
+                }
+                &.thc-active {
+                  transform: translateY(0);
+                  opacity: 1;
+                  visibility: visible;
                 }
               }
             }

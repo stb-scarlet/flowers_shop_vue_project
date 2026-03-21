@@ -38,13 +38,13 @@
         </div>
       </div>
     </div>
-    <Service />
+    <Services />
     <PartnerLogos />
   </div>
 </template>
 <script setup>
-import Service from "@/components/Service.vue";
-import PartnerLogos from "@/components/PartnerLogos.vue";
+import PartnerLogos from "@/components/ui/PartnerLogos.vue";
+import Services from "@/components/ui/Services.vue";
 </script>
 <style lang="scss" scoped>
 .about-us-container {

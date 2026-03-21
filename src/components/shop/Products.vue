@@ -1,8 +1,6 @@
 <template>
   <div class="hv-products-section">
-    <MainFilter
-      @products="filteredProducts = $event"
-    />
+    <MainFilter @products="filteredProducts = $event" />
     <div class="products-container">
       <div class="sort-container">
         <div class="mmf-box">
@@ -32,10 +30,14 @@
             </li>
           </ul>
         </div>
-        <div class="sort-by-container" :class="{ 'active-sort': toggleSort }">
+        <div
+          class="sort-by-container"
+          :class="{ 'active-sort': overlayStore.isSortActive }"
+        >
           <div class="sb-text">
-            <button @click="toggleSort = !toggleSort">
-              Default Sorting
+            <p>Sort By:</p>
+            <button @click="overlayStore.toggleSort">
+              <span>{{ sort }}</span>
               <i class="fas fa-chevron-down"></i>
             </button>
           </div>
@@ -160,11 +162,11 @@
         v-if="readyProducts.length > 1"
       >
         <div class="psc-prev">
-          <i class="fas fa-angle-left"></i>
+          <i class="fas fa-arrow-left"></i>
         </div>
         <div class="psc-pagination"></div>
         <div class="psc-next">
-          <i class="fas fa-angle-right"></i>
+          <i class="fas fa-arrow-right"></i>
         </div>
       </div>
     </div>
@@ -172,10 +174,10 @@
 </template>
 <script setup>
 import MainFilter from "./MainFilter.vue";
-import { computed, ref, provide, inject, watch } from "vue";
-import { useFilterStore } from "@/store/modules/Filter";
-const filterStore = useFilterStore();
-const showFilter = filterStore.showFilter;
+import { computed, ref } from "vue";
+import { useOverlayStore } from "@/store/modules/Overlay";
+const overlayStore = useOverlayStore();
+const showFilter = overlayStore.showFilter;
 const filteredProducts = ref([]);
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
@@ -192,12 +194,15 @@ const pagination = {
   },
 };
 
-const toggleSort = ref(false);
 const status = ref("All Plants");
 const sort = ref("Default Sorting");
 
 const readyProducts = computed(() => {
-  let result = [...filteredProducts.value];
+  let result = [
+    ...filteredProducts.value,
+    ...filteredProducts.value,
+    ...filteredProducts.value,
+  ];
   if (status.value === "New Arrivals") {
     result = [...result].sort((a, b) => b.id - a.id);
   } else if (status.value === "Best Sellers") {
@@ -315,20 +320,26 @@ const readyProducts = computed(() => {
           }
         }
         .sb-text {
+          p {
+            margin-right: 4px;
+          }
           button {
             background-color: transparent;
             color: rgb(100, 100, 100);
             border: none;
             cursor: pointer;
             font-size: 16px;
+            display: flex;
             font-family: "Quicksand", sans-serif;
             font-weight: 500;
-            transition: all 0.2s ease-in;
+            transition: color 0.2s;
             i {
               font-size: clamp(4px, 3.6vw, 14px);
               color: rgb(100, 100, 100);
-              padding-top: 2px;
-              transition: all 0.2s;
+              padding-top: 4px;
+              transition:
+                color 0.2s,
+                transform 0.2s;
             }
             &:hover {
               color: rgb(0, 180, 0);
@@ -352,7 +363,9 @@ const readyProducts = computed(() => {
           visibility: hidden;
           opacity: 0;
           transform: translateY(-4px);
-          transition: all 0.2s;
+          transition:
+            transform 0.2s,
+            opacity 0.2s;
           .sbw-item {
             button {
               background-color: transparent;
@@ -381,12 +394,10 @@ const readyProducts = computed(() => {
             button {
               color: rgb(0, 180, 0);
               i {
+                align-self: flex-end;
                 color: rgb(0, 180, 0);
+                transform: rotate(-180deg);
               }
-            }
-            i {
-              padding-bottom: 2px;
-              transform: rotate(-180deg);
             }
           }
           .sb-wrap {
@@ -634,7 +645,7 @@ const readyProducts = computed(() => {
       .psc-prev,
       .psc-next {
         display: inline-block;
-        font-size: clamp(10px, 4vw, 24px);
+        font-size: 20px;
         color: rgb(100, 100, 100);
         transition: color 0.2s;
         &:hover {
@@ -643,11 +654,12 @@ const readyProducts = computed(() => {
       }
       .psc-pagination {
         display: flex;
+        margin: 0 10px;
         width: auto !important;
         :deep(.swiper-pagination-bullet) {
           background-color: rgba(0, 180, 0, 0.1);
-          height: 30px;
-          width: 30px;
+          height: 34px;
+          width: 34px;
           border-radius: 5px;
           display: flex;
           justify-content: center;

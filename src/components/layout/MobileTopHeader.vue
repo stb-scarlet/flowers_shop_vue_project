@@ -1,7 +1,7 @@
 <template>
   <div class="mth-left-side">
     <div class="mth-burger-container">
-      <button class="mth-burger-button" @click.stop="handleMenu">
+      <button class="mth-burger-button" @click="overlayStore.showMenu">
         <span class="mthbb-line"></span>
       </button>
     </div>
@@ -40,14 +40,8 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-const emit = defineEmits(["handleOverlay"]);
-const isOpen = ref(false);
-
-const handleMenu = () => {
-  isOpen.value = true;
-  emit("handleOverlay", isOpen.value);
-};
+import { useOverlayStore } from "@/store/modules/Overlay";
+const overlayStore = useOverlayStore();
 </script>
 <style lang="scss" scoped>
 .mth-left-side,

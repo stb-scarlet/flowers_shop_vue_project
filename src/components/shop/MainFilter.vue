@@ -1,5 +1,5 @@
 <template>
-  <div class="main-filter-container" :class="{'mf-show': filterStore.isFilterActive}">
+  <div class="main-filter-container" :class="{'mf-show': overlayStore.isFilterActive}">
     <div class="mf-header">
       <div class="mfh-title">
         <h3>Filter</h3>
@@ -118,10 +118,10 @@
 <script setup>
 import { useStore } from "vuex";
 import { computed, ref, watch, onMounted, provide, inject } from "vue";
-import { useFilterStore } from "@/store/modules/Filter";
+import { useOverlayStore } from "@/store/modules/Overlay";
 const emit = defineEmits(["products"]);
-const filterStore = useFilterStore();
-const hideFilter = filterStore.hideFilter;
+const overlayStore = useOverlayStore();
+const hideFilter = overlayStore.hideFilter;
 const store = useStore();
 const category = ref([]);
 const size = ref([]);
