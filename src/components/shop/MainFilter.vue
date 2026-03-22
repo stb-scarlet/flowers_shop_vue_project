@@ -116,26 +116,24 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
-import { computed, ref, watch, onMounted, provide, inject } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import { useOverlayStore } from "@/store/modules/Overlay";
+import { useCurrencyStore } from "@/store/modules/Currency";
+const currencyStore = useCurrencyStore();
 const emit = defineEmits(["products"]);
 const overlayStore = useOverlayStore();
 const hideFilter = overlayStore.hideFilter;
-const store = useStore();
 const category = ref([]);
 const size = ref([]);
-const products = computed(() => store.getters["product/getProducts"]);
 const categories = computed(() => {
-  return [...new Set(products.value.map((p) => p?.category))];
+  return [...new Set(currencyStore.currencyProducts.map((p) => p?.category))];
 });
-
 const minPrice = computed(() =>
-  Math.min(...products.value.map((p) => p.price)),
+  Math.min(...currencyStore.currencyProducts.map((p) => p.price)),
 );
 
 const maxPrice = computed(() =>
-  Math.max(...products.value.map((p) => p.price)),
+  Math.max(...currencyStore.currencyProducts.map((p) => p.price)),
 );
 
 const rangeMin = ref(0);
@@ -157,12 +155,12 @@ onMounted(() => {
 
 /* ---------- FILTER PRODUCTS ---------- */
 const productsQuantity = (el) => {
-  return products.value.filter((p) => p.category === el || p.sizes.includes(el))
+  return currencyStore.currencyProducts.filter((p) => p.category === el || p.sizes.includes(el))
     .length;
 };
 
 const filteredProducts = computed(() => {
-  let result = [...products.value];
+  let result = [...currencyStore.currencyProducts];
   if (category.value.length) {
     result = result.filter((p) => category.value.includes(p.category));
   }

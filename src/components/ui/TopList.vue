@@ -128,17 +128,15 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
 import { computed } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import { useProductStore } from "@/store/modules/product";
+const productStore = useProductStore();
+const products = computed(() => productStore.products);
 const modules = [Navigation];
-
-const store = useStore();
-
-const products = computed(() => store.getters["product/getProducts"]);
 
 const topListProducts = [...products.value].sort((a, b) => {
   const ratingA =

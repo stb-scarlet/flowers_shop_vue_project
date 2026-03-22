@@ -14,7 +14,7 @@ import TopList from '@/components/ui/TopList.vue';
 .shop-container {
   max-width: 1500px;
   margin: 0 auto;
-  padding: 100px 0;
+  padding: 100px 0 0;
 }
 @media (min-width: 1024px) {
   .shop-container {

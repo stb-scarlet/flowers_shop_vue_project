@@ -130,7 +130,7 @@
                     <div class="pcm-old-price" v-if="item.discountPrice">
                       <p>{{ item.discountPrice.oldPrice.toFixed(2) }}</p>
                     </div>
-                    <p>{{ item.price.toFixed(2) }}</p>
+                    <p>{{ item.formattedPrice }}</p>
                   </div>
                   <button class="pcm-cart-container">
                     <div class="pcm-cart-box">
@@ -252,10 +252,10 @@ const readyProducts = computed(() => {
 .hv-products-section {
   display: grid;
   grid-template-columns: 22% 1fr;
-  padding: 20px clamp(10px, 1vw, 20px) 0;
+  padding: 0 clamp(10px, 1vw, 20px);
   width: 100%;
   gap: 16px;
-  margin-bottom: clamp(20px, 10vw, 40px);
+  margin: clamp(20px, 10vw, 40px) auto;
   .products-container {
     min-width: 0;
     .sort-container {
@@ -677,8 +677,8 @@ const readyProducts = computed(() => {
 }
 @media (max-width: 1023px) {
   .hv-products-section {
-    padding: 10px clamp(10px, 1vw, 20px) 0;
-    grid-template-columns: 100%;
+    padding: 0 clamp(10px, 1vw, 20px);
+    grid-template-columns: 1fr;
     position: relative;
   }
 }

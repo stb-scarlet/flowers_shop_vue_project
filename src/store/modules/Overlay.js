@@ -8,14 +8,13 @@ export const useOverlayStore = defineStore("overlay", () => {
     const ignoreSelectors = ref([
         ".search-container",
         ".search-view",
-        ".th-language",
         "#search-button",
-        ".th-currency",
         ".main-filter-container",
         ".fb-button",
         ".mth-burger-button",
         ".main-menu",
         ".sort-by-container",
+        ".th-settings",
     ])
 
     const addSelector = (selector) => {

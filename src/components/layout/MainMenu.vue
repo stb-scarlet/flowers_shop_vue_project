@@ -1,5 +1,8 @@
 <template>
-  <div class="main-menu-container" :class="{ 'mm-show': overlayStore.isMenuActive }">
+  <div
+    class="main-menu-container"
+    :class="{ 'mm-show': overlayStore.isMenuActive }"
+  >
     <div class="main-menu">
       <button class="close-menu" @click="overlayStore.hideMenu">
         <svg
@@ -22,7 +25,11 @@
           <!-- LINKS -->
           <ul v-if="m_item.links" class="mmw-links">
             <li v-for="l in m_item.links" :key="l.id" class="mmwl-item">
-              <router-link :to="l.link" class="mmwl-link" active-class="mmwl-link-active">
+              <router-link
+                :to="l.link"
+                class="mmwl-link"
+                active-class="mmwl-link-active"
+              >
                 {{ l.page }}
               </router-link>
             </li>

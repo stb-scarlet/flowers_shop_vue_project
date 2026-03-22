@@ -61,20 +61,30 @@
               <span>Currency: </span>
               <button
                 class="th-currency-button"
-                @click="toggleCurrency = !toggleCurrency"
+                @click="currencyStore.toggleCurrency"
               >
-                <span></span>
+                <span
+                  :style="{
+                    backgroundImage: `url(${currencyStore.currency[currencyStore.selectedId - 1].flag})`,
+                  }"
+                ></span>
               </button>
               <ul
                 class="th-currency-list"
-                :style="{ 'thc-active': toggleCurrency }"
+                :class="{ 'ths-active': currencyStore.isCurrencyActive }"
               >
                 <li
                   class="thc-item"
                   v-for="item in currencyStore.currency"
                   :key="item.id"
                 >
-                  <button class="thc-button">
+                  <button
+                    class="thc-button"
+                    :class="{
+                      'thsb-active': currencyStore.selectedId == item.id,
+                    }"
+                    @click="currencyStore.changeCurrency(item.id)"
+                  >
                     <span
                       :style="{
                         backgroundImage: `url(${item.flag})`,
@@ -90,11 +100,44 @@
             </li>
             <li class="th-language" ref="languageList">
               <span>Language: </span>
-              <button class="th-language-button" @click="toggleLanguage">
-                <span></span>
+              <button class="th-language-button" @click="localeStore.toggleLaguage">
+                <p>EN</p>
               </button>
+              <ul class="th-language-list" :class="{'ths-active': localeStore.isLanguageActive}">
+                <li
+                  class="thl-item"
+                  :class="{ 'ths-active': $i18n.locale == 'en' }"
+                >
+                  <button
+                    class="thl-button"
+                    @click="localeStore.setLocale('en')"
+                    :class="{ 'thsb-active': $i18n.locale == 'en' }"
+                  >
+                    <span
+                      :style="{
+                        backgroundImage: `url(./action-icons/usa-flag.svg)`,
+                      }"
+                    ></span>
+                    <p>English</p>
+                  </button>
+                </li>
+                <li class="thl-item">
+                  <button
+                    class="thl-button"
+                    @click="localeStore.setLocale('ru')"
+                    :class="{ 'thsb-active': $i18n.locale == 'ru' }"
+                  >
+                    <span
+                      :style="{
+                        backgroundImage: `url(./action-icons/russia-flag.svg)`,
+                      }"
+                    ></span>
+                    <p>Russian</p>
+                  </button>
+                </li>
+              </ul>
             </li>
-            <li class="th-theme-box"></li>
+            <li class="th-theme"></li>
           </ul>
         </div>
         <MobileTopHeader />
@@ -122,7 +165,7 @@
                     to="/"
                     exact-active-class="active-link"
                     class="link"
-                    >Home</router-link
+                    >{{ $t("navbar.home") }}</router-link
                   >
                 </li>
                 <!-- Shop Link -->
@@ -239,9 +282,9 @@
 import MobileTopHeader from "../layout/MobileTopHeader.vue";
 import { onMounted, ref, onBeforeUnmount, watch } from "vue";
 import { useCurrencyStore } from "@/store/modules/Currency";
+import { useLocaleStore } from "@/i18n";
+const localeStore = useLocaleStore();
 const currencyStore = useCurrencyStore();
-const toggleCurrency = ref(false);
-console.log(toggleCurrency.value)
 const emit = defineEmits(["toggle-search", "is-search-active"]);
 const props = defineProps({
   hideSearch: Boolean,
@@ -266,6 +309,8 @@ const search = ref(false);
 
 const toggleSearch = () => {
   search.value = !search.value;
+  localeStore.isLanguageActive = false;
+  currencyStore.isCurrencyActive = false;
   emit("toggle-search", search.value);
 };
 const showSearchView = () => {
@@ -502,26 +547,30 @@ watch(search, (newVal) => {
               .th-message-icon,
               .th-currency-button,
               .th-language-button,
-              .th-currency-list .thc-item .thc-button span {
+              .th-currency-list .thc-item .thc-button,
+              .th-language-list .thl-item .thl-button {
                 border: none;
                 margin: 0 4px;
-                width: 18px;
-                height: 18px;
                 background-color: transparent;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border-radius: 50%;
                 overflow: hidden;
                 cursor: pointer;
                 span {
-                  height: 100%;
-                  width: 100%;
-                  background: url("/public/action-icons/usa-flag.svg");
+                  border-radius: 50%;
+                  background-size: cover;
+                  background: center center no-repeat;
+                  width: 18px;
+                  height: 18px;
                   object-fit: cover;
                 }
               }
-              .th-currency-list {
+              .th-language-button {
+                color: rgb(245, 242, 235);
+              }
+              .th-currency-list,
+              .th-language-list {
                 position: absolute;
                 top: 100%;
                 right: 0;
@@ -537,7 +586,8 @@ watch(search, (newVal) => {
                 transition:
                   transform 0.2s ease-out,
                   opacity 0.2s ease-out;
-                .thc-button {
+                .thc-button,
+                .thl-button {
                   display: flex;
                   background-color: transparent;
                   border: none;
@@ -548,9 +598,12 @@ watch(search, (newVal) => {
                   font-weight: 700;
                   cursor: pointer;
                   p {
-                    margin: 0 4px;
+                    margin-left: 6px;
                   }
                   &:hover {
+                    color: rgb(0, 180, 0);
+                  }
+                  &.thsb-active {
                     color: rgb(0, 180, 0);
                   }
                 }
@@ -564,7 +617,7 @@ watch(search, (newVal) => {
                   height: 1px;
                   background-color: rgba(0, 0, 0, 0.1);
                 }
-                &.thc-active {
+                &.ths-active {
                   transform: translateY(0);
                   opacity: 1;
                   visibility: visible;

@@ -13,6 +13,10 @@ import MainMenu from "./components/layout/MainMenu.vue";
 import { useRoute } from "vue-router";
 import { onMounted, onBeforeUnmount, ref, watch, computed } from "vue";
 import { useOverlayStore } from "./store/modules/Overlay";
+import { useCurrencyStore } from "./store/modules/Currency";
+import { useLocaleStore } from "./i18n";
+const localeStore = useLocaleStore();
+const currencyStore = useCurrencyStore();
 const route = useRoute();
 watch(
   () => route.path,
@@ -52,6 +56,14 @@ const handleClick = (event) => {
 
   if (overlayStore.isSortActive) {
     overlayStore.toggleSort();
+  }
+
+  if (currencyStore.isCurrencyActive) {
+    currencyStore.toggleCurrency();
+  }
+
+  if (localeStore.isLanguageActive) {
+    localeStore.toggleLaguage();
   }
 };
 

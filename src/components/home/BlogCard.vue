@@ -25,10 +25,9 @@
   </div>
 </template>
 <script setup>
-import { useStore } from "vuex";
-import { computed } from "vue";
-const store = useStore();
-const blogs = computed(() => store.getters["product/getBlogs"]);
+import { useBlogStore } from '@/store/modules/blog';
+const blogStore = useBlogStore();
+const blogs = blogStore.blogs;
 </script>
 <style lang="scss" scoped>
 .hv-blogs-container {
