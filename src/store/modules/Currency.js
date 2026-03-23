@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { useProductStore } from "./product";
+import { useCartStore } from "./cart";
+import { useWishlistStore } from "./wishlist";
 import { ref, computed, watch } from "vue";
 
 export const useCurrencyStore = defineStore("currency", () => {
@@ -39,6 +41,8 @@ export const useCurrencyStore = defineStore("currency", () => {
   }
 
   const productStore = useProductStore()
+  const cartStore = useCartStore()
+  const wishlistStore = useWishlistStore()
 
   const currencyProducts = computed(() => {
     const isUSD = selectedId.value === 1;
@@ -51,10 +55,46 @@ export const useCurrencyStore = defineStore("currency", () => {
       }
     );
 
-    return productStore.products.map((product) => ({
+    return productStore.getProducts.map((product) => ({
       ...product,
       formattedPrice: formatter.format(product.price),
     }));
   });
-  return { currency, changeCurrency, selectedId, currencyProducts, toggleCurrency, isCurrencyActive };
+
+  const currencyCartProducts = computed(() => {
+    const isUSD = selectedId.value === 1;
+
+    const formatter = new Intl.NumberFormat(
+      isUSD ? "en-US" : "ru-RU",
+      {
+        style: "currency",
+        currency: isUSD ? "USD" : "RUB",
+      }
+    );
+
+    return cartStore.cart.map((product) => ({
+      ...product,
+      formattedPrice: formatter.format(product.price),
+      totalPrice: formatter.format(product.price * product.quantity),
+    }));
+  });
+
+  const currencyWishlistProducts = computed(() => {
+    const isUSD = selectedId.value === 1;
+
+    const formatter = new Intl.NumberFormat(
+      isUSD ? "en-US" : "ru-RU",
+      {
+        style: "currency",
+        currency: isUSD ? "USD" : "RUB",
+      }
+    );
+
+    return productStore.getProducts.map((product) => ({
+      ...product,
+      formattedPrice: formatter.format(product.price),
+    }));
+  });
+
+  return { currency, changeCurrency, selectedId, currencyProducts, toggleCurrency, isCurrencyActive, currencyCartProducts };
 })

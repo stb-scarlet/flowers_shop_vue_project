@@ -215,24 +215,23 @@ export const useProductStore = defineStore("product", () => {
     },
   ])
 
-  const getProducts = computed(() => {
-    products.map((product, index) => {
+  const getProducts = computed(() =>
+    products.value.map((product, index) => {
       if (index % 2 === 0) {
-        const oldPrice = product.price
-        const discount = 0.20
+        const oldPrice = product.price;
+
         return {
           ...product,
-          price: oldPrice - (oldPrice * discount),
+          price: oldPrice * 0.8,
           discountPrice: {
-            oldPrice: oldPrice,
-            discount: discount * 100
+            oldPrice,
+            discount: 20
           }
-        }
-      } else {
-        return product
+        };
       }
+      return product;
     })
-  })
+  );
 
-  return { products, getProducts }
+  return { getProducts }
 })

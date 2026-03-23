@@ -26,7 +26,8 @@
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+</script>
 <style lang="scss" scoped>
 @media (max-width: 1023px) {
   .hv-products-banner-container {

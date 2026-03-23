@@ -1,20 +1,26 @@
 <template>
   <div class="shop-container">
-    <Products />
-    <Banners />
-    <TopList />
+    <div class="shop-wrapper">
+      <Products />
+      <Banners />
+      <TopList />
+    </div>
   </div>
 </template>
 <script setup>
-import Products from '@/components/shop/Products.vue';
-import Banners from '@/components/ui/Banners.vue';
-import TopList from '@/components/ui/TopList.vue';
+import Products from "@/components/shop/Products.vue";
+import Banners from "@/components/ui/Banners.vue";
+import TopList from "@/components/ui/TopList.vue";
 </script>
 <style lang="scss">
 .shop-container {
-  max-width: 1500px;
-  margin: 0 auto;
   padding: 100px 0 0;
+  .shop-wrapper {
+    max-width: 1500px;
+    margin: 0 auto;
+    .hv-products-banner-container {
+    }
+  }
 }
 @media (min-width: 1024px) {
   .shop-container {

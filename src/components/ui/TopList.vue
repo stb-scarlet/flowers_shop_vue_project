@@ -90,9 +90,39 @@
                   <div class="pcm-old-price" v-if="item.discountPrice">
                     <p>{{ item.discountPrice.oldPrice.toFixed(2) }}</p>
                   </div>
-                  <p>{{ item.price.toFixed(2) }}</p>
+                  <p>{{ item.formattedPrice }}</p>
                 </div>
-                <button class="pcm-cart-container">
+                <button
+                  v-if="!cartStore.isProductInCart(item.id)"
+                  class="pcm-cart-container"
+                  @click="cartStore.addToCart(item)"
+                >
+                  <div class="pcm-cart-box">
+                    <svg class="cb-icon" viewBox="0 0 1024 1024">
+                      <path
+                        d="M800.8 952c-31.2 0-56-24.8-56-56s24.8-56 56-56 56 24.8 56 56-25.6 56-56 56z 
+    m-448 0c-31.2 0-56-24.8-56-56s24.8-56 56-56 56 24.8 56 56-25.6 56-56 56z
+    M344 792c-42.4 0-79.2-33.6-84-76l-54.4-382.4-31.2-178.4c-2.4-19.2-19.2-35.2-37.6-35.2H96
+    c-13.6 0-24-10.4-24-24s10.4-24 24-24h40.8c42.4 0 80 33.6 85.6 76l31.2 178.4 54.4 383.2
+    C309.6 728 326.4 744 344 744h520c13.6 0 24 10.4 24 24s-10.4 24-24 24H344z
+    m40-128c-12.8 0-23.2-9.6-24-22.4-0.8-6.4 1.6-12.8 5.6-17.6s10.4-8 16-8l434.4-32
+    c19.2 0 36-15.2 38.4-33.6l50.4-288c1.6-13.6-2.4-28-10.4-36.8-5.6-6.4-12.8-9.6-21.6-9.6H320
+    c-13.6 0-24-10.4-24-24s10.4-24 24-24h554.4c22.4 0 42.4 9.6 57.6 25.6
+    16.8 19.2 24.8 47.2 21.6 75.2l-50.4 288c-4.8 41.6-42.4 74.4-84 74.4l-432 32
+    c-1.6 0.8-2.4 0.8-3.2 0.8z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </button>
+                <button
+                  class="pcm-cart-container"
+                  v-if="cartStore.isProductInCart(item.id)"
+                  @click="cartStore.removeFromCart(item.id)"
+                  :class="{
+                    'added-to-cart': cartStore.isProductInCart(item.id),
+                  }"
+                >
                   <div class="pcm-cart-box">
                     <svg class="cb-icon" viewBox="0 0 1024 1024">
                       <path
@@ -128,14 +158,16 @@
   </div>
 </template>
 <script setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import { useProductStore } from "@/store/modules/product";
-const productStore = useProductStore();
-const products = computed(() => productStore.products);
+import { useCurrencyStore } from "@/store/modules/Currency";
+import { useCartStore } from "@/store/modules/cart";
+const cartStore = useCartStore();
+const currencyStore = useCurrencyStore();
+const products = computed(() => currencyStore.currencyProducts);
 const modules = [Navigation];
 
 const topListProducts = [...products.value].sort((a, b) => {
@@ -326,7 +358,7 @@ const topListProducts = [...products.value].sort((a, b) => {
                     color: rgb(0, 180, 0);
                   }
                 }
-                &:hover {
+                &.added-to-cart {
                   background-color: rgba(0, 180, 0, 0.8);
                   .pcm-cart-box {
                     .cb-icon {
