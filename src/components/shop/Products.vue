@@ -210,6 +210,30 @@
           </div>
         </swiper-slide>
       </swiper>
+      <div class="empty-products" v-if="!readyProducts.length">
+        <div class="ep-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g>
+              <path
+                d="M17.0404 21.9986C16.8964 21.9986 16.7524 21.9286 16.6484 21.7986L15.1604 19.9386C14.9444 19.6686 14.9444 19.2286 15.1604 18.9486C15.3764 18.6786 15.7284 18.6786 15.9524 18.9486L17.4404 20.8086C17.6564 21.0786 17.6564 21.5186 17.4404 21.7986C17.3284 21.9286 17.1844 21.9986 17.0404 21.9986Z"
+                fill="#292D32"
+              />
+
+              <path
+                d="M9.2 2C5.008 2 1.6 6.26 1.6 11.5C1.6 16.74 5.008 21 9.2 21C13.392 21 16.8 16.74 16.8 11.5C16.8 6.26 13.392 2 9.2 2ZM11.2 12.45H7.2C6.872 12.45 6.6 12.11 6.6 11.7C6.6 11.29 6.872 10.95 7.2 10.95H11.2C11.528 10.95 11.8 11.29 11.8 11.7C11.8 12.11 11.528 12.45 11.2 12.45Z"
+                fill="#292D32"
+              />
+            </g>
+          </svg>
+        </div>
+        <div class="ep-texts">
+          <p>Products not found</p>
+        </div>
+      </div>
       <div
         class="products-swiper-custom-container"
         v-if="readyProducts.length > 1"
@@ -689,6 +713,35 @@ const readyProducts = computed(() => {
         }
       }
     }
+    .empty-products {
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.65);
+      border-radius: 10px;
+      padding: 30px;
+      gap: 20px;
+      .ep-icon {
+        width: 100px;
+        height: 100px;
+        padding: 10px;
+        border-radius: 50%;
+        background-color: rgba(0, 180, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ep-texts {
+        text-align: center;
+        p {
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+      }
+    }
     .products-swiper-custom-container {
       display: flex;
       align-items: center;
@@ -731,6 +784,14 @@ const readyProducts = computed(() => {
     padding: 0 clamp(10px, 1vw, 20px);
     grid-template-columns: 1fr;
     position: relative;
+    .products-container {
+      .empty-products {
+        .ep-icon {
+          width: 80px;
+          height: 80px;
+        }
+      }
+    }
   }
 }
 </style>

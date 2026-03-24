@@ -1,7 +1,7 @@
 <template>
   <div class="wishlist-container">
     <div class="wishlist-wrapper">
-      <div class="products">
+      <div class="products" v-if="wishlistStore.wishlist.length > 0">
         <div
           class="product-card"
           v-for="item in wishlistStore.wishlist"
@@ -133,6 +133,47 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="empty-wishlist" v-else>
+        <div class="ew-icon">
+          <svg
+            viewBox="0 0 512 512"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#000000"
+          >
+            <g>
+              <path
+                fill="#000000"
+                d="
+      M333.984 31.215
+      c-62.12 0-93.184 65.73-93.184 65.73
+      s-31.064-65.72-93.184-65.72
+      c-29.712 0-86.216 33.72-86.216 125.13
+      0 161.24 179.4 324.43 179.4 324.43
+      s179.4-163.19 179.4-324.43
+      c0-91.42-56.504-125.13-86.216-125.14
+      z
+
+      M153.539 225.65
+      h176
+      v60.7
+      h-176
+      z
+    "
+              ></path>
+            </g>
+          </svg>
+        </div>
+        <div class="ew-texts">
+          <p>Wihslist is empty</p>
+          <p>
+            See Take a look at the main page - we've collected products there
+            that you might like.
+          </p>
+          <router-link to="/shop">
+            <button class="ewb-button">Shop Now</button>
+          </router-link>
         </div>
       </div>
     </div>
@@ -325,12 +366,61 @@ const wishlistStore = useWishlistStore();
         gap: 18px;
       }
     }
+    .empty-wishlist {
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.65);
+      padding: 30px;
+      gap: 20px;
+      .ew-icon {
+        width: 80px;
+        height: 80px;
+        padding: 10px;
+        border-radius: 50%;
+        background-color: rgba(0, 180, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ew-texts {
+        text-align: center;
+        p:nth-child(1) {
+          font-weight: 700;
+        }
+        p {
+          margin-bottom: 10px;
+        }
+        .ewb-button {
+          margin-top: 10px;
+          padding: 10px 20px;
+          border-radius: 10px;
+          background-color: rgb(0, 180, 0);
+          border: none;
+          color: rgb(245, 242, 235);
+          font-weight: 700;
+          font-size: 16px;
+        }
+      }
+    }
   }
 }
 
 @media (min-width: 1024px) {
   .wishlist-container {
-    padding: 100px 0 0;
+    padding: 120px 0 0;
+    .wishlist-wrapper {
+      .empty-wishlist {
+        .ew-icon {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
   }
 }
 </style>
