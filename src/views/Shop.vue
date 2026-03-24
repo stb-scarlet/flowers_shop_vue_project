@@ -18,6 +18,9 @@ import TopList from "@/components/ui/TopList.vue";
   .shop-wrapper {
     max-width: 1500px;
     margin: 0 auto;
+    .tl-see-more {
+      display: none;
+    }
     .hv-products-banner-container {
     }
   }

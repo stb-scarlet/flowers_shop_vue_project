@@ -140,9 +140,9 @@
                     </div>
                   </button>
                 </div>
-                <div class="pct-image-container">
+                <router-link :to="'/product/' + item.id" class="pct-image-container">
                   <img :src="item.src" :alt="item.name" loading="lazy" />
-                </div>
+                </router-link>
               </div>
               <div class="pc-main-container">
                 <div class="pcm-name-container">

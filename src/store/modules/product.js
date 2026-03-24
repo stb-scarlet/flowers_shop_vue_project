@@ -233,5 +233,11 @@ export const useProductStore = defineStore("product", () => {
     })
   );
 
-  return { getProducts }
+  const getAverageRating = (reviews) => {
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+    return averageRating.toFixed(1);
+  };
+
+  return { getProducts, getAverageRating };
 })

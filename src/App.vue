@@ -5,9 +5,11 @@
     :hideSearch="isSearchActive"
   />
   <MainMenu />
+  <Login />
   <router-view />
 </template>
 <script setup>
+import Login from "./views/Login.vue";
 import Navbar from "./components/layout/Navbar.vue";
 import MainMenu from "./components/layout/MainMenu.vue";
 import { useRoute } from "vue-router";

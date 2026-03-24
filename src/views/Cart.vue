@@ -13,7 +13,7 @@
       >
         <CartTotal />
       </div>
-      <div class="empty-cart-container">
+      <div class="empty-cart-container" v-else>
         <div class="empty-cart">
           <div class="ec-icon">
             <svg

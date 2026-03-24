@@ -2,7 +2,6 @@
   <div class="categories-card-container">
     <div class="cc-title">
       <p>Popular Categories</p>
-      <button>See More <i class="fas fa-arrow-right"></i></button>
     </div>
     <swiper
       class="categories-swiper"
@@ -42,7 +41,7 @@
           </div>
           <div class="cc-texts">
             <p>{{ item.name }}</p>
-            <button>See All</button>
+            <router-link to="/shop" class="cc-see-all">See All</router-link>
           </div>
         </div>
       </swiper-slide>
@@ -90,17 +89,6 @@ const categories = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    button {
-      background-color: transparent;
-      border: none;
-      color: rgb(100, 100, 100);
-      font-size: clamp(12px, 2vw, 16px);
-      cursor: pointer;
-      &:hover {
-        color: rgb(0, 180, 0);
-        text-decoration: underline;
-      }
-    }
   }
   .categories-swiper {
     .categories-swiper-slide {
@@ -134,8 +122,9 @@ const categories = [
           text-align: center;
           padding: clamp(20px, 100vw, 30px) clamp(14px, 5vw, 26px)
             clamp(14px, 5vw, 26px);
-          button {
+          .cc-see-all {
             background-color: rgba(0, 0, 0, 0.03);
+            text-decoration: none;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border: 1px solid rgb(245, 242, 235);
