@@ -58,7 +58,7 @@
         <div class="th-left">
           <ul class="th-settings">
             <li class="th-currency">
-              <span>Currency: </span>
+              <span>{{ $t("navbar.currency") }}: </span>
               <button
                 class="th-currency-button"
                 @click="currencyStore.toggleCurrency"
@@ -99,7 +99,7 @@
               </ul>
             </li>
             <li class="th-language" ref="languageList">
-              <span>Language: </span>
+              <span>{{ $t("navbar.language") }}: </span>
               <button class="th-language-button" @click="localeStore.toggleLaguage">
                 <p>EN</p>
               </button>
@@ -174,7 +174,7 @@
                     to="/shop"
                     active-class="active-link"
                     class="link"
-                    >Shop</router-link
+                    >{{ $t("navbar.shop") }}</router-link
                   >
                 </li>
                 <!-- About Us Link -->
@@ -183,7 +183,7 @@
                     to="/about-us"
                     active-class="active-link"
                     class="link"
-                    >About Us</router-link
+                    >{{ $t("navbar.about") }}</router-link
                   >
                 </li>
                 <!-- Contact Us Link -->
@@ -192,7 +192,7 @@
                     to="/contact-us"
                     active-class="active-link"
                     class="link"
-                    >Contact Us</router-link
+                    >{{ $t("navbar.contact") }}</router-link
                   >
                 </li>
               </ul>
@@ -222,7 +222,7 @@
                         alt=""
                       />
                     </div>
-                    <span>Search</span>
+                    <span>{{ $t("navbar.search") }}</span>
                   </button>
                 </div>
               </div>
@@ -267,9 +267,24 @@
               </li>
               <!-- Login Button -->
               <li class="action-item">
-                <button class="login">
-                  <i class="fa-solid fa-arrow-right-to-bracket"></i>Login
+                <button class="login" @click="loginRegisterStore.toggleLogin" v-if="!loginRegisterStore.currentUser">
+                  <i class="fa-solid fa-arrow-right-to-bracket"></i>{{ $t("navbar.login") }}
                 </button>
+                <router-link to="/profile" class="profile" v-if="loginRegisterStore.currentUser">
+                  <div class="profile-image">
+                    <img
+                      src="/action-icons/user-icon.svg"
+                      alt=""
+                      v-if="!loginRegisterStore.currentUser.profileImage"
+                    />
+                    <img
+                      :src="loginRegisterStore.currentUser.profileImage"
+                      alt=""
+                      v-if="loginRegisterStore.currentUser.profileImage"
+                    />
+                  </div>
+                  <div class="p-username">{{ loginRegisterStore.currentUser.username }}</div>
+                </router-link>
               </li>
             </ul>
           </div>
@@ -282,7 +297,9 @@
 import MobileTopHeader from "../layout/MobileTopHeader.vue";
 import { onMounted, ref, onBeforeUnmount, watch } from "vue";
 import { useCurrencyStore } from "@/store/modules/Currency";
+import { useLoginRegisterStore } from "@/store/modules/loginRegister";
 import { useLocaleStore } from "@/i18n";
+const loginRegisterStore = useLoginRegisterStore();
 const localeStore = useLocaleStore();
 const currencyStore = useCurrencyStore();
 const emit = defineEmits(["toggle-search", "is-search-active"]);
@@ -778,6 +795,36 @@ watch(search, (newVal) => {
                   }
                   i {
                     margin-right: 5px;
+                  }
+                }
+                .profile {
+                  margin-left: 10px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 6px;
+                  border: none;
+                  background-color: transparent;
+                  font-family: "Quicksand", sans-serif;
+                  font-weight: 500;
+                  font-size: 16px;
+                  transition: color 0.2s;
+                  color: rgb(0, 0, 0);
+                  text-decoration: none;
+                  cursor: pointer;
+                  .profile-image {
+                    height: 25px;
+                    width: 25px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    img {
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                    }
+                  }
+                  &:hover {
+                    color: rgb(0, 180, 0);
                   }
                 }
               }

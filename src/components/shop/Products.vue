@@ -118,7 +118,7 @@
                       </svg>
                     </div>
                   </button>
-                  <button class="pct-view-container">
+                  <!-- <button class="pct-view-container">
                     <div class="pct-view-box">
                       <svg class="vb-icon" viewBox="0 0 512 512">
                         <path
@@ -138,7 +138,7 @@
                         />
                       </svg>
                     </div>
-                  </button>
+                  </button> -->
                 </div>
                 <router-link :to="'/product/' + item.id" class="pct-image-container">
                   <img :src="item.src" :alt="item.name" loading="lazy" />

@@ -30,7 +30,7 @@
                 class="mmwl-link"
                 active-class="mmwl-link-active"
               >
-                {{ l.page }}
+                {{ $t(l.page) }}
               </router-link>
             </li>
           </ul>
@@ -38,7 +38,44 @@
           <!-- PANEL -->
           <ul v-if="m_item.panel" class="mmw-panel">
             <li v-for="p in m_item.panel" :key="p.id" class="mmwp-item">
-              <button class="mmwp-button">{{ p.label }}</button>
+              <p class="mmwp-button">{{ $t(p.label) }}</p>
+              <ul
+                v-if="p.type == 'language'"
+                class="mmwp-list"
+                :class="{ 'mmwp-list-active': $i18n.locale == 'ru' }"
+              >
+                <li v-for="a in p.action" :key="a.id" class="mmwpl-item">
+                  <button
+                    class="mmwpl-button"
+                    v-if="a == 'En'"
+                    @click="localeStore.setLocale('en')"
+                  >
+                    {{ a }}
+                  </button>
+                  <button
+                    class="mmwpl-button"
+                    v-if="a == 'Ру'"
+                    @click="localeStore.setLocale('ru')"
+                  >
+                    {{ a }}
+                  </button>
+                </li>
+              </ul>
+              <ul v-if="p.type == 'currency'" class="mmwp-list" :class="{ 'mmwp-list-active': currencyStore.selectedId == 2}">
+                <li v-for="a in p.action" :key="a.id" class="mmwpl-item">
+                  <button
+                    class="mmwpl-button"
+                    @click="currencyStore.changeCurrency(a.id)"
+                  >
+                    {{ a.name }}
+                  </button>
+                </li>
+              </ul>
+              <ul v-if="p.type == 'theme'" class="mmwp-list">
+                <li v-for="a in p.action" :key="a.id" class="mmwpl-item">
+                  <button class="mmwpl-button">{{ $t(a) }}</button>
+                </li>
+              </ul>
             </li>
           </ul>
           <!-- SOCIALS -->
@@ -58,7 +95,8 @@
           </div>
           <!-- PRIVACY POLICY -->
           <div class="mmw-privacy-item" v-if="m_item.privacy">
-            <p>privacy podivcy</p>
+            <a href="#">{{ $t("navbar.privacy_policy") }}<i class="fa fa-arrow-right"></i></a>
+            <a href="#">{{ $t("navbar.terms_conditions") }}<i class="fa fa-arrow-right"></i></a>
           </div>
         </li>
       </ul>
@@ -68,15 +106,20 @@
         <img src="/logo.png" alt="" />
       </div>
       <div class="mml-description">
-        <h3>We care for your plants like they're our own.</h3>
+        <h3>{{ $t("navbar.logo_description") }}</h3>
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
+import { useCurrencyStore } from "@/store/modules/Currency";
+import { useLocaleStore } from "@/i18n";
 import { useOverlayStore } from "@/store/modules/Overlay";
 
+
+const localeStore = useLocaleStore();
+const currencyStore = useCurrencyStore();
 const overlayStore = useOverlayStore();
 
 const menu = ref([
@@ -84,10 +127,10 @@ const menu = ref([
     id: 1,
     title: "Menu",
     links: [
-      { id: 1, page: "Home", link: "/" },
-      { id: 2, page: "Shop", link: "/shop" },
-      { id: 3, page: "About Us", link: "/about-us" },
-      { id: 4, page: "Contact Us", link: "/contact-us" },
+      { id: 1, page: "navbar.home", link: "/" },
+      { id: 2, page: "navbar.shop", link: "/shop" },
+      { id: 3, page: "navbar.about", link: "/about-us" },
+      { id: 4, page: "navbar.contact", link: "/contact-us" },
     ],
   },
   { id: 2, line: "line" },
@@ -95,16 +138,16 @@ const menu = ref([
     id: 3,
     title: "User Panel",
     panel: [
-      { id: 1, label: "Language" },
-      { id: 2, label: "Currency" },
-      { id: 3, label: "Theme" },
-      { id: 4, label: "Sign In", type: "modal" },
+      { id: 1, label: "navbar.language", action: ["En", "Ру"], type: "language" },
+      { id: 2, label: "navbar.currency", action: [{ id: 1, name: "USD"}, { id: 2, name: "RUB"}], type: "currency" },
+      { id: 3, label: "navbar.theme", action: ["navbar.light", "navbar.dark"], type: "theme" },
+      { id: 4, label: "navbar.login", type: "modal" },
     ],
   },
   { id: 4, line: "line" },
   {
     id: 5,
-    title: "Socials",
+    title: "Socials2",
     socials: [
       {
         id: 1,
@@ -245,12 +288,69 @@ const menu = ref([
                 }
               }
             }
+            .mmwp-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              .mmwp-list {
+                list-style: none;
+                display: flex;
+                align-items: center;
+                background-color: rgb(255, 255, 255, 0.65);
+                height: 100%;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                border-radius: 25px;
+                overflow: hidden;
+                position: relative;
+                .mmwpl-item {
+                  padding: 6px 10px;
+                  border-radius: 25px;
+                  .mmwpl-button {
+                    font-size: 16px;
+                    white-space: nowrap;
+                    color: rgb(0, 0, 0);
+                    font-weight: 700;
+                    font-family: "Quicksand", sans-serif;
+                    background-color: transparent;
+                    border: none;
+                  }
+                }
+                &::after {
+                  content: "";
+                  position: absolute;
+                  width: 50%;
+                  left: 0;
+                  transform: translateX(0%);
+                  height: 100%;
+                  background-color: rgb(0, 180, 0);
+                  border-radius: 25px;
+                  z-index: -1;
+                  transition: transform 0.2s;
+                }
+                &.mmwp-list-active {
+                  &::after {
+                    transform: translateX(100%);
+                  }
+                }
+              }
+            }
           }
         }
         .mmw-privacy-item {
           width: 100%;
           padding: 20px;
           border-top: 1px solid rgba(0, 0, 0, 0.65);
+          display: flex;
+          gap: 30px;
+          a {
+            font-size: clamp(14px, 2vw, 16px);
+            white-space: nowrap;
+            color: rgb(0, 0, 0);
+            font-weight: 700;
+            i {
+              font-size: clamp(12px, 2vw, 14px);
+            }
+          }
         }
       }
     }

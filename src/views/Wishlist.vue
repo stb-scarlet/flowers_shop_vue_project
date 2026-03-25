@@ -176,11 +176,13 @@
           </router-link>
         </div>
       </div>
+      <TopList />
     </div>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
+import TopList from "@/components/ui/TopList.vue";
 import { useWishlistStore } from "@/store/modules/wishlist";
 import { useCartStore } from "@/store/modules/cart";
 const cartStore = useCartStore();
@@ -197,6 +199,7 @@ const wishlistStore = useWishlistStore();
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: clamp(10px, 3vw, 14px);
+      margin: clamp(20px, 10vw, 40px) 0;
       .product-card {
         min-width: 0;
         border-radius: clamp(10px, 2.5vw, 16px);
@@ -377,6 +380,7 @@ const wishlistStore = useWishlistStore();
       background-color: rgba(255, 255, 255, 0.65);
       padding: 30px;
       gap: 20px;
+      margin: clamp(20px, 10vw, 40px) 0;
       .ew-icon {
         width: 80px;
         height: 80px;

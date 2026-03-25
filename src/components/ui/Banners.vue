@@ -2,26 +2,24 @@
   <div class="hv-products-banner-container">
     <div class="product-banner">
       <div class="pb-texts">
-        <p>Summer Cactus & Succulents</p>
+        <p>{{ $t("first-banner.title") }}</p>
         <p>
-          We are an online plant shop offering a wide range of cheap and trendy
-          plants
+          {{ $t("first-banner.description") }}
         </p>
-        <button>
-          Find More <span><i class="fas fa-arrow-right"></i></span>
-        </button>
+        <router-link to="/shop" class="pb-button">
+          {{ $t("first-banner.button") }} <span><i class="fas fa-arrow-right"></i></span>
+        </router-link>
       </div>
     </div>
     <div class="product-banner">
       <div class="pb-texts">
-        <p>Styling Trends & Much More</p>
+        <p>{{ $t("second-banner.title") }}</p>
         <p>
-          We are an online plant shop offering a wide range of cheap and trendy
-          plants
+          {{ $t("second-banner.description") }}
         </p>
-        <button>
-          Find More <span><i class="fas fa-arrow-right"></i></span>
-        </button>
+        <router-link to="/shop" class="pb-button">
+          {{ $t("second-banner.button") }} <span><i class="fas fa-arrow-right"></i></span>
+        </router-link>
       </div>
     </div>
   </div>
@@ -64,8 +62,9 @@
           margin-bottom: 20px;
           color: rgb(245, 242, 235);
         }
-        button {
+        .pb-button {
           background-color: rgba(0, 0, 0, 0.03);
+          text-decoration: none;
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(4px);
           border: 1px solid rgb(245, 242, 235);
@@ -156,10 +155,11 @@
           margin-bottom: 20px;
           color: rgb(245, 242, 235);
         }
-        button {
+        .pb-button {
           background-color: rgba(200, 200, 200, 0.15);
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(10px);
+          text-decoration: none;
           border: 1px solid rgb(245, 242, 235);
           font-family: "Quicksand", sans-serif;
           padding: clamp(8px, 1vw, 10px) clamp(10px, 1vw, 20px);

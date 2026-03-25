@@ -7,17 +7,21 @@
   <MainMenu />
   <Login />
   <router-view />
+  <Footer />
 </template>
 <script setup>
+import Footer from "./components/ui/Footer.vue";
 import Login from "./views/Login.vue";
 import Navbar from "./components/layout/Navbar.vue";
 import MainMenu from "./components/layout/MainMenu.vue";
 import { useRoute } from "vue-router";
 import { onMounted, onBeforeUnmount, ref, watch, computed } from "vue";
+import { useLoginRegisterStore } from "./store/modules/loginRegister";
 import { useOverlayStore } from "./store/modules/Overlay";
 import { useCurrencyStore } from "./store/modules/Currency";
 import { useLocaleStore } from "./i18n";
 const localeStore = useLocaleStore();
+const loginRegisterStore = useLoginRegisterStore();
 const currencyStore = useCurrencyStore();
 const route = useRoute();
 watch(
@@ -36,8 +40,8 @@ const isSearchActive = ref(false);
 const overlayActive = computed(() => {
   return isSearchActive.value || overlayStore.isFilterActive;
 });
-const menuOverlayActive = computed(() => {
-  return overlayStore.isMenuActive;
+const mainOverlayActive = computed(() => {
+  return overlayStore.isMenuActive || loginRegisterStore.isLoginActive || loginRegisterStore.isUpdateProfile;
 });
 const handleClick = (event) => {
   const selectors = overlayStore.ignoreSelectors.join(", ");
@@ -67,6 +71,14 @@ const handleClick = (event) => {
   if (localeStore.isLanguageActive) {
     localeStore.toggleLaguage();
   }
+
+  if (loginRegisterStore.isLoginActive) {
+    loginRegisterStore.toggleLogin();
+  }
+
+  if (loginRegisterStore.isUpdateProfile) {
+    loginRegisterStore.toggleUpdateProfile();
+  }
 };
 
 onMounted(() => window.addEventListener("click", handleClick));
@@ -81,7 +93,7 @@ watch(overlayActive, (val) => {
     document.body.style.top = "";
   }
 });
-watch(menuOverlayActive, (val) => {
+watch(mainOverlayActive, (val) => {
   if (val) {
     document.body.classList.add("menu-overlay");
     document.body.style.top = `-${window.scrollY}px`;

@@ -1,7 +1,14 @@
 <template>
-  <div class="notice-container" v-if="notice?.message" :style="{ backgroundColor: notice?.type ? 'rgb(255, 25, 83)': 'gold'}">
+  <div
+    class="notice-container"
+    v-if="isNoticeActive && notice.message"
+    :style="{
+      backgroundColor: !notice.type ? 'rgb(255, 25, 83)' : 'rgb(0, 180, 0)',
+    }"
+  >
     <p>{{ notice.message }}</p>
-    <div class="n-close-button">
+
+    <div class="n-close-button" @click="closeNotice">
       <svg
         viewBox="0 0 12 12"
         xmlns="http://www.w3.org/2000/svg"
@@ -17,13 +24,39 @@
     </div>
   </div>
 </template>
+
 <script setup>
-defineProps({
+import { ref, watch } from "vue";
+
+const props = defineProps({
   notice: {
     type: Object,
-    required: true
-  }
-})
+    required: true,
+  },
+});
+
+const isNoticeActive = ref(false);
+let timeoutId;
+
+const closeNotice = () => {
+  isNoticeActive.value = false;
+  clearTimeout(timeoutId);
+};
+
+watch(
+  () => props.notice,
+  (val) => {
+    if (val?.message) {
+      isNoticeActive.value = true;
+
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        isNoticeActive.value = false;
+      }, 3000);
+    }
+  },
+  { deep: true },
+);
 </script>
 <style lang="scss" scoped>
 .notice-container {
@@ -37,6 +70,9 @@ defineProps({
   color: rgb(245, 242, 235);
   font-weight: 700;
   font-size: 16px;
+  .n-close-button {
+    cursor: pointer;
+  }
   .nc-icon {
     position: absolute;
     right: 10px;

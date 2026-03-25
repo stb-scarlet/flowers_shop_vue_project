@@ -6,7 +6,7 @@
     <div class="hb-texts">
       <p>Grow green,</p>
       <p>live happy</p>
-      <button>Shop All Our Plants</button>
+      <router-link to="/shop" class="hb-button">Shop All Our Plants</router-link>
     </div>
   </div>
 </template>
@@ -44,8 +44,9 @@
       font-family: "Petit Formal Script", cursive;
       margin-bottom: clamp(10px, 1vw, 20px);
     }
-    button {
+    .hb-button {
       background-color: rgba(0, 0, 0, 0.03);
+      text-decoration: none;
       backdrop-filter: blur(4px);
       border: 1px solid rgb(245, 242, 235);
       font-family: "Quicksand", sans-serif;

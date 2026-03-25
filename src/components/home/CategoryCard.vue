@@ -40,8 +40,8 @@
             <img :src="item.src" alt="" />
           </div>
           <div class="cc-texts">
-            <p>{{ item.name }}</p>
-            <router-link to="/shop" class="cc-see-all">See All</router-link>
+            <p>{{ $t(item.name) }}</p>
+            <router-link to="/shop" class="cc-see-all">{{ $t("categories-list.button") }}</router-link>
           </div>
         </div>
       </swiper-slide>
@@ -58,22 +58,22 @@ const categories = [
   {
     id: 1,
     src: "/category-images/1.avif",
-    name: "Garden Plants",
+    name: "categories-list.firstCategory",
   },
   {
     id: 2,
     src: "/category-images/2.avif",
-    name: "House Plants",
+    name: "categories-list.secondCategory",
   },
   {
     id: 3,
     src: "/category-images/3.avif",
-    name: "Seeds",
+    name: "categories-list.thirdCategory",
   },
   {
     id: 4,
     src: "/category-images/4.avif",
-    name: "Pots",
+    name: "categories-list.fourthCategory",
   },
 ];
 </script>

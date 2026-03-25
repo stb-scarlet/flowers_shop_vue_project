@@ -15,6 +15,9 @@ export const useOverlayStore = defineStore("overlay", () => {
         ".main-menu",
         ".sort-by-container",
         ".th-settings",
+        ".login-container",
+        ".login",
+        ".phub-button"
     ])
 
     const addSelector = (selector) => {

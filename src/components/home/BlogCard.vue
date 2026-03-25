@@ -1,10 +1,9 @@
 <template>
   <div class="hv-blogs-container">
     <div class="bc-title">
-      <h2>Our Blog Posts</h2>
+      <h2>{{ $t("blog.title") }}</h2>
       <p>
-        We are an online plant shop offering a wide range of cheap and trendy
-        plants
+        {{ $t("blog.description") }}
       </p>
     </div>
     <div class="posts-card-container">
@@ -13,11 +12,11 @@
           <img :src="item.src" alt="" />
         </div>
         <div class="pc-main">
-          <p>{{ item.firstParagraph }}</p>
-          <p>{{ item.secondParagraph }}</p>
-          <p>{{ item.thirdParagraph }}</p>
+          <p>{{ $t(item.firstParagraph) }}</p>
+          <p>{{ $t(item.secondParagraph) }}</p>
+          <p>{{ $t(item.thirdParagraph) }}</p>
           <button>
-            Read More<span><i class="fas fa-arrow-right"></i></span>
+            {{ $t("blog.button") }}<span><i class="fas fa-arrow-right"></i></span>
           </button>
         </div>
       </div>

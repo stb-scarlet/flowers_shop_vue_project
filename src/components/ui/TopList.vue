@@ -2,7 +2,9 @@
   <div class="top-list-container">
     <div class="tl-title">
       <p>Top List</p>
-      <router-link to="/shop" class="tl-see-more">See More <i class="fas fa-arrow-right"></i></router-link>
+      <router-link to="/shop" class="tl-see-more"
+        >See More <i class="fas fa-arrow-right"></i
+      ></router-link>
     </div>
     <swiper
       class="tl-swiper"
@@ -78,7 +80,7 @@
                     </svg>
                   </div>
                 </button>
-                <button class="pct-view-container">
+                <!-- <button class="pct-view-container">
                   <div class="pct-view-box">
                     <svg class="vb-icon" viewBox="0 0 512 512">
                       <path
@@ -98,11 +100,11 @@
                       />
                     </svg>
                   </div>
-                </button>
+                </button> -->
               </div>
-              <div class="pct-image-container">
+              <router-link :to="'/product/' + item.id" class="pct-image-container">
                 <img :src="item.src" :alt="item.name" loading="lazy" />
-              </div>
+              </router-link>
             </div>
             <div class="pc-main-container">
               <div class="pcm-name-container">
@@ -195,7 +197,7 @@ const currencyStore = useCurrencyStore();
 const products = computed(() => currencyStore.currencyProducts);
 const modules = [Navigation];
 
-const topListProducts = [...products.value].sort((a, b) => {
+const topListProducts = products.value.sort((a, b) => {
   const ratingA =
     a.reviews.reduce((total, review) => total + review.rating, 0) /
     a.reviews.length;
@@ -425,8 +427,7 @@ const topListProducts = [...products.value].sort((a, b) => {
       justify-content: center;
       align-items: center;
       border-radius: 50%;
-      transition:
-        color 0.2s ease-in;
+      transition: color 0.2s ease-in;
       cursor: pointer;
       &:hover {
         color: rgb(0, 180, 0);

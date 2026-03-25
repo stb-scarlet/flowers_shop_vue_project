@@ -2,6 +2,50 @@
   "navbar": {
     "home": "Home",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "shop": "Shop",
+    "login": "Login",
+    "menu": "Menu",
+    "userPanel": "User Panel",
+    "language": "Language",
+    "currency": "Currency",
+    "search": "Search",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "socials": "Socials",
+    "privacy_policy": "Privacy Policy",
+    "terms_conditions": "Terms & Conditions",
+    "logo_description": "We care for your plants like they're our own."
+  },
+
+  "first-banner": {
+    "title": "Summer Cactus & Succulents",
+    "description": "We are an online plant shop offering a wide range of cheap and trendy plants",
+    "button": "Find More"
+  },
+
+  "second-banner": {
+    "title": "Styling Trends & Much More",
+    "description": "We are an online plant shop offering a wide range of cheap and trendy plants",
+    "button": "Find More"
+  },
+
+  "categories-list": {
+    "title": "Poplular Categories",
+    "firstCategory": "House Plants",
+    "secondCategory": "Pots",
+    "thirdCategory": "Seeds",
+    "fourthCategory": "Garden Plants",
+    "button": "See All"
+  },
+
+  "blog": {
+    "title": "Our Blog Posts",
+    "description": "We are an online plant shop offering a wide range of cheap and trendy plants",
+    "button": "Read More",
+    "firstParagraph": " September 12 | Read in 8 minutes",
+    "secondParagraph": "Cactus & Succulent Care Tips",
+    "thirdParagraph": "Cacti are succulents are easy care plants for any home or patio."
   }
 }

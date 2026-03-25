@@ -239,5 +239,12 @@ export const useProductStore = defineStore("product", () => {
     return averageRating.toFixed(1);
   };
 
-  return { getProducts, getAverageRating };
+  const addToReviews = (productId, review) => {
+    const product = products.value.find((product) => product.id === productId);
+    if (product) {
+      product.reviews.push(review);
+    }
+  };
+
+  return { getProducts, getAverageRating, addToReviews };
 })
