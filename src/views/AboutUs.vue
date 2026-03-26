@@ -8,33 +8,19 @@
       </div>
       <div class="au-right-side">
         <div class="auls-title">
-          <h2>About Us</h2>
+          <h2>{{ $t("about.title") }}</h2>
         </div>
         <div class="auls-texts">
           <p>
-            We started Green Day Shop as a group of childhood friends who all
-            shared a love for nature and the outdoors. After college, we became
-            roommates and quickly realized that filling our home with plants was
-            something we all had in common. But when we tried shopping for
-            houseplants online, we found it surprisingly difficult to find a
-            store that was easy to navigate and not just geared toward
-            wholesale. So, in 2017, we decided to launch HousePlantShop.com—a
-            one-stop shop for all things houseplants.
+            {{ $t("about.firstParagraph") }}
           </p>
           <p>
-            What started in our shared home, with plants packed from our
-            backyard and garage, has now grown into something much bigger.
-            Today, we operate out of a large greenhouse in Southern California
-            and have now expanded to a second greenhouse in Florida to bring
-            even more happy, healthy plants to plant lovers across the country.
+            {{ $t("about.secondParagraph") }}
           </p>
           <p>
-            Even as we’ve grown, we still treat every order with the same care
-            and attention as we did when we first started. Our goal is simple:
-            to make finding and caring for houseplants easy, fun, and accessible
-            to everyone.
+            {{ $t("about.thirdParagraph") }}
           </p>
-          <p>From our house to yours, <span> The Green Day Shop Team</span></p>
+          <p>{{ $t("about.fourthParagraph") }} <span> {{ $t("about.fifthParagraph") }}</span></p>
         </div>
       </div>
     </div>

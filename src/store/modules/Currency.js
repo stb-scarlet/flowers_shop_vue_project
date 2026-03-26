@@ -79,6 +79,22 @@ export const useCurrencyStore = defineStore("currency", () => {
     }));
   });
 
+  const cartTotal = computed(() => {
+    const isUSD = selectedId.value === 1;
+
+    const formatter = new Intl.NumberFormat(
+      isUSD ? "en-US" : "ru-RU",
+      {
+        style: "currency",
+        currency: isUSD ? "USD" : "RUB",
+      }
+    );
+
+    return formatter.format(
+      cartStore.cart.reduce((total, product) => total + product.price * product.quantity, 0)
+    );
+  });
+
   const currencyWishlistProducts = computed(() => {
     const isUSD = selectedId.value === 1;
 
@@ -90,11 +106,11 @@ export const useCurrencyStore = defineStore("currency", () => {
       }
     );
 
-    return productStore.getProducts.map((product) => ({
+    return wishlistStore.wishlist.map((product) => ({
       ...product,
       formattedPrice: formatter.format(product.price),
     }));
   });
 
-  return { currency, changeCurrency, selectedId, currencyProducts, toggleCurrency, isCurrencyActive, currencyCartProducts };
+  return { currencyWishlistProducts, currency, changeCurrency, cartTotal, selectedId, currencyProducts, toggleCurrency, isCurrencyActive, currencyCartProducts };
 })

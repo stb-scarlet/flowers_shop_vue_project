@@ -1,9 +1,9 @@
 <template>
   <div class="top-list-container">
     <div class="tl-title">
-      <p>Top List</p>
+      <p>{{ $t("top-list.title") }}</p>
       <router-link to="/shop" class="tl-see-more"
-        >See More <i class="fas fa-arrow-right"></i
+        >{{ $t("top-list.button") }} <i class="fas fa-arrow-right"></i
       ></router-link>
     </div>
     <swiper

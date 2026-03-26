@@ -7,7 +7,7 @@
         </div>
         <div class="fc-location">
           <i class="fas fa-map-marker-alt"></i>
-          <span>70 West Buckingham Ave. Farmingdale, NY 11735</span>
+          <span>{{ $t("footer.middle-part.location") }}</span>
         </div>
         <div class="fc-email">
           <i class="fas fa-envelope"></i>
@@ -23,68 +23,68 @@
       <div class="fb-container">
         <ul class="my-pages-wrapper">
           <li class="title">
-            <p>My Account</p>
+            <p>{{ $t("footer.bottom-part.my-pages.title") }}</p>
           </li>
           <li class="item">
-            <router-link to="/profile">My Account</router-link>
+            <router-link to="/profile">{{ $t("footer.bottom-part.my-pages.my-account") }}</router-link>
           </li>
           <li class="item">
-            <router-link to="/">Home</router-link>
+            <router-link to="/">{{ $t("footer.bottom-part.my-pages.home") }}</router-link>
           </li>
           <li class="item">
-            <router-link to="/shop">Shop</router-link>
+            <router-link to="/shop">{{ $t("footer.bottom-part.my-pages.shop") }}</router-link>
           </li>
           <li class="item">
-            <router-link to="/contact-us">Contact Us</router-link>
+            <router-link to="/contact-us">{{ $t("footer.bottom-part.my-pages.contact-us") }}</router-link>
           </li>
           <li class="item">
-            <router-link to="/profile">About Us</router-link>
+            <router-link to="/profile">{{ $t("footer.bottom-part.my-pages.about-us") }}</router-link>
           </li>
         </ul>
         <ul class="help-guide-wrapper">
           <li class="title">
-            <p>Help & Guide</p>
+            <p>{{ $t("footer.bottom-part.help-guide.title") }}</p>
           </li>
           <li class="item">
-            <a href="#">Help Center</a>
+            <a href="#">{{ $t("footer.bottom-part.help-guide.help-center") }}</a>
           </li>
           <li class="item">
-            <a href="#">How to Buy</a>
+            <a href="#">{{ $t("footer.bottom-part.help-guide.how-to-buy") }}</a>
           </li>
           <li class="item">
-            <a href="#">Shipping & Delivery</a>
+            <a href="#">{{ $t("footer.bottom-part.help-guide.shipping-delivery") }}</a>
           </li>
           <li class="item">
-            <a href="#">Product Policy</a>
+            <a href="#">{{ $t("footer.bottom-part.help-guide.product-policy") }}</a>
           </li>
           <li class="item">
-            <a href="#">How to Return</a>
+            <a href="#">{{ $t("footer.bottom-part.help-guide.returns-refunds") }}</a>
           </li>
         </ul>
         <ul class="categories-wrapper">
           <li class="title">
-            <p>Categories</p>
+            <p>{{ $t("footer.bottom-part.categories.title") }}</p>
           </li>
           <li class="item">
-            <router-link to="/shop">House Plants</router-link>
+            <router-link to="/shop">{{ $t("footer.bottom-part.categories.house-plants") }}</router-link>
           </li>
           <li class="item">
-            <router-link to="/shop">Potter Plants</router-link>
+            <router-link to="/shop">{{ $t("footer.bottom-part.categories.pots") }}</router-link>
           </li>
           <li class="item">
-            <router-link to="/shop">Seeds</router-link>
+            <router-link to="/shop">{{ $t("footer.bottom-part.categories.seeds") }} </router-link>
           </li>
           <li class="item">
-            <router-link to="/shop">Small Plants</router-link>
+            <router-link to="/shop">{{ $t("footer.bottom-part.categories.garden-plants") }}</router-link>
           </li>
           <li class="item">
-            <router-link to="/shop">Accessories</router-link>
+            <router-link to="/shop">{{ $t("footer.bottom-part.categories.succulents") }}</router-link>
           </li>
         </ul>
         <div class="fb-socials">
           <div class="fb-social-brands">
             <div class="fbs-title">
-              <p>Social Media</p>
+              <p>{{ $t("footer.bottom-part.socials.title") }}</p>
             </div>
             <div class="fbs-icons">
               <div class="fbs-box">
@@ -102,7 +102,7 @@
             </div>
           </div>
           <div class="fbs-bank-cards">
-            <div class="fbs-title"><p>We Accept</p></div>
+            <div class="fbs-title"><p>{{ $t("footer.bottom-part.socials.we-accept") }}</p></div>
             <ul class="bc-wrapper">
               <li class="bcw-box">
                 <i class="fab fa-cc-visa"></i>
@@ -118,7 +118,7 @@
         </div>
       </div>
       <div class="f-privacy">
-        <p>© 2021 GreenShop. All Rights Reserved.</p>
+        <p>{{ $t("footer.copyright") }}</p>
       </div>
     </div>
   </div>

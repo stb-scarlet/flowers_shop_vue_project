@@ -2,7 +2,7 @@
   <div class="main-filter-container" :class="{'mf-show': overlayStore.isFilterActive}">
     <div class="mf-header">
       <div class="mfh-title">
-        <h3>Filter</h3>
+        <h3>{{ $t("filter.title") }}</h3>
       </div>
       <button class="mfh-close-button" @click="hideFilter">
         <svg
@@ -21,7 +21,7 @@
     </div>
     <div class="mf-categories-container">
       <div class="mfc-title">
-        <p>Categories</p>
+        <p>{{ $t("filter.titles.categories") }}</p>
       </div>
       <ul class="categories-container">
         <li
@@ -36,14 +36,14 @@
             :value="item"
             v-model="category"
           />
-          <label :for="`${item}-checkbox`">{{ item }}</label>
+          <label :for="`${item}-checkbox`">{{ $t(item) }}</label>
           <span>({{ productsQuantity(item) }})</span>
         </li>
       </ul>
     </div>
     <div class="mf-range-container">
       <div class="mfr-title">
-        <p>Price Range</p>
+        <p>{{ $t("filter.titles.price") }}</p>
       </div>
       <div class="range-container">
         <div class="range-slider">
@@ -66,7 +66,7 @@
         <form class="range-field-container" @submit.prevent="handlePrice">
           <div class="range-field">
             <label for="minNumber" class="rf-min">
-              <p>Min:</p>
+              <p>{{ $t("filter.price-range.from") }}:</p>
               <input
                 type="number"
                 id="minNumber"
@@ -74,7 +74,7 @@
               />
             </label>
             <label for="maxNumber" class="rf-max">
-              <p>Max:</p>
+              <p>{{ $t("filter.price-range.to") }}:</p>
               <input
                 type="number"
                 id="maxNumber"
@@ -82,13 +82,13 @@
               />
             </label>
           </div>
-          <button type="submit" class="rf-filter">Filter</button>
+          <button type="submit" class="rf-filter">{{ $t("filter.price-range.button") }}</button>
         </form>
       </div>
     </div>
     <div class="mf-size-container">
       <div class="mfs-title">
-        <p>Size</p>
+        <p>{{ $t("filter.titles.size") }}</p>
       </div>
       <ul class="sizes-container">
         <li
@@ -264,7 +264,6 @@ watch(
       .category-container,
       .size {
         list-style: none;
-        text-transform: capitalize;
         font-size: 16px;
         font-weight: 500;
         display: flex;

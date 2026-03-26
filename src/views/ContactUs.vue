@@ -3,35 +3,32 @@
     <div class="contact-part">
       <div class="contact-info">
         <div class="ci-item">
-          <h2>Contact Us</h2>
+          <h2>{{ $t("contact.title") }}</h2>
           <p>
-            <span>Email call, or complete the form learn how</span>
-            <span>Snappy can solve your messaging problem.</span>
+            <span>{{ $t("contact.firstParagraph") }}</span>
+            <span>{{ $t("contact.secondParagraph") }}</span>
           </p>
           <p>example@ex.com</p>
           <p>(123)-123-123</p>
-          <a href="">Custom Support</a>
+          <a href="">{{ $t("contact.thirdParagraph") }}</a>
         </div>
         <ul class="ci-wrapper">
           <li class="ciw-item">
-            <p class="ciw-title">Custom Support</p>
+            <p class="ciw-title">{{ $t("contact.thirdParagraph") }}</p>
             <p>
-              Our team is availble around the clock to address any concerns or
-              questions you may have.
+              {{ $t("contact.fourthParagraph") }}
             </p>
           </li>
           <li class="ciw-item">
-            <p class="ciw-title">Feedback & Suggestion</p>
+            <p class="ciw-title">{{ $t("contact.fifthParagraph") }}</p>
             <p>
-              Our team is availble around the clock to address any concerns or
-              questions you may have.
+              {{ $t("contact.sixthParagraph") }}
             </p>
           </li>
           <li class="ciw-item">
-            <p class="ciw-title">Medi Inquiries</p>
+            <p class="ciw-title">{{ $t("contact.seventhParagraph") }}</p>
             <p>
-              Our team is availble around the clock to address any concerns or
-              questions you may have.
+              {{ $t("contact.eighthParagraph") }}
             </p>
           </li>
         </ul>
@@ -39,8 +36,8 @@
       <div class="main-contact">
         <div class="mc-card">
           <div class="mcc-header">
-            <div class="mcc-title">Send a Message</div>
-            <p>You can reach us anytime</p>
+            <div class="mcc-title">{{ $t("contact.ninthParagraph") }}</div>
+            <p>{{ $t("contact.tenthParagraph") }}</p>
           </div>
           <div class="mcc-body">
             <form class="mcc-form">
@@ -51,11 +48,11 @@
               <input type="email" placeholder="Your email" required />
               <input type="text" placeholder="Phone number" required />
               <textarea placeholder="How can we help?" required></textarea>
-              <button class="mccf-button">Send</button>
+              <button class="mccf-button">{{ $t("contact.button") }}</button>
               <p>
-                By contacting us, you agree to our
-                <a href="#">Terms & Conditions</a> and
-                <a href="#">Privacy Policy</a>
+                {{ $t("contact.eleventhParagraph") }}
+                <a href="#">{{ $t("contact.twelfthParagraph") }}</a> {{ $t("contact.thirteenthParagraph") }}
+                <a href="#">{{ $t("contact.fourteenthParagraph") }}</a>
               </p>
             </form>
           </div>

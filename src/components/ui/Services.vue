@@ -7,8 +7,8 @@
             <img :src="item.src" alt="">
           </div>
           <div class="swi-texts">
-            <h4>{{ item.firstParagraph }}</h4>
-            <p>{{ item.secondParagraph }}</p>
+            <h4>{{ $t(item.firstParagraph) }}</h4>
+            <p>{{ $t(item.secondParagraph) }}</p>
           </div>
         </div>
       </div>
@@ -20,23 +20,23 @@ const service = [
   {
     id: 1,
     src: "/service-images/1.png",
-    firstParagraph: "Large Selection",
+    firstParagraph: "services.firstParagraph",
     secondParagraph:
-      "From easy-care classics to rare finds, we have a plant for everyone.",
+      "services.secondParagraph",
   },
   {
     id: 2,
     src: "/service-images/2.png",
-    firstParagraph: "Free Shipping Nationwide",
+    firstParagraph: "services.thirdParagraph",
     secondParagraph:
-      "We ship from our California and Florida greenhouses, ensuring your plants arrive fresh and healthy.",
+      "services.fourthParagraph",
   },
   {
     id: 3,
     src: "/service-images/3.png",
-    firstParagraph: "30-Day Guarantee",
+    firstParagraph: "services.fifthParagraph",
     secondParagraph:
-      "We stand by our plants! If anything goes wrong, we’ll make it right.",
+      "services.sixthParagraph",
   },
 ];
 </script>

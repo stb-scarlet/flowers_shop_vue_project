@@ -100,10 +100,16 @@
             </li>
             <li class="th-language" ref="languageList">
               <span>{{ $t("navbar.language") }}: </span>
-              <button class="th-language-button" @click="localeStore.toggleLaguage">
+              <button
+                class="th-language-button"
+                @click="localeStore.toggleLaguage"
+              >
                 <p>EN</p>
               </button>
-              <ul class="th-language-list" :class="{'ths-active': localeStore.isLanguageActive}">
+              <ul
+                class="th-language-list"
+                :class="{ 'ths-active': localeStore.isLanguageActive }"
+              >
                 <li
                   class="thl-item"
                   :class="{ 'ths-active': $i18n.locale == 'en' }"
@@ -211,6 +217,7 @@
                     class="search-input"
                     autocomplete="off"
                     placeholder="Search..."
+                    v-model="searchResult"
                     v-on:focus="showSearchView"
                   />
                 </label>
@@ -227,7 +234,19 @@
                 </div>
               </div>
               <div class="search-view" :class="{ 'search-view-show': search }">
-                <div class="a"></div>
+                <div class="sv-container">
+                  <ul class="sv-wrapper">
+                    <li
+                      class="sv-item"
+                      v-for="item in filteredProducts"
+                      :key="item.id"
+                    >
+                      <router-link :to="`/product/${item.id}`">{{
+                        item.name || item.category
+                      }}</router-link>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -267,10 +286,19 @@
               </li>
               <!-- Login Button -->
               <li class="action-item">
-                <button class="login" @click="loginRegisterStore.toggleLogin" v-if="!loginRegisterStore.currentUser">
-                  <i class="fa-solid fa-arrow-right-to-bracket"></i>{{ $t("navbar.login") }}
+                <button
+                  class="login"
+                  @click="loginRegisterStore.toggleLogin"
+                  v-if="!loginRegisterStore.currentUser"
+                >
+                  <i class="fa-solid fa-arrow-right-to-bracket"></i
+                  >{{ $t("navbar.login") }}
                 </button>
-                <router-link to="/profile" class="profile" v-if="loginRegisterStore.currentUser">
+                <router-link
+                  to="/profile"
+                  class="profile"
+                  v-if="loginRegisterStore.currentUser"
+                >
                   <div class="profile-image">
                     <img
                       src="/action-icons/user-icon.svg"
@@ -283,7 +311,9 @@
                       v-if="loginRegisterStore.currentUser.profileImage"
                     />
                   </div>
-                  <div class="p-username">{{ loginRegisterStore.currentUser.username }}</div>
+                  <div class="p-username">
+                    {{ loginRegisterStore.currentUser.username }}
+                  </div>
                 </router-link>
               </li>
             </ul>
@@ -295,10 +325,12 @@
 </template>
 <script setup>
 import MobileTopHeader from "../layout/MobileTopHeader.vue";
-import { onMounted, ref, onBeforeUnmount, watch } from "vue";
+import { onMounted, ref, onBeforeUnmount, watch, computed } from "vue";
 import { useCurrencyStore } from "@/store/modules/Currency";
 import { useLoginRegisterStore } from "@/store/modules/loginRegister";
+import { useProductStore } from "@/store/modules/product";
 import { useLocaleStore } from "@/i18n";
+const productStore = useProductStore();
 const loginRegisterStore = useLoginRegisterStore();
 const localeStore = useLocaleStore();
 const currencyStore = useCurrencyStore();
@@ -307,6 +339,23 @@ const props = defineProps({
   hideSearch: Boolean,
 });
 const navbarHide = ref(false);
+
+const searchResult = ref("");
+
+const filteredProducts = computed(() => {
+  const query = searchResult.value.trim().toLowerCase();
+
+  if (!query) return productStore.getProducts;
+
+  return productStore.getProducts.filter((p) => {
+    return (
+      p.name.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query) ||
+      p.sizes.some((s) => s.toLowerCase().includes(query))
+    );
+  });
+});
+
 let lastScroll = 0;
 const handleScroll = () => {
   const currentScroll = window.scrollY;
@@ -508,11 +557,25 @@ watch(search, (newVal) => {
               transition:
                 opacity 0.2s ease-in,
                 transform 0.2s ease-out;
-              .a {
-                height: 150px;
+              .sv-container {
+                height: 300px;
+                width: 100%;
+                overflow: scroll;
                 border-radius: 10px;
-                padding-left: clamp(15px, 1vw, 20px);
+                padding: 20px;
                 background-color: rgb(255, 255, 255);
+                .sv-wrapper {
+                  list-style: none;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                  a {
+                    color: rgb(0, 0, 0);
+                    font-weight: 600;
+                    font-size: 16px;
+                    text-decoration: none;
+                  }
+                }
               }
               &.search-view-show {
                 transform: translateY(0px);

@@ -14,18 +14,18 @@
               />
             </svg>
           </button>
-          <button class="fbc-button">Clear All</button>
+          <button class="fbc-button">{{ $t("filter.clear") }}</button>
         </div>
         <div class="sort-status">
           <ul class="ss-wrap">
             <li
               class="ssw-item"
-              v-for="item in ['All Plants', 'New Arrivals', 'Best Sellers']"
+              v-for="item in ['sort.all-plants', 'sort.new-arrival', 'sort.best-sellers']"
               :key="item"
               :class="{ 'active-status': status === item }"
             >
               <button @click="status = item">
-                {{ item }}
+                {{ $t(item) }}
               </button>
             </li>
           </ul>
@@ -35,9 +35,9 @@
           :class="{ 'active-sort': overlayStore.isSortActive }"
         >
           <div class="sb-text">
-            <p>Sort By:</p>
+            <p>{{ $t("sort.title") }}:</p>
             <button @click="overlayStore.toggleSort">
-              <span>{{ sort }}</span>
+              <span>{{ $t(sort) }}</span>
               <i class="fas fa-chevron-down"></i>
             </button>
           </div>
@@ -45,18 +45,18 @@
             <li
               class="sbw-item"
               v-for="item in [
-                'Default Sorting',
-                'A - Z',
-                'Z - A',
-                'Price - High to Low',
-                'Price - Low to High',
-                'Rating - High to Low',
-                'Rating - Low to High',
+                'sort.default-sorting',
+                'sort.a-z',
+                'sort.z-a',
+                'sort.price-high-to-low',
+                'sort.price-low-to-high',
+                'sort.rating-high-to-low',
+                'sort.rating-low-to-high',
               ]"
               :key="item"
               :class="{ 'active-sort': sort === item }"
             >
-              <button @click="sort = item">{{ item }}</button>
+              <button @click="sort = item">{{ $t(item) }}</button>
             </li>
           </ul>
         </div>
@@ -231,7 +231,7 @@
           </svg>
         </div>
         <div class="ep-texts">
-          <p>Products not found</p>
+          <p>{{ $t("empty-product.firstParagraph") }}</p>
         </div>
       </div>
       <div
@@ -275,8 +275,8 @@ const pagination = {
   },
 };
 
-const status = ref("All Plants");
-const sort = ref("Default Sorting");
+const status = ref("sort.all-plants");
+const sort = ref("sort.default-sorting");
 
 const readyProducts = computed(() => {
   let result = [
@@ -284,21 +284,21 @@ const readyProducts = computed(() => {
     ...filteredProducts.value,
     ...filteredProducts.value,
   ];
-  if (status.value === "New Arrivals") {
+  if (status.value === "sort.new-arrival") {
     result = [...result].sort((a, b) => b.id - a.id);
-  } else if (status.value === "Best Sellers") {
+  } else if (status.value === "sort.best-sellers") {
     result = [...result].sort((a, b) => b.reviews.length - a.reviews.length);
   }
 
-  if (sort.value === "Price - Low to High") {
+  if (sort.value === "sort.price-low-to-high") {
     result = [...result].sort((a, b) => a.price - b.price);
-  } else if (sort.value === "Price - High to Low") {
+  } else if (sort.value === "sort.price-high-to-low") {
     result = [...result].sort((a, b) => b.price - a.price);
-  } else if (sort.value === "A - Z") {
+  } else if (sort.value === "sort.a-z") {
     result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sort.value === "Z - A") {
+  } else if (sort.value === "sort.z-a") {
     result = [...result].sort((a, b) => b.name.localeCompare(a.name));
-  } else if (sort.value === "Rating - High to Low") {
+  } else if (sort.value === "sort.rating-high-to-low") {
     result = [...result].sort((a, b) => {
       const ratingA =
         a.reviews.reduce((total, review) => total + review.rating, 0) /
@@ -308,7 +308,7 @@ const readyProducts = computed(() => {
         b.reviews.length;
       return ratingA - ratingB;
     });
-  } else if (sort.value === "Rating - Low to High") {
+  } else if (sort.value === "sort.rating-low-to-high") {
     result = [...result].sort((a, b) => {
       const ratingA =
         a.reviews.reduce((total, review) => total + review.rating, 0) /

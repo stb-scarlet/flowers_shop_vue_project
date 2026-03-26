@@ -1,10 +1,10 @@
 <template>
   <div class="wishlist-container">
     <div class="wishlist-wrapper">
-      <div class="products" v-if="wishlistStore.wishlist.length > 0">
+      <div class="products" v-if="currencyStore.currencyWishlistProducts.length > 0">
         <div
           class="product-card"
-          v-for="item in wishlistStore.wishlist"
+          v-for="item in currencyStore.currencyWishlistProducts"
           :key="item"
         >
           <div class="pc-top-container">
@@ -166,13 +166,14 @@
           </svg>
         </div>
         <div class="ew-texts">
-          <p>Wihslist is empty</p>
+          <p>{{ $t("wishlist.empty-wishlist.firstParagraph") }}</p>
           <p>
-            See Take a look at the main page - we've collected products there
-            that you might like.
+            {{ $t("wishlist.empty-wishlist.secondParagraph") }}
           </p>
           <router-link to="/shop">
-            <button class="ewb-button">Shop Now</button>
+            <button class="ewb-button">
+              {{ $t("wishlist.empty-wishlist.button") }}
+            </button>
           </router-link>
         </div>
       </div>
@@ -184,8 +185,10 @@
 import { ref } from "vue";
 import TopList from "@/components/ui/TopList.vue";
 import { useWishlistStore } from "@/store/modules/wishlist";
+import { useCurrencyStore } from "@/store/modules/Currency";
 import { useCartStore } from "@/store/modules/cart";
 const cartStore = useCartStore();
+const currencyStore = useCurrencyStore();
 const wishlistStore = useWishlistStore();
 </script>
 <style lang="scss" scoped>

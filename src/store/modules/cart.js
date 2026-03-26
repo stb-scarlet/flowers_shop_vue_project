@@ -45,10 +45,6 @@ export const useCartStore = defineStore("cart", () => {
     }
   }
 
-  const getCartTotal = () => {
-    return cart.value.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
-
   const isProductInCart = (productId) => {
     return cart.value.some((item) => item.id === productId);
   };
@@ -60,5 +56,5 @@ export const useCartStore = defineStore("cart", () => {
       console.error(err);
     }
   }, { deep: true });
-  return { cart, addToCart, removeFromCart, clearCart, updateQuantity, getCartTotal, isProductInCart, selectedProducts };
+  return { cart, addToCart, removeFromCart, clearCart, updateQuantity, isProductInCart, selectedProducts };
 });

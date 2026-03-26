@@ -40,13 +40,12 @@
           </svg>
         </div>
         <div class="ec-texts">
-          <p>Cart is empty</p>
+          <p>{{ $t("cart.empty-cart.firstParagraph") }}</p>
           <p>
-            See Take a look at the main page - we've collected products there
-            that you might like.
+            {{ $t("cart.empty-cart.secondParagraph") }}
           </p>
           <router-link to="/shop">
-            <button class="ecb-button">Shop Now</button>
+            <button class="ecb-button">{{ $t("cart.empty-cart.button") }}</button>
           </router-link>
         </div>
       </div>

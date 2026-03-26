@@ -47,5 +47,147 @@
     "firstParagraph": " September 12 | Read in 8 minutes",
     "secondParagraph": "Cactus & Succulent Care Tips",
     "thirdParagraph": "Cacti are succulents are easy care plants for any home or patio."
+  },
+
+  "top-list": {
+    "title": "Top Sales",
+    "button": "See More"
+  },
+
+  "footer": {
+    "middle-part": {
+      "location": "70 West Buckingham Ave Farmingdale, NY 11735"
+    },
+    "bottom-part": {
+      "my-pages": {
+        "title": "My Account",
+        "my-account": "My Account",
+        "home": "Home",
+        "shop": "Shop",
+        "contact-us": "Contact Us",
+        "about-us": "About Us"
+      },
+      "help-guide": {
+        "title": "Help Guide",
+        "help-center": "Help Center",
+        "shipping-delivery": "Shipping & Delivery",
+        "returns-refunds": "Returns & Refunds",
+        "product-policy": "Product Policy",
+        "how-to-buy": "How to Buy"
+      },
+
+      "categories": {
+        "title": "Categories",
+        "house-plants": "House Plants",
+        "pots": "Pots",
+        "seeds": "Seeds",
+        "garden-plants": "Garden Plants",
+        "succulents": "Succulents"
+      },
+
+      "socials": {
+        "title": "Socials Media",
+        "we-accept": "We Accept"
+      }
+    },
+    "copyright": "© 2023 GreenShop. All rights reserved."
+  },
+
+  "filter": {
+    "title": "Filter",
+    "clear": "Clear All",
+    "titles": {
+      "categories": "Categories",
+      "price": "Price Range",
+      "size": "Size"
+    },
+    "categories": {
+      "house-plants": "House Plants",
+      "potter-plants": "Potter Plants",
+      "garden-plants": "Garden Plants",
+      "succulents-plants": "Succulents Plants",
+      "terrarium-plants": "Terrarium Plants"
+    },
+    "sizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "price-range": {
+      "from": "From",
+      "to": "To",
+      "button": "Apply"
+    }
+  },
+
+  "sort": {
+    "all-plants": "All Plants",
+    "new-arrival": "New Arrival",
+    "best-sellers": "Best Sellers",
+    "title": "Sort By",
+    "default-sorting": "Default Sorting",
+    "price-low-to-high": "Price - Low to High",
+    "price-high-to-low": "Price - High to Low",
+    "rating-high-to-low": "Rating - High to Low",
+    "rating-low-to-high": "Rating - Low to High",
+    "a-z": "A - Z",
+    "z-a": "Z - A"
+  },
+
+  "about": {
+    "title": "About Us",
+    "firstParagraph": "We started Green Day Shop as a group of childhood friends who all shared a love for nature and the outdoors. After college, we became roommates and quickly realized that filling our home with plants was something we all had in common. But when we tried shopping for houseplants online, we found it surprisingly difficult to find a store that was easy to navigate and not just geared toward wholesale. So, in 2017, we decided to launch HousePlantShop.com—a one-stop shop for all things houseplants.",
+    "secondParagraph": "What started in our shared home, with plants packed from our backyard and garage, has now grown into something much bigger. Today, we operate out of a large greenhouse in Southern California and have now expanded to a second greenhouse in Florida to bring even more happy, healthy plants to plant lovers across the country.",
+    "thirdParagraph": "Even as we’ve grown, we still treat every order with the same care and attention as we did when we first started. Our goal is simple: to make finding and caring for houseplants easy, fun, and accessible to everyone.",
+    "fourthParagraph": "From our house to yours,",
+    "fifthParagraph": "The Green Day Shop Team"
+  },
+
+  "services": {
+    "firstParagraph": "Large Selection",
+    "secondParagraph": "From easy-care classics to rare finds, we have a plant for everyone.",
+    "thirdParagraph": "Free Shipping Nationwide",
+    "fourthParagraph": "We ship from our California and Florida greenhouses, ensuring your plants arrive fresh and healthy.",
+    "fifthParagraph": "30-Day Guarantee",
+    "sixthParagraph": "We stand by our plants! If anything goes wrong, we’ll make it right."
+  },
+
+  "contact": {
+    "title": "Contact Us",
+    "firstParagraph": "Email call, or complete the form learn how",
+    "secondParagraph": "Snappy can solve your messaging problem.",
+    "thirdParagraph": "Custom Support",
+    "fourthParagraph": "Our team is availble around the clock to address any concerns or questions you may have.",
+    "fifthParagraph": "Feedback & Suggestion",
+    "sixthParagraph": "Our team is availble around the clock to address any concerns or questions you may have.",
+    "seventhParagraph": "Medi Inquiries",
+    "eighthParagraph": "Our team is availble around the clock to address any concerns or questions you may have.",
+    "ninthParagraph": "Send A Message",
+    "tenthParagraph": "You can reach us anytime",
+    "eleventhParagraph": "By contacting us, you agree to our",
+    "twelfthParagraph": "Terms & Conditions",
+    "thirteenthParagraph": "and",
+    "fourteenthParagraph": "Privacy Policy",
+    "button": "Send"
+  },
+
+  "cart": {
+    "empty-cart": {
+      "firstParagraph": "Cart is empty",
+      "secondParagraph": "Maybe you want to visit our main page to collect products that you like.",
+      "button": "Shop Now"
+    }
+  },
+
+  "wishlist": {
+    "empty-wishlist": {
+      "firstParagraph": "Wishlist is empty",
+      "secondParagraph": "Maybe you want to visit our main page to collect products that you like.",
+      "button": "Shop Now"
+    }
+  },
+
+  "empty-product": {
+    "firstParagraph": "Product is empty"
   }
 }

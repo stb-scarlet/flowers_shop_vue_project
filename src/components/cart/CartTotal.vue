@@ -29,14 +29,19 @@
       </div>
       <div class="ctb-total-price">
         <p>Total</p>
-        <p>$0.00</p>
+        <p>{{ currencyStore.cartTotal }}</p>
       </div>
       <button class="ctb-checkout-button">Proceed to Checkout</button>
-      <button class="ctb-continue-button">Continue Shopping</button>
+      <router-link to="/shop" class="ctb-continue-button"
+        >Continue Shopping</router-link
+      >
     </div>
   </div>
 </template>
 <script setup>
+import { useCartStore } from "@/store/modules/cart";
+import { useCurrencyStore } from "@/store/modules/Currency";
+const currencyStore = useCurrencyStore();
 </script>
 <style lang="scss" scoped>
 .cart-total {
@@ -49,9 +54,11 @@
   }
   .ct-body {
     border-top: 2px solid rgba(0, 180, 0, 0.1);
+    text-align: center;
     padding-top: 10px;
     .ctb-coupon-container {
       font-size: 14px;
+      text-align: start;
       .ctb-coupon-field {
         display: flex;
         background-color: rgb(0, 180, 0);
@@ -115,6 +122,7 @@
       }
     }
     .ctb-continue-button {
+      text-decoration: none;
       width: 100%;
       background-color: transparent;
       color: rgb(0, 180, 0);
