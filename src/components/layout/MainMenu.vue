@@ -61,7 +61,11 @@
                   </button>
                 </li>
               </ul>
-              <ul v-if="p.type == 'currency'" class="mmwp-list" :class="{ 'mmwp-list-active': currencyStore.selectedId == 2}">
+              <ul
+                v-if="p.type == 'currency'"
+                class="mmwp-list"
+                :class="{ 'mmwp-list-active': currencyStore.selectedId == 2 }"
+              >
                 <li v-for="a in p.action" :key="a.id" class="mmwpl-item">
                   <button
                     class="mmwpl-button"
@@ -95,8 +99,13 @@
           </div>
           <!-- PRIVACY POLICY -->
           <div class="mmw-privacy-item" v-if="m_item.privacy">
-            <a href="#">{{ $t("navbar.privacy_policy") }}<i class="fa fa-arrow-right"></i></a>
-            <a href="#">{{ $t("navbar.terms_conditions") }}<i class="fa fa-arrow-right"></i></a>
+            <a href="#"
+              >{{ $t("navbar.privacy_policy") }}<i class="fa fa-arrow-right"></i
+            ></a>
+            <a href="#"
+              >{{ $t("navbar.terms_conditions")
+              }}<i class="fa fa-arrow-right"></i
+            ></a>
           </div>
         </li>
       </ul>
@@ -116,7 +125,6 @@ import { ref } from "vue";
 import { useCurrencyStore } from "@/store/modules/Currency";
 import { useLocaleStore } from "@/i18n";
 import { useOverlayStore } from "@/store/modules/Overlay";
-
 
 const localeStore = useLocaleStore();
 const currencyStore = useCurrencyStore();
@@ -138,16 +146,34 @@ const menu = ref([
     id: 3,
     title: "User Panel",
     panel: [
-      { id: 1, label: "navbar.language", action: ["En", "Ру"], type: "language" },
-      { id: 2, label: "navbar.currency", action: [{ id: 1, name: "USD"}, { id: 2, name: "RUB"}], type: "currency" },
-      { id: 3, label: "navbar.theme", action: ["navbar.light", "navbar.dark"], type: "theme" },
+      {
+        id: 1,
+        label: "navbar.language",
+        action: ["En", "Ру"],
+        type: "language",
+      },
+      {
+        id: 2,
+        label: "navbar.currency",
+        action: [
+          { id: 1, name: "USD" },
+          { id: 2, name: "RUB" },
+        ],
+        type: "currency",
+      },
+      {
+        id: 3,
+        label: "navbar.theme",
+        action: ["navbar.light", "navbar.dark"],
+        type: "theme",
+      },
       { id: 4, label: "navbar.login", type: "modal" },
     ],
   },
   { id: 4, line: "line" },
   {
     id: 5,
-    title: "Socials2",
+    title: "Socials",
     socials: [
       {
         id: 1,
@@ -209,6 +235,7 @@ const menu = ref([
         display: flex;
         justify-content: center;
         align-items: center;
+        z-index: 1;
         color: rgb(100, 100, 100);
         .cm-icon {
           height: 16px;
@@ -303,9 +330,9 @@ const menu = ref([
                 overflow: hidden;
                 position: relative;
                 .mmwpl-item {
-                  padding: 6px 10px;
                   border-radius: 25px;
                   .mmwpl-button {
+                    padding: 6px 10px;
                     font-size: 16px;
                     white-space: nowrap;
                     color: rgb(0, 0, 0);
@@ -313,6 +340,7 @@ const menu = ref([
                     font-family: "Quicksand", sans-serif;
                     background-color: transparent;
                     border: none;
+                    cursor: pointer;
                   }
                 }
                 &::after {
@@ -344,9 +372,11 @@ const menu = ref([
           gap: 30px;
           a {
             font-size: clamp(14px, 2vw, 16px);
-            white-space: nowrap;
             color: rgb(0, 0, 0);
             font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             i {
               font-size: clamp(12px, 2vw, 14px);
             }

@@ -20,7 +20,11 @@
           <ul class="ss-wrap">
             <li
               class="ssw-item"
-              v-for="item in ['sort.all-plants', 'sort.new-arrival', 'sort.best-sellers']"
+              v-for="item in [
+                'sort.all-plants',
+                'sort.new-arrival',
+                'sort.best-sellers',
+              ]"
               :key="item"
               :class="{ 'active-status': status === item }"
             >
@@ -35,8 +39,8 @@
           :class="{ 'active-sort': overlayStore.isSortActive }"
         >
           <div class="sb-text">
-            <p>{{ $t("sort.title") }}:</p>
             <button @click="overlayStore.toggleSort">
+              <p>{{ $t("sort.title") }}:</p>
               <span>{{ $t(sort) }}</span>
               <i class="fas fa-chevron-down"></i>
             </button>
@@ -140,7 +144,10 @@
                     </div>
                   </button> -->
                 </div>
-                <router-link :to="'/product/' + item.id" class="pct-image-container">
+                <router-link
+                  :to="'/product/' + item.id"
+                  class="pct-image-container"
+                >
                   <img :src="item.src" :alt="item.name" loading="lazy" />
                 </router-link>
               </div>
@@ -279,11 +286,7 @@ const status = ref("sort.all-plants");
 const sort = ref("sort.default-sorting");
 
 const readyProducts = computed(() => {
-  let result = [
-    ...filteredProducts.value,
-    ...filteredProducts.value,
-    ...filteredProducts.value,
-  ];
+  let result = [...filteredProducts.value];
   if (status.value === "sort.new-arrival") {
     result = [...result].sort((a, b) => b.id - a.id);
   } else if (status.value === "sort.best-sellers") {
@@ -401,9 +404,6 @@ const readyProducts = computed(() => {
           }
         }
         .sb-text {
-          p {
-            margin-right: 4px;
-          }
           button {
             background-color: transparent;
             color: rgb(100, 100, 100);
@@ -432,7 +432,7 @@ const readyProducts = computed(() => {
         }
         .sb-wrap {
           position: absolute;
-          padding: clamp(4px, 1.2vw, 10px) clamp(6px, 1.2vw, 16px);
+          padding: 10px 16px;
           min-width: 0;
           top: 100%;
           right: 0;
@@ -459,7 +459,7 @@ const readyProducts = computed(() => {
               padding: clamp(0px, 0.8vw, 4px) 0;
               border: none;
               white-space: nowrap;
-              transition: all 0.2s ease-in;
+              transition: color 0.2s;
               cursor: pointer;
               &:hover {
                 color: rgb(0, 180, 0);
@@ -531,7 +531,7 @@ const readyProducts = computed(() => {
           }
         }
       }
-      @media (max-width: 575px) {
+      @media (max-width: 767px) {
         .sort-status {
           display: none;
         }
@@ -550,6 +550,8 @@ const readyProducts = computed(() => {
             .pc-top-container {
               margin-bottom: clamp(4px, 1.2vw, 10px);
               height: clamp(150px, 60vw, 350px);
+              border-radius: 10px;
+              overflow: hidden;
               position: relative;
               .pct-discount-container {
                 position: absolute;

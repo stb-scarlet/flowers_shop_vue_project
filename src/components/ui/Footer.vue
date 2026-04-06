@@ -169,7 +169,7 @@
       display: grid;
       grid-template-columns: 50% 50%;
       gap: 15px;
-      padding: 30px;
+      padding: 30px 30px 30px 0;
       .my-pages-wrapper,
       .help-guide-wrapper,
       .categories-wrapper {

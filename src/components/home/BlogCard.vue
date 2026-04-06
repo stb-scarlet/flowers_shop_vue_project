@@ -16,7 +16,8 @@
           <p>{{ $t(item.secondParagraph) }}</p>
           <p>{{ $t(item.thirdParagraph) }}</p>
           <button>
-            {{ $t("blog.button") }}<span><i class="fas fa-arrow-right"></i></span>
+            {{ $t("blog.button")
+            }}<span><i class="fas fa-arrow-right"></i></span>
           </button>
         </div>
       </div>
@@ -24,7 +25,7 @@
   </div>
 </template>
 <script setup>
-import { useBlogStore } from '@/store/modules/blog';
+import { useBlogStore } from "@/store/modules/blog";
 const blogStore = useBlogStore();
 const blogs = blogStore.blogs;
 </script>
@@ -39,11 +40,10 @@ const blogs = blogStore.blogs;
       color: rgb(0, 180, 0);
       font-family: "Petit Formal Script", cursive;
       font-weight: 700;
-      line-height: clamp(10px, 4.8vw, 38px);
       margin-bottom: 2px;
     }
     p {
-      font-size: clamp(8px, 3vw, 20px);
+      font-size: 16px;
       line-height: clamp(8px, 4vw, 26px);
       color: rgb(100, 100, 100);
     }
@@ -51,13 +51,15 @@ const blogs = blogStore.blogs;
   .posts-card-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: clamp(10px, 1.4vw, 40px);
+    gap: 20px;
     .post-card {
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      border-radius: 10px;
+      overflow: hidden;
       .pc-image {
         width: 100%;
         position: relative;
@@ -65,15 +67,11 @@ const blogs = blogStore.blogs;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
         }
         &::after {
           content: "";
           inset: 0;
           position: absolute;
-          border-top-left-radius: 10px;
-          border-top-right-radius: 10px;
           transition: background-color 0.2s;
         }
         &:hover::after {
@@ -82,10 +80,8 @@ const blogs = blogStore.blogs;
       }
       .pc-main {
         padding: 3%;
-        background-color: rgba(0, 0, 0, 0.03);
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        height: clamp(120px, 20vw, 178px);
+        background-color: rgba(255, 255, 255, 0.65);
+        height: 180px;
         display: flex;
         justify-content: start;
         flex-direction: column;
@@ -133,31 +129,27 @@ const blogs = blogStore.blogs;
   .hv-blogs-container {
     .posts-card-container {
       grid-template-columns: repeat(3, 1fr);
-      .post-card {
-        .pc-main {
-          height: 178px;
-        }
-      }
     }
   }
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .hv-blogs-container {
+    .bc-title {
+      p {
+        font-size: 14px;
+      }
+    }
     .posts-card-container {
       grid-template-columns: repeat(2, 1fr);
       .post-card {
         .pc-main {
-          height: clamp(116px, 24vw, 150px);
           p:nth-child(2) {
-            font-size: clamp(12px, 3vw, 20px);
+            font-size: 16px;
           }
           p:nth-child(1),
           p:nth-child(3),
           button {
-            font-size: clamp(10px, 2vw, 16px);
-            i {
-              font-size: clamp(8px, 2vw, 14px);
-            }
+            font-size: 14px;
           }
         }
       }

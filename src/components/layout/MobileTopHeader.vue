@@ -14,9 +14,21 @@
   <div class="mth-right-side">
     <ul class="mth-actions-wrapper">
       <li class="mth-action-item">
-        <router-link to="" class="mth-action">
-          <img src="/public/action-icons/user-icon.svg" alt="" />
+        <router-link
+          to="/profile"
+          class="mth-action"
+          v-if="loginRegisterStore.currentUser.id"
+          active-class="active-mth-action"
+        >
+          <img src="/action-icons/user-icon.svg" alt="" />
         </router-link>
+        <button
+          class="mth-action"
+          v-if="!loginRegisterStore.currentUser.id"
+          @click="loginRegisterStore.toggleLogin"
+        >
+          <img src="/action-icons/user-icon.svg" alt="" />
+        </button>
       </li>
       <li class="mth-action-item">
         <router-link
@@ -26,6 +38,9 @@
         >
           <img src="/action-icons/heart-icon.svg" alt="" />
         </router-link>
+        <span v-if="currencyStore.currencyWishlistProducts.length > 0">{{
+          currencyStore.currencyWishlistProducts.length
+        }}</span>
       </li>
       <li class="mth-action-item">
         <router-link
@@ -35,12 +50,19 @@
         >
           <img src="/action-icons/cart-icon.svg" alt="" />
         </router-link>
+        <span v-if="currencyStore.currencyCartProducts.length > 0">{{
+          currencyStore.currencyCartProducts.length
+        }}</span>
       </li>
     </ul>
   </div>
 </template>
 <script setup>
 import { useOverlayStore } from "@/store/modules/Overlay";
+import { useCurrencyStore } from "@/store/modules/Currency";
+import { useLoginRegisterStore } from "@/store/modules/loginRegister";
+const loginRegisterStore = useLoginRegisterStore();
+const currencyStore = useCurrencyStore();
 const overlayStore = useOverlayStore();
 </script>
 <style lang="scss" scoped>
@@ -117,11 +139,15 @@ const overlayStore = useOverlayStore();
       align-items: center;
       list-style: none;
       .mth-action-item {
-        height: 25px;
-        width: 41px;
+        height: 100%;
         padding: 0 8px;
+        position: relative;
         .mth-action {
           text-decoration: none;
+          height: 100%;
+          background-color: transparent;
+          border: none;
+          cursor: pointer;
           img {
             width: 100%;
             height: 100%;
@@ -131,6 +157,20 @@ const overlayStore = useOverlayStore();
             filter: brightness(0) saturate(100%) invert(21%) sepia(96%)
               saturate(7492%) hue-rotate(340deg) brightness(101%) contrast(101%);
           }
+        }
+        span {
+          position: absolute;
+          bottom: 50%;
+          right: 0;
+          background-color: rgb(0, 180, 0);
+          color: rgb(245, 242, 235);
+          height: 18px;
+          width: 18px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
         }
       }
     }

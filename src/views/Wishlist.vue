@@ -1,7 +1,10 @@
 <template>
   <div class="wishlist-container">
-    <div class="wishlist-wrapper">
-      <div class="products" v-if="currencyStore.currencyWishlistProducts.length > 0">
+    <div
+      class="wishlist-wrapper"
+      v-if="currencyStore.currencyWishlistProducts.length > 0"
+    >
+      <div class="products">
         <div
           class="product-card"
           v-for="item in currencyStore.currencyWishlistProducts"
@@ -68,7 +71,9 @@
               </button>
             </div>
             <div class="pct-image-container">
-              <img :src="item.src" :alt="item.name" loading="lazy" />
+              <router-link :to="`/product/${item.id}`">
+                <img :src="item.src" :alt="item.name" loading="lazy" />
+              </router-link>
             </div>
           </div>
           <div class="pc-main-container">
@@ -135,7 +140,9 @@
           </div>
         </div>
       </div>
-      <div class="empty-wishlist" v-else>
+    </div>
+    <div class="empty-wishlist-container" v-else>
+      <div class="empty-wishlist">
         <div class="ew-icon">
           <svg
             viewBox="0 0 512 512"
@@ -177,8 +184,8 @@
           </router-link>
         </div>
       </div>
-      <TopList />
     </div>
+    <TopList />
   </div>
 </template>
 <script setup>
@@ -196,8 +203,8 @@ const wishlistStore = useWishlistStore();
   padding: 100px 0 0;
   .wishlist-wrapper {
     max-width: 1500px;
-    padding: 0 clamp(10px, 1vw, 20px);
     margin: clamp(20px, 10vw, 40px) auto;
+    padding: 0 clamp(10px, 1vw, 20px);
     .products {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -372,9 +379,13 @@ const wishlistStore = useWishlistStore();
         gap: 18px;
       }
     }
+  }
+  .empty-wishlist-container {
+    max-width: 1500px;
+    padding: 0 clamp(10px, 1vw, 20px);
+    margin: clamp(20px, 10vw, 40px) auto;
     .empty-wishlist {
       width: 100%;
-      margin: 0 auto;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -383,7 +394,6 @@ const wishlistStore = useWishlistStore();
       background-color: rgba(255, 255, 255, 0.65);
       padding: 30px;
       gap: 20px;
-      margin: clamp(20px, 10vw, 40px) 0;
       .ew-icon {
         width: 80px;
         height: 80px;
@@ -415,16 +425,22 @@ const wishlistStore = useWishlistStore();
       }
     }
   }
-}
 
+  .top-list-container {
+    max-width: 1500px;
+    margin: 0 auto clamp(30px, 7vw, 70px);
+  }
+}
 @media (min-width: 1024px) {
   .wishlist-container {
     padding: 120px 0 0;
     .wishlist-wrapper {
-      .empty-wishlist {
-        .ew-icon {
-          width: 100px;
-          height: 100px;
+      .empty-wishlist-container {
+        .empty-wishlist {
+          .ew-icon {
+            width: 100px;
+            height: 100px;
+          }
         }
       }
     }

@@ -46,6 +46,9 @@ import BlogCard from "@/components/home/BlogCard.vue";
     max-width: 1500px;
     padding: 0 clamp(10px, 1vw, 20px);
     margin: 0 auto;
+    .top-list-container {
+      padding: 0;
+    }
   }
 }
 </style>

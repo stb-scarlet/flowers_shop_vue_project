@@ -12,14 +12,18 @@
             <input type="checkbox" class="cpbw-checkbox" @change="cartStore.selectedProducts(item.id)">
           </div> -->
           <div class="cpbw-image">
-            <img :src="item.src" alt="" />
+            <router-link :to="`/product/${item.id}`">
+              <img :src="item.src" alt="" />
+            </router-link>
           </div>
           <div class="cpbw-info">
             <div class="cpbw-name">
               <div class="cp-title">
                 <p>Name</p>
               </div>
-              <p>{{ item.name }}</p>
+              <router-link :to="`/product/${item.id}`" class="cpbw-name">
+                <p>{{ item.name }}</p>
+              </router-link>
             </div>
             <div class="cpbw-price">
               <div class="cp-title">
@@ -177,6 +181,8 @@ const currencyStore = useCurrencyStore();
             position: relative;
             display: flex;
             align-items: center;
+            text-decoration: none;
+            color: rgb(0, 0, 0);
             height: 100%;
             .cp-title {
               position: absolute;

@@ -6,6 +6,7 @@
           class="pdaip-image-container"
           :modules="modules"
           :thumbs="{ swiper: thumbsSwiper }"
+          :space-between="16"
           :slidesPerView="1"
         >
           <swiper-slide
@@ -342,7 +343,7 @@ const handleReview = () => {
     comment: review.value.comment,
   };
 
-  if (loginRegisterStore.isAuthenticated) {
+  if (loginRegisterStore.currentUser) {
     productStore.addToReviews(Number(productId.value), newReview);
   } else {
     loginRegisterStore.toggleLogin();

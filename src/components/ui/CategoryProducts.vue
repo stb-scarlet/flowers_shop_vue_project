@@ -1,13 +1,13 @@
 <template>
-  <div class="top-list-container">
-    <div class="tl-title">
-      <p>{{ $t("top-list.title") }}</p>
+  <div class="category-products-container">
+    <div class="cp-title">
+      <p>{{ $t("category-products.title") }}</p>
       <router-link to="/shop" class="tl-see-more"
-        >{{ $t("top-list.button") }} <i class="fas fa-arrow-right"></i
+        >{{ $t("category-products.button") }} <i class="fas fa-arrow-right"></i
       ></router-link>
     </div>
     <swiper
-      class="tl-swiper"
+      class="cp-swiper"
       :modules="modules"
       :free-mode="true"
       :breakpoints="{
@@ -27,16 +27,16 @@
         },
       }"
       :navigation="{
-        prevEl: '.tl-swiper-prev',
-        nextEl: '.tl-swiper-next',
+        prevEl: '.cp-swiper-prev',
+        nextEl: '.cp-swiper-next',
       }"
     >
       <swiper-slide
-        class="tl-swiper-slide"
-        v-for="item in topListProducts.slice(0, 8)"
+        class="cp-swiper-slide"
+        v-for="item in categoryProducts"
         :key="item.id"
       >
-        <div class="tl-swiper-slide-container">
+        <div class="cp-swiper-slide-container">
           <div class="product-card">
             <div class="pc-top-container">
               <div class="pct-discount-container" v-if="item.discountPrice">
@@ -171,11 +171,11 @@
         </div>
       </swiper-slide>
     </swiper>
-    <div class="tl-swiper-navigation-container">
-      <div class="tl-swiper-prev">
+    <div class="cp-swiper-navigation-container">
+      <div class="cp-swiper-prev">
         <i class="fas fa-chevron-left"></i>
       </div>
-      <div class="tl-swiper-next">
+      <div class="cp-swiper-next">
         <i class="fas fa-chevron-right"></i>
       </div>
     </div>
@@ -193,25 +193,18 @@ import { useWishlistStore } from "@/store/modules/wishlist";
 const wishlistStore = useWishlistStore();
 const cartStore = useCartStore();
 const currencyStore = useCurrencyStore();
-const products = computed(() => currencyStore.currencyProducts);
 const modules = [Navigation];
 
-const topListProducts = products.value.sort((a, b) => {
-  const ratingA =
-    a.reviews.reduce((total, review) => total + review.rating, 0) /
-    a.reviews.length;
-  const ratingB =
-    b.reviews.reduce((total, review) => total + review.rating, 0) /
-    b.reviews.length;
-  return ratingB - ratingA;
+const categoryProducts = computed(() => {
+  return currencyStore.currencyCartProducts.filter((c) => c.category);
 });
 </script>
 <style lang="scss" scoped>
-.top-list-container {
+.category-products-container {
   margin-bottom: clamp(30px, 7vw, 70px);
   padding: 0 clamp(10px, 1vw, 20px);
   position: relative;
-  .tl-title {
+  .cp-title {
     font-family: "Petit Formal Script", cursive;
     color: rgb(0, 180, 0);
     font-size: clamp(18px, 4.8vw, 28px);
@@ -220,7 +213,7 @@ const topListProducts = products.value.sort((a, b) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .tl-see-more {
+    .cp-see-more {
       background-color: transparent;
       border: none;
       font-family: "Quicksand", sans-serif;
@@ -234,9 +227,9 @@ const topListProducts = products.value.sort((a, b) => {
       }
     }
   }
-  .tl-swiper {
-    .tl-swiper-slide {
-      .tl-swiper-slide-container {
+  .cp-swiper {
+    .cp-swiper-slide {
+      .cp-swiper-slide-container {
         .product-card {
           .pc-top-container {
             margin-bottom: clamp(4px, 1.2vw, 10px);
@@ -390,7 +383,7 @@ const topListProducts = products.value.sort((a, b) => {
       }
     }
   }
-  .tl-swiper-navigation-container {
+  .cp-swiper-navigation-container {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -401,8 +394,8 @@ const topListProducts = products.value.sort((a, b) => {
     align-items: center;
     padding: 0 clamp(4px, 1.2vw, 8px);
     justify-content: space-between;
-    .tl-swiper-prev,
-    .tl-swiper-next {
+    .cp-swiper-prev,
+    .cp-swiper-next {
       color: rgb(100, 100, 100);
       font-size: clamp(12px, 5vw, 18px);
       z-index: 1;

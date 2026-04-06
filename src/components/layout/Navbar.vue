@@ -273,6 +273,10 @@
                 >
                   <img src="/action-icons/heart-icon.svg" alt="" />
                 </router-link>
+                <span
+                  v-if="currencyStore.currencyWishlistProducts.length > 0"
+                  >{{ currencyStore.currencyWishlistProducts.length }}</span
+                >
               </li>
               <!-- Cart Icon -->
               <li class="action-item">
@@ -283,13 +287,16 @@
                 >
                   <img src="/action-icons/cart-icon.svg" alt="" />
                 </router-link>
+                <span v-if="currencyStore.currencyCartProducts.length > 0">{{
+                  currencyStore.currencyCartProducts.length
+                }}</span>
               </li>
               <!-- Login Button -->
               <li class="action-item">
                 <button
                   class="login"
                   @click="loginRegisterStore.toggleLogin"
-                  v-if="!loginRegisterStore.currentUser"
+                  v-if="!loginRegisterStore.currentUser.email"
                 >
                   <i class="fa-solid fa-arrow-right-to-bracket"></i
                   >{{ $t("navbar.login") }}
@@ -297,7 +304,7 @@
                 <router-link
                   to="/profile"
                   class="profile"
-                  v-if="loginRegisterStore.currentUser"
+                  v-if="loginRegisterStore.currentUser.email"
                 >
                   <div class="profile-image">
                     <img
@@ -816,6 +823,7 @@ watch(search, (newVal) => {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                position: relative;
                 .action {
                   padding: 0 10px;
                   border: none;
@@ -836,7 +844,6 @@ watch(search, (newVal) => {
                       contrast(101%);
                   }
                 }
-
                 .login {
                   margin-left: 10px;
                   padding: 0 18px;
@@ -889,6 +896,20 @@ watch(search, (newVal) => {
                   &:hover {
                     color: rgb(0, 180, 0);
                   }
+                }
+                span {
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  background-color: rgb(0, 180, 0);
+                  color: rgb(245, 242, 235);
+                  height: 18px;
+                  width: 18px;
+                  border-radius: 50%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  font-size: 14px;
                 }
               }
             }

@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
-
+import { ref, watch } from "vue";
 export const useLoginRegisterStore = defineStore("loginRegister", () => {
-	const usersDate = ref(JSON.parse(localStorage.getItem("usersDate")) || []);
+	const usersData = ref(JSON.parse(localStorage.getItem("usersData")) || []);
 	const isLoginActive = ref(false);
 	const isUpdateProfile = ref(false);
-	const isAuthenticated = ref(JSON.parse(localStorage.getItem("token") || null));
 
 	const toggleLogin = () => {
 		isLoginActive.value = !isLoginActive.value;
@@ -20,12 +18,12 @@ export const useLoginRegisterStore = defineStore("loginRegister", () => {
 		isUpdateProfile.value = false;
 	};
 
-	const registerVerification = (date) => {
-		const exists = usersDate.value.find(
+	const registerVerification = (data) => {
+		const exists = usersData.value.find(
 			(u) =>
-				u.username === date.username ||
-				u.email === date.email ||
-				u.phone === date.phone
+				u.username === data.username ||
+				u.email === data.email ||
+				u.phone === data.phone
 		);
 		if (exists) {
 			return {
@@ -35,14 +33,15 @@ export const useLoginRegisterStore = defineStore("loginRegister", () => {
 		}
 
 		const newUser = {
-			username: date.username,
-			email: date.email,
-			phone: date.phone,
-			password: date.password,
+			id: new Date(),
+			username: data.username,
+			email: data.email,
+			phone: data.phone,
+			password: data.password,
 		};
 
-		usersDate.value.push(newUser);
-		localStorage.setItem("usersDate", JSON.stringify(usersDate.value));
+		usersData.value.push(newUser);
+		localStorage.setItem("usersData", JSON.stringify(usersData.value));
 
 		return {
 			status: true,
@@ -50,55 +49,95 @@ export const useLoginRegisterStore = defineStore("loginRegister", () => {
 		};
 	};
 
-	const loginVerification = (date) => {
-		const user = usersDate.value.find((u) => ((u.email === date?.username) || (u.username === date?.username)) && u.password === date?.password)
+	const loginVerification = (data) => {
+		const user = usersData.value.find((u) => ((u.email === data?.username) || (u.username === data?.username)) && u.password === data?.password);
 		if (user) {
 			localStorage.setItem("currentUser", JSON.stringify(user));
+			currentUser.value = user;
 			return {
 				status: true,
 				message: "Login successful"
 			}
 		} else {
-			const token = Math.random().toString(36).substring(2, 15);
-			localStorage.setItem("token", token);
 			return {
 				status: false,
 				message: "Invalid username or password"
-			}
+			};
 		}
 	};
 
-	const updateVerification = (date) => {
-		const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-		const oldUser = usersDate.value.find(u => u.email === currentUser.email);
-		if (currentUser.email === date.email && oldUser.email !== date.email) {
+	const updateVerification = (data) => {
+		// const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+		// const userId = usersData.value.find(u => u.id === currentUser.id);
+		// if (currentUser.email === data.email && userId.email !== data.email) {
+		// 	return {
+		// 		status: false,
+		// 		message: "Email already exists"
+		// 	}
+		// } else if (currentUser.username === data.username && userId.username !== data.username) {
+		// 	return {
+		// 		status: false,
+		// 		message: "Username already exists"
+		// 	}
+		// } else if (currentUser.phone === data.phone && userId.phone !== data.phone) {
+		// 	return {
+		// 		status: false,
+		// 		message: "Phone already exists"
+		// 	}
+		// } else {
+		// 	const index = usersData.value.findIndex(u => u.email === currentUser.email);
+		// 	usersData.value[index] = data;
+		// 	localStorage.setItem("usersData", JSON.stringify(usersData.value));
+		// 	localStorage.setItem("currentUser", JSON.stringify(data));
+		// 	return {
+		// 		status: true,
+		// 		message: "Updata successful"
+		// 	}
+		// }
+
+		const userId = usersData.value.find(data => data.id === data.id)
+
+		if (usersData.value.some(d => d.email === data.email && d.email !== userId.email)) {
 			return {
-				status: false,
-				message: "Email already exists"
+				statsu: false,
+				message: "Email is already exists."
 			}
-		} else if (currentUser.username === date.username && oldUser.username !== date.username) {
+		} else if (usersData.value.some(d => d.username === data.username && d.username !== userId.username)) {
 			return {
 				status: false,
-				message: "Username already exists"
-			}
-		} else if (currentUser.phone === date.phone && oldUser.phone !== date.phone) {
-			return {
-				status: false,
-				message: "Phone already exists"
+				message: "Username is already exists."
 			}
 		} else {
-			const index = usersDate.value.findIndex(u => u.email === currentUser.email);
-			usersDate.value[index] = date;
-			localStorage.setItem("usersDate", JSON.stringify(usersDate.value));
-			localStorage.setItem("currentUser", JSON.stringify(date));
+			const index = usersData.value.findIndex(i => i.id === userId.id)
+			usersData.value[index] = data
+			localStorage.setItem("usersData", JSON.stringify(usersData.value));
+			localStorage.setItem("currentUser", JSON.stringify(data))
 			return {
 				status: true,
-				message: "Update successful"
+				message: "You are successfully updated."
 			}
 		}
 	}
 
-	const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+	const clearUser = (userEmail) => {
+		const index = usersData.value.findIndex(u => u.email === userEmail);
+		usersData.value.splice(index, 1);
+		localStorage.setItem("usersData", JSON.stringify(usersData.value));
+	};
 
-	return { isAuthenticated, usersDate, registerVerification, loginVerification, isLoginActive, toggleLogin, currentUser, isUpdateProfile, toggleUpdateProfile, closeLogin, updateVerification };
+	const currentUser = ref(JSON.parse(localStorage.getItem("currentUser")) || {});
+
+	watch(currentUser, (val) => {
+		try {
+			if (val) {
+				localStorage.setItem("currentUser", JSON.stringify(val));
+			} else {
+				localStorage.removeItem("currentUser");
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	}, { deep: true });
+
+	return { usersData, registerVerification, loginVerification, isLoginActive, toggleLogin, currentUser, isUpdateProfile, toggleUpdateProfile, closeLogin, updateVerification, clearUser };
 });

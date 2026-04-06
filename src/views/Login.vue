@@ -45,59 +45,76 @@
         @submit.prevent="login"
       >
         <p class="title">Enter your username or email and password to login.</p>
+        <label for="login-username" class="label">Email/Username</label>
         <input
           type="text"
           class="username"
           placeholder="Username or Email"
+          id="login-username"
           v-model="loginData.username"
           required
         />
+        <label for="login-password" class="label">Password</label>
         <input
           type="text"
           class="password"
           placeholder="Password"
+          id="login-password"
           v-model="loginData.password"
+          maxlength="8"
           required
         />
-        <button class="forgot" type="button" >Forgot Password?</button>
-        <button class="login" type="submit">Login</button>
+        <button class="forgot" type="button">Forgot Password?</button>
+        <button class="submit" type="submit">Login</button>
       </form>
       <form
         class="register-form"
         v-if="activeForm === 'register' && !loginRegisterStore.isUpdateProfile"
         @submit.prevent="register"
       >
+        <label for="register-username" class="label">Username</label>
         <input
           type="text"
           class="username"
           placeholder="Username"
+          id="register-password"
           v-model="registerData.username"
+          maxlength="10"
           required
         />
+        <label for="register-email" class="label">Email</label>
         <input
           type="text"
           class="email"
           placeholder="Email"
+          id="register-email"
           v-model="registerData.email"
+          maxlength="14"
           required
         />
+        <label for="register-phone" class="label">Phone</label>
         <input
           type="text"
           class="phone"
           placeholder="Phone"
           v-model="registerData.phone"
+          id="register-phone"
+          maxlength="19"
           required
           @input="phoneInput($event)"
         />
+        <label for="register-password" class="label">Password</label>
         <input
           type="text"
           class="password"
           placeholder="Password"
+          id="register-password"
           v-model="registerData.password"
+          maxlength="8"
           required
         />
         <button class="forgot" type="button">Forgot Password?</button>
-        <button class="login" type="submit">Register</button>
+        <button class="submit" type="submit">Register</button>
       </form>
       <form
         class="update-form"
@@ -152,48 +169,66 @@
             class="image-input"
           />
         </div>
+        <label for="update-username" class="label">Username</label>
         <input
           type="text"
           class="username"
           placeholder="Username"
+          id="update-username"
           v-model="updataData.username"
+          maxlength="10"
           required
         />
+        <label for="update-email" class="label">Email</label>
         <input
           type="email"
           class="email"
           placeholder="Email"
+          id="update-email"
           v-model="updataData.email"
+          maxlength="14"
           required
         />
+        <label for="update-phone" class="label">Phone</label>
         <input
           type="text"
           class="phone"
           placeholder="Phone"
+          id="update-phone"
           v-model="updataData.phone"
+          maxlength="19"
           required
           @input="phoneInput($event)"
         />
+        <label for="update-password" class="label">Password</label>
         <input
           type="text"
           class="password"
           placeholder="Password"
+          id="update-password"
           v-model="updataData.password"
+          maxlength="8"
           required
         />
         <button class="forgot" type="button">Forgot Password?</button>
-        <button class="login" type="submit">Update</button>
+        <button class="submit" type="submit">Update</button>
+        <button class="delete-profile" @click="loginRegisterStore.clearUser(loginRegisterStore.currentUser.email)" type="button">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          Delete Profile
+        </button>
       </form>
-      <p class="or">Or login with</p>
-      <div class="lb-buttons">
-        <button class="lb-button">
-          <i class="fab fa-google"></i>
-          <p>Login with Google</p>
-        </button>
-        <button class="lb-button">
-          <i class="fab fa-facebook-f"></i>
-          <p>Login with Facebook</p>
-        </button>
+      <div class="fast-enter" v-if="!loginRegisterStore.isUpdateProfile">
+        <p class="or">Or login with</p>
+        <div class="lb-buttons">
+          <button class="lb-button">
+            <i class="fab fa-google"></i>
+            <p>Login with Google</p>
+          </button>
+          <button class="lb-button">
+            <i class="fab fa-facebook-f"></i>
+            <p>Login with Facebook</p>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -226,7 +261,7 @@ const updataData = ref({
 const profileImageRemover = () => {
   updataData.value.profileImage = null;
   loginRegisterStore.currentUser.profileImage = null;
-}
+};
 
 const phoneInput = (e) => {
   let value = e.target.value.replace(/\D/g, "");
@@ -338,14 +373,17 @@ watch(
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 500px;
+  width: 100%;
+  height: 100%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 50px 50px 100px;
+  overflow: scroll;
+  padding: 0 20px;
   .l-close {
     position: absolute;
     top: 20px;
@@ -396,69 +434,11 @@ watch(
     flex-direction: column;
     align-items: center;
     width: 100%;
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      .title {
-        font-size: 14px;
-        font-weight: 600;
-        font-family: "Quicksand", sans-serif;
-        color: rgb(100, 100, 100);
-        margin-bottom: 20px;
-      }
-      .username,
-      .password {
-        width: 100%;
-        height: 40px;
-        border: 1px solid rgb(100, 100, 100);
-        border-radius: 5px;
-        margin-bottom: 15px;
-        padding: 0 10px;
-        font-family: "Quicksand", sans-serif;
-        font-size: 16px;
-        outline: none;
-        &:focus {
-          border: none;
-          outline: 1px solid rgb(0, 180, 0);
-        }
-      }
-      .forgot {
-        display: flex;
-        align-self: flex-end;
-        background-color: transparent;
-        border: none;
-        margin-bottom: 20px;
-        &:hover {
-          color: rgb(0, 180, 0);
-        }
-      }
-      .login {
-        cursor: pointer;
-        width: 100%;
-        height: 40px;
-        border: 1px solid rgb(0, 0, 0);
-        border-radius: 5px;
-        margin-bottom: 40px;
-        padding: 0 10px;
-        font-family: "Quicksand", sans-serif;
-        border: none;
-        background-color: rgb(0, 180, 0);
-        color: rgb(245, 242, 235);
-        font-weight: 700;
-        font-size: 16px;
-        transition: background-color 0.2s;
-        &:hover {
-          background-color: rgb(0, 190, 0);
-        }
-      }
-    }
+    .login-form,
     .register-form,
     .update-form {
       display: flex;
       flex-direction: column;
-      align-items: center;
       width: 100%;
       .profile-image {
         display: flex;
@@ -522,6 +502,11 @@ watch(
         color: rgb(100, 100, 100);
         margin-bottom: 20px;
       }
+      .label {
+        color: rgb(100, 100, 100);
+        margin-bottom: 2px;
+        font-size: 14px;
+      }
       .username,
       .email,
       .phone,
@@ -550,7 +535,7 @@ watch(
           color: rgb(0, 180, 0);
         }
       }
-      .login {
+      .submit {
         cursor: pointer;
         width: 100%;
         height: 40px;
@@ -569,38 +554,64 @@ watch(
           background-color: rgb(0, 190, 0);
         }
       }
-    }
-    .or {
-      font-size: 14px;
-      font-weight: 600;
-      font-family: "Quicksand", sans-serif;
-      color: rgb(100, 100, 100);
-      margin-bottom: 20px;
-    }
-    .lb-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 100%;
-      .lb-button {
-        background-color: transparent;
-        border: 1px solid rgb(100, 100, 100);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        font-weight: 500;
+      .delete-profile {
+        color: rgb(100, 100, 100);
+        font-weight: 700;
         font-family: "Quicksand", sans-serif;
-        gap: 6px;
-        padding: 10px;
-        i {
-          font-size: 20px;
-        }
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.65);
+        font-size: 16px;
+        background-color: transparent;
+        border: none;
+        transition: color 0.2s;
+        &:hover,
+        &:active {
+          color: rgb(255, 25, 83);
         }
       }
     }
+    .fast-enter {
+      width: 100%;
+      text-align: center;
+      .or {
+        font-size: 14px;
+        font-weight: 600;
+        font-family: "Quicksand", sans-serif;
+        color: rgb(100, 100, 100);
+        margin-bottom: 20px;
+      }
+      .lb-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        .lb-button {
+          background-color: transparent;
+          border: 1px solid rgb(100, 100, 100);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          font-weight: 500;
+          font-family: "Quicksand", sans-serif;
+          gap: 6px;
+          padding: 10px;
+          i {
+            font-size: 20px;
+          }
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.65);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .login-container {
+    width: 500px;
+    height: auto;
+    padding: 50px;
+    overflow: hidden;
   }
 }
 </style>

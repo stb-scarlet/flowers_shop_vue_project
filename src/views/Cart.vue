@@ -45,15 +45,19 @@
             {{ $t("cart.empty-cart.secondParagraph") }}
           </p>
           <router-link to="/shop">
-            <button class="ecb-button">{{ $t("cart.empty-cart.button") }}</button>
+            <button class="ecb-button">
+              {{ $t("cart.empty-cart.button") }}
+            </button>
           </router-link>
         </div>
       </div>
     </div>
     <TopList />
+    <CategoryProducts />
   </div>
 </template>
 <script setup>
+import CategoryProducts from "@/components/ui/CategoryProducts.vue";
 import TopList from "@/components/ui/TopList.vue";
 import CartProducts from "@/components/cart/CartProducts.vue";
 import CartTotal from "@/components/cart/CartTotal.vue";
@@ -62,18 +66,16 @@ const currencyStore = useCurrencyStore();
 </script>
 <style lang="scss" scoped>
 .cart-container {
-  padding: 100px clamp(10px, 1vw, 20px) 0;
-  max-width: 1500px;
-  margin: 0 auto;
+  padding: 100px 0 0;
   .cart-wrapper {
     display: grid;
     padding: 0 clamp(10px, 1vw, 20px);
     grid-template-columns: 1fr;
-    margin: clamp(20px, 10vw, 40px) 0;
+    margin: clamp(20px, 10vw, 40px) auto;
+    max-width: 1500px;
     gap: 20px;
   }
   .empty-cart-container {
-    width: 100%;
     max-width: 1500px;
     padding: 0 clamp(10px, 1vw, 20px);
     margin: clamp(20px, 10vw, 40px) auto;
@@ -118,12 +120,14 @@ const currencyStore = useCurrencyStore();
       }
     }
   }
-  
-  .top-list-container {
+
+  .top-list-container,
+  .category-products-container {
     padding: 0 clamp(10px, 1vw, 20px);
+    max-width: 1500px;
+    margin: 0 auto clamp(30px, 7vw, 70px);
   }
 }
-
 @media (min-width: 1024px) {
   .cart-container {
     padding: 120px 0 0;

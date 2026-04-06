@@ -22,6 +22,7 @@ import TopList from "@/components/ui/TopList.vue";
       display: none;
     }
     .hv-products-banner-container {
+      padding: 0 clamp(10px, 1vw, 20px);
     }
   }
 }
