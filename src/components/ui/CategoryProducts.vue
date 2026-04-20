@@ -1,8 +1,8 @@
 <template>
-  <div class="category-products-container">
+  <div class="category-products-container" v-if="categoryProducts.length > 0">
     <div class="cp-title">
       <p>{{ $t("category-products.title") }}</p>
-      <router-link to="/shop" class="tl-see-more"
+      <router-link to="/shop" class="cp-see-more"
         >{{ $t("category-products.button") }} <i class="fas fa-arrow-right"></i
       ></router-link>
     </div>
@@ -171,7 +171,10 @@
         </div>
       </swiper-slide>
     </swiper>
-    <div class="cp-swiper-navigation-container">
+    <div
+      class="cp-swiper-navigation-container"
+      v-if="categoryProducts.length > 2"
+    >
       <div class="cp-swiper-prev">
         <i class="fas fa-chevron-left"></i>
       </div>
@@ -196,7 +199,9 @@ const currencyStore = useCurrencyStore();
 const modules = [Navigation];
 
 const categoryProducts = computed(() => {
-  return currencyStore.currencyCartProducts.filter((c) => c.category);
+  const cartProductsCategory = currencyStore.currencyCartProducts.map((product) => product.category);
+  const cartProductsId = currencyStore.currencyCartProducts.map((product) => product.id);
+  return currencyStore.currencyProducts.filter((p) => cartProductsCategory.includes(p.category) && !cartProductsId.includes(p.id));
 });
 </script>
 <style lang="scss" scoped>

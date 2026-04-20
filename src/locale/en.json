@@ -40,6 +40,11 @@
     "button": "See All"
   },
 
+  "category-products": {
+    "title": "You May Also Like",
+    "button": "See More"
+  },
+
   "blog": {
     "title": "Our Blog Posts",
     "description": "We are an online plant shop offering a wide range of cheap and trendy plants",
@@ -188,6 +193,7 @@
   },
 
   "empty-product": {
-    "firstParagraph": "Product is empty"
+    "firstParagraph": "No products found",
+    "secondParagraph": "Try adjusting your search or filter to find what you're looking for."
   }
 }

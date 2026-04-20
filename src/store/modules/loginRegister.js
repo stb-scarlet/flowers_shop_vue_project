@@ -32,6 +32,14 @@ export const useLoginRegisterStore = defineStore("loginRegister", () => {
 			};
 		}
 
+		// Validate phone number format
+		if (data.phone.length !== 19) {
+			return {
+				status: false,
+				message: "Phone number must be in the format +998 (XX) XXX-XX-XX"
+			};
+		}
+
 		const newUser = {
 			id: new Date(),
 			username: data.username,
@@ -67,65 +75,39 @@ export const useLoginRegisterStore = defineStore("loginRegister", () => {
 	};
 
 	const updateVerification = (data) => {
-		// const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-		// const userId = usersData.value.find(u => u.id === currentUser.id);
-		// if (currentUser.email === data.email && userId.email !== data.email) {
-		// 	return {
-		// 		status: false,
-		// 		message: "Email already exists"
-		// 	}
-		// } else if (currentUser.username === data.username && userId.username !== data.username) {
-		// 	return {
-		// 		status: false,
-		// 		message: "Username already exists"
-		// 	}
-		// } else if (currentUser.phone === data.phone && userId.phone !== data.phone) {
-		// 	return {
-		// 		status: false,
-		// 		message: "Phone already exists"
-		// 	}
-		// } else {
-		// 	const index = usersData.value.findIndex(u => u.email === currentUser.email);
-		// 	usersData.value[index] = data;
-		// 	localStorage.setItem("usersData", JSON.stringify(usersData.value));
-		// 	localStorage.setItem("currentUser", JSON.stringify(data));
-		// 	return {
-		// 		status: true,
-		// 		message: "Updata successful"
-		// 	}
-		// }
 
-		const userId = usersData.value.find(data => data.id === data.id)
+	const user = usersData.value.find(u => u.id === data.id)
 
-		if (usersData.value.some(d => d.email === data.email && d.email !== userId.email)) {
-			return {
-				statsu: false,
-				message: "Email is already exists."
-			}
-		} else if (usersData.value.some(d => d.username === data.username && d.username !== userId.username)) {
-			return {
-				status: false,
-				message: "Username is already exists."
-			}
-		} else {
-			const index = usersData.value.findIndex(i => i.id === userId.id)
-			usersData.value[index] = data
-			localStorage.setItem("usersData", JSON.stringify(usersData.value));
-			localStorage.setItem("currentUser", JSON.stringify(data))
-			return {
-				status: true,
-				message: "You are successfully updated."
-			}
+	if (usersData.value.some(d => d.email === data.email && d.email !== user.email)) {
+		return {
+			status: false,
+			message: "Email is already exists."
+		}
+	} else if (usersData.value.some(d => d.username === data.username && d.username !== user.username)) {
+		return {
+			status: false,
+			message: "Username is already exists."
+		}
+	} else {
+		const index = usersData.value.findIndex(i => i.id === user.id)
+		usersData.value.splice(index, 1, { ...data })
+		localStorage.setItem("usersData", JSON.stringify(usersData.value));
+		localStorage.setItem("currentUser", JSON.stringify(data))
+		currentUser.value = data;
+		return {
+			status: true,
+			message: "You are successfully updated."
 		}
 	}
+}
 
-	const clearUser = (userEmail) => {
-		const index = usersData.value.findIndex(u => u.email === userEmail);
-		usersData.value.splice(index, 1);
-		localStorage.setItem("usersData", JSON.stringify(usersData.value));
+	const logout = () => {
+		currentUser.value = null;
+		isLoginActive.value = false;
+		isUpdateProfile.value = false;
 	};
 
-	const currentUser = ref(JSON.parse(localStorage.getItem("currentUser")) || {});
+	const currentUser = ref(JSON.parse(localStorage.getItem("currentUser")) || null);
 
 	watch(currentUser, (val) => {
 		try {
@@ -139,5 +121,5 @@ export const useLoginRegisterStore = defineStore("loginRegister", () => {
 		}
 	}, { deep: true });
 
-	return { usersData, registerVerification, loginVerification, isLoginActive, toggleLogin, currentUser, isUpdateProfile, toggleUpdateProfile, closeLogin, updateVerification, clearUser };
+	return { usersData, registerVerification, loginVerification, isLoginActive, toggleLogin, currentUser, isUpdateProfile, toggleUpdateProfile, closeLogin, updateVerification, logout };
 });

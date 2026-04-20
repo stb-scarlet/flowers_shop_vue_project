@@ -17,14 +17,14 @@
         <router-link
           to="/profile"
           class="mth-action"
-          v-if="loginRegisterStore.currentUser.id"
+          v-if="loginRegisterStore?.currentUser?.id"
           active-class="active-mth-action"
         >
           <img src="/action-icons/user-icon.svg" alt="" />
         </router-link>
         <button
           class="mth-action"
-          v-if="!loginRegisterStore.currentUser.id"
+          v-if="!loginRegisterStore?.currentUser?.id"
           @click="loginRegisterStore.toggleLogin"
         >
           <img src="/action-icons/user-icon.svg" alt="" />

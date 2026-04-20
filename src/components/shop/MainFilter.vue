@@ -93,7 +93,7 @@
       <ul class="sizes-container">
         <li
           class="size"
-          v-for="item in ['small', 'medium', 'large']"
+          v-for="item in ['filter.sizes.large', 'filter.sizes.medium', 'filter.sizes.small']"
           :key="item"
           :class="{ 'active-filter': size.includes(item) }"
         >
@@ -103,7 +103,7 @@
             :value="item"
             v-model="size"
           />
-          <label :for="`${item}-checkbox`">{{ item }}</label>
+          <label :for="`${item}-checkbox`">{{ $t(item) }}</label>
           <span>({{ productsQuantity(item) }})</span>
         </li>
       </ul>

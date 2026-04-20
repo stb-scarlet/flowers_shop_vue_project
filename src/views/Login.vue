@@ -52,15 +52,17 @@
           placeholder="Username or Email"
           id="login-username"
           v-model="loginData.username"
+          maxlength="25"
           required
         />
         <label for="login-password" class="label">Password</label>
         <input
-          type="text"
+          type="password"
           class="password"
           placeholder="Password"
           id="login-password"
           v-model="loginData.password"
+          minlength="6"
           maxlength="8"
           required
         />
@@ -84,12 +86,12 @@
         />
         <label for="register-email" class="label">Email</label>
         <input
-          type="text"
+          type="email"
           class="email"
           placeholder="Email"
           id="register-email"
           v-model="registerData.email"
-          maxlength="14"
+          maxlength="25"
           required
         />
         <label for="register-phone" class="label">Phone</label>
@@ -110,6 +112,7 @@
           placeholder="Password"
           id="register-password"
           v-model="registerData.password"
+          minlength="6"
           maxlength="8"
           required
         />
@@ -212,9 +215,9 @@
         />
         <button class="forgot" type="button">Forgot Password?</button>
         <button class="submit" type="submit">Update</button>
-        <button class="delete-profile" @click="loginRegisterStore.clearUser(loginRegisterStore.currentUser.email)" type="button">
+        <button class="delete-profile" @click="logout" type="button">
           <i class="fa-solid fa-arrow-right-to-bracket"></i>
-          Delete Profile
+          Log Out
         </button>
       </form>
       <div class="fast-enter" v-if="!loginRegisterStore.isUpdateProfile">
@@ -237,6 +240,8 @@
 import { ref, watch } from "vue";
 import Notice from "@/components/ui/Notice.vue";
 import { useLoginRegisterStore } from "@/store/modules/loginRegister";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const loginRegisterStore = useLoginRegisterStore();
 const notice = ref({});
 const activeForm = ref("login");
@@ -257,6 +262,11 @@ const updataData = ref({
   password: "",
   profileImage: null,
 });
+
+const logout = () => {
+  loginRegisterStore.logout();
+  router.push("/");
+};
 
 const profileImageRemover = () => {
   updataData.value.profileImage = null;

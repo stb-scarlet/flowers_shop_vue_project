@@ -48,7 +48,7 @@
                   </svg>
                 </div>
               </button>
-              <button class="pct-view-container">
+              <!-- <button class="pct-view-container">
                 <div class="pct-view-box">
                   <svg class="vb-icon" viewBox="0 0 512 512">
                     <path
@@ -68,7 +68,7 @@
                     />
                   </svg>
                 </div>
-              </button>
+              </button> -->
             </div>
             <div class="pct-image-container">
               <router-link :to="`/product/${item.id}`">
@@ -144,32 +144,10 @@
     <div class="empty-wishlist-container" v-else>
       <div class="empty-wishlist">
         <div class="ew-icon">
-          <svg
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#000000"
-          >
-            <g>
-              <path
-                fill="#000000"
-                d="
-      M333.984 31.215
-      c-62.12 0-93.184 65.73-93.184 65.73
-      s-31.064-65.72-93.184-65.72
-      c-29.712 0-86.216 33.72-86.216 125.13
-      0 161.24 179.4 324.43 179.4 324.43
-      s179.4-163.19 179.4-324.43
-      c0-91.42-56.504-125.13-86.216-125.14
-      z
-
-      M153.539 225.65
-      h176
-      v60.7
-      h-176
-      z
-    "
-              ></path>
-            </g>
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="ew-icon-svg">
+            <path
+              d="M24 12.977c-3.866 0-7 3.158-7 7.055 0 2.22 1.02 4.197 2.609 5.491-2.056 1.525-3.609 2.488-3.609 2.488s-14-8.652-14-15.622c0-4.2 2.583-8.399 7.5-8.399 4.5 0 6.5 4.296 6.5 4.296s1.75-4.296 6.5-4.296 7.416 4.115 7.416 8.399c0 .958-.272 1.943-.716 2.932-1.281-1.436-3.134-2.344-5.2-2.344zM24 13.984c3.313 0 6 2.707 6 6.047s-2.687 6.048-6 6.048c-3.314 0-6-2.708-6-6.048s2.686-6.047 6-6.047zM21 21.039h6v-2.016h-6v2.016z"
+            />
           </svg>
         </div>
         <div class="ew-texts">
@@ -395,14 +373,16 @@ const wishlistStore = useWishlistStore();
       padding: 30px;
       gap: 20px;
       .ew-icon {
-        width: 80px;
-        height: 80px;
-        padding: 10px;
+        padding: 20px;
         border-radius: 50%;
         background-color: rgba(0, 180, 0, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
+        .ew-icon-svg {
+          height: 80px;
+        width: 80px;
+        }
       }
       .ew-texts {
         text-align: center;

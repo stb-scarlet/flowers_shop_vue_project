@@ -296,7 +296,7 @@
                 <button
                   class="login"
                   @click="loginRegisterStore.toggleLogin"
-                  v-if="!loginRegisterStore.currentUser.email"
+                  v-if="!loginRegisterStore?.currentUser?.email"
                 >
                   <i class="fa-solid fa-arrow-right-to-bracket"></i
                   >{{ $t("navbar.login") }}
@@ -304,22 +304,22 @@
                 <router-link
                   to="/profile"
                   class="profile"
-                  v-if="loginRegisterStore.currentUser.email"
+                  v-if="loginRegisterStore?.currentUser?.email"
                 >
                   <div class="profile-image">
                     <img
                       src="/action-icons/user-icon.svg"
                       alt=""
-                      v-if="!loginRegisterStore.currentUser.profileImage"
+                      v-if="!loginRegisterStore?.currentUser?.profileImage"
                     />
                     <img
-                      :src="loginRegisterStore.currentUser.profileImage"
+                      :src="loginRegisterStore?.currentUser?.profileImage"
                       alt=""
-                      v-if="loginRegisterStore.currentUser.profileImage"
+                      v-if="loginRegisterStore?.currentUser?.profileImage"
                     />
                   </div>
                   <div class="p-username">
-                    {{ loginRegisterStore.currentUser.username }}
+                    {{ loginRegisterStore?.currentUser?.username }}
                   </div>
                 </router-link>
               </li>
@@ -567,7 +567,7 @@ watch(search, (newVal) => {
               .sv-container {
                 height: 300px;
                 width: 100%;
-                overflow: scroll;
+                overflow-x: auto;
                 border-radius: 10px;
                 padding: 20px;
                 background-color: rgb(255, 255, 255);

@@ -77,7 +77,7 @@
                 v-for="size in productDetail.sizes"
                 :key="size"
               >
-                {{ size[0] }}
+                {{ $t(size).slice(0, 1) }}
               </button>
             </div>
           </div>
@@ -168,7 +168,7 @@
           </div>
           <div class="category">
             <p>Category:</p>
-            <span>{{ productDetail.category }}</span>
+            <span>{{ $t(productDetail.category) }}</span>
           </div>
           <div class="share-icons">
             <p>Share this product:</p>
@@ -196,7 +196,7 @@
           @click="((showReviews = true), (showDescription = false))"
           :class="{ 'active-drb': showReviews }"
         >
-          Reviews 19
+          Reviews {{ productDetail.reviews.length }}
         </button>
       </div>
       <div class="pddr-container">
@@ -343,10 +343,10 @@ const handleReview = () => {
     comment: review.value.comment,
   };
 
-  if (loginRegisterStore.currentUser) {
-    productStore.addToReviews(Number(productId.value), newReview);
-  } else {
+  if (!loginRegisterStore.currentUser) {
     loginRegisterStore.toggleLogin();
+  } else {
+    productStore.addToReviews(Number(productId.value), newReview);
   }
 
   review.value.comment = "";
